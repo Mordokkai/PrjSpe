@@ -1,0 +1,5 @@
+Pixel d .x .y
+Vr contient un poids, num rectangle
+	ou un stage threshold et num stage
+
+Mr quand c->feature threholds contient les différentes valeurs de seuils et l numéro de feature
