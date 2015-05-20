@@ -27,11 +27,30 @@ int32_t* integral_image(unsigned char* img, int width, int height) {
 }
 
 main(int argc, char** argv){
-	unsigned char* data;
+	unsigned char* image;
 	int width, height;
+    int i, j;
 
-	if( (argc>1) && ((data = load_pixmap(argv[1],&width,&height)) != NULL))
-		store_pixmap("clone.pgm",data,width,height);
+	/*if( (argc>1) && ((data = load_pixmap(argv[1],&width,&height)) != NULL))
+		store_pixmap("clone.pgm",data,width,height);*/
+
+    image = load_pixmap("../img/feep.pgm",&width,&height);
+	for (i=0; i < width*height; i++){
+		printf("%d\n", atoi(image+i));
+	}
+    for (j = 0; j < height; j++) {
+		for (i = 0; i < width; i++) {
+                printf("%d ",(unsigned char) atoi(image+j*width+i));
+		}
+		printf("\n");
+	}
+    int32_t* int_image = integral_image(image, width, height);
+    /*for (j = 0; j < height; j++) {
+		for (i = 0; i < width; i++) {
+                printf("%d ",*(int_image+j*width+i));
+		}
+		printf("\n");
+	}*/
 
 	return 0;
 }
