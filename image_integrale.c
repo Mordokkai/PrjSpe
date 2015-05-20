@@ -1,5 +1,5 @@
-x >
-y V
+// x >
+// y V
 
 image integral_image(image i) {
 	image ii;
@@ -19,4 +19,4 @@ image integral_image(image i) {
 	}
 
 	return ii;
-} aaaa
+}
