@@ -38,7 +38,7 @@ void Haar_normalize_rects(Haar_Cascade *c)
 {
   unsigned int nb_rect0;
   unsigned int nb_f = 0;
-  unsigned int nb_r = 0; //Le numéro de rectangle dans un feature d'un stage
+  unsigned int nb_r = 0; 
 	//On parcourt tous les stages (Sy)
   for (unsigned int s = 0; s < vn(c->stage_feature); s++) {
 		//On parcourt tous les haarfeatures de ce stage (Sy)
@@ -68,15 +68,16 @@ void Haar_normalize_rects(Haar_Cascade *c)
 
 void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
 {
-  int rect_n, feat_n, s_n;
+  int rect_n, feat_n, s_n; //numero rectangle, feature, stage
   char tmp[256];
   int i;
 
 
-  fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y);
+  fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //coord pixel debut
   fscanf(file, "%s %d", tmp, &rect_n);
   fscanf(file, "%s %d", tmp, &feat_n);
   fscanf(file, "%s %d", tmp, &s_n);
+
   c->rect= MI_alloue_special(1, 4, rect_n);
   c->weight= Vr_alloue_special(1, rect_n);
   c->feature_rect= VI_alloue_special(1, feat_n);
@@ -88,11 +89,11 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
   c->inv_area=1.0/c->area;
 
 
-  MI_entree_fichier(c->rect, 4, rect_n, file);
+  MI_entree_fichier(c->rect, 4, rect_n, file);			//Construction rectangle ? 4 pour le nombre de trucs à lire ?
 
-  Vr_entree_fichier(c->weight, rect_n, file);
-  VI_entree_fichier(c->feature_rect, feat_n, file);
-  Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);
+  Vr_entree_fichier(c->weight, rect_n, file);				//Creation poids
+  VI_entree_fichier(c->feature_rect, feat_n, file);	//Creation feature
+  Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);	//3 éléments à lire, seuil, left_value, rightvalue
   VI_entree_fichier(c->stage_feature, s_n, file);
   Vr_entree_fichier(c->stage_threshold, s_n, file);
   /* Normalise les rectangles */
