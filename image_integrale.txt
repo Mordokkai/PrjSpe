@@ -19,4 +19,4 @@ image integral_image(image i) {
 	}
 
 	return ii;
-}
+} aaaa
