@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 typedef struct {
 	int x;
@@ -28,6 +29,11 @@ typedef struct {
 
 } Mr;
 
+typedef struct {
+	float seuil;
+	float lvalue;
+	float rvalue;
+} Feature;
 
 int v(VI* vi, unsigned int s){return 0;}
 int vn(VI* vi){return 0;}
@@ -116,11 +122,87 @@ int getNbFeatures(int s, char* doc) {
 
 }
 
+//Un float est codé sur 32 bits
+float getSeuil(int n_s, char* doc) {
+	
+	FILE* f = fopen(doc,"r");
+	initPlacement(f);
+	int c;
+	int nb=-1;
+	float resultat;
+	if(f==NULL) {
+		printf("Problème lors de l'ouverture du fichier");
+	}
+	else{
+		//On se positionne au bon stage
+		do{
+			c = fgetc(f);
+			if(c=='S') {nb++; 
+			}
+			//printf("coucou");
+		}
+		while(n_s!=nb && c!=EOF);
+		fscanf(f, "%f",&resultat);
+		//printf("Recupéré en poubelle: %d", tmp);
+	return resultat;
+	fclose(f);
+	}
+}
+
+
+Feature* getFeature(int nb_f, int n_s, char* doc){
+	FILE* f = fopen(doc,"r");
+	initPlacement(f);
+	int c;
+	int nb=0;
+	float resultat;
+	Feature* feature= malloc(sizeof(Feature));
+	if(f==NULL) {
+		printf("Problème lors de l'ouverture du fichier");
+	}
+	else{
+		//On se positionne au bon stage
+		do{
+			c = fgetc(f);
+			if(c=='S') {nb++; 
+			}
+			//printf("coucou");
+		}
+		while(n_s!=nb && c!=EOF);
+		
+		//On se positionne au bon feature
+		int num_f=0;
+		do{
+			c = fgetc(f);
+			if(c=='F') {num_f++; 
+			}
+			
+		}
+		while(num_f!= nb_f && c!='S' && c!=EOF);
+
+		fscanf(f,"%f %f %f", &(feature->seuil), &(feature->lvalue), &(feature->rvalue));
+		return feature;
+	fclose(f);
+	}
+
+
+
+}
+
+
+
+
+
+
+
+
 int main(int argc, char *argv[]) {
 	char* doc="haarcascade_frontalface_short.txt";
 	printf("Nombre de stages: %d",getNbStages(doc));
 	printf("Nombre de features de S=1: %d", getNbFeatures(0,doc));
-
+	printf("Le seuil pour S=1: %.16f", getSeuil(0,doc));
+	Feature* feature = getFeature(3, 1, doc);
+	printf("Le feature 3 pour S=1: %.16f, %.16f, %.16f", feature->seuil, feature->lvalue, feature->rvalue);
 }
 
 
