@@ -165,7 +165,7 @@ unsigned char *load_pixmap(char *filename, int *width, int *height)
 
   if( (fd = open_read_pixmap(filename, MAGIC_PGM, width, height)) < 0)
     return NULL;
-  size = (long)*width * *height *3;
+  size = (long)*width * *height *4;
   data = alloc_pixmap(size);
   if( data != NULL )
     load_data(fd, data, size);
@@ -173,6 +173,8 @@ unsigned char *load_pixmap(char *filename, int *width, int *height)
   //printf("%s \n",data);
   return data;
 }
+
+
 
 int load_RGB_pixmap(char *filename, int *width, int *height, unsigned char**R_data, unsigned char**G_data, unsigned char**B_data)
 {
@@ -248,7 +250,7 @@ static int open_write(char *filename)
   return fd;
 }
 
-static void store_data(int fd, unsigned char *data, long size)
+/*static void store_data(int fd, unsigned char *data, long size)
 {
   char *buffer;
   int count;
@@ -266,6 +268,25 @@ static void store_data(int fd, unsigned char *data, long size)
     //buffer += count;
     //size -= count;
     //}
+}*/
+
+static void store_data(int fd, unsigned char *data, long size)
+{
+  char *buffer;
+  int count;
+
+  buffer = (char *)data;
+  while(size > 0)
+    {
+    count = IO_LEN;
+    if( count > size )
+     count = size;
+      
+    //printf("%s \n",buffer);  
+    write(fd, buffer, strlen(buffer)*sizeof(char));
+    buffer += count;
+    size -= count;
+    }
 }
 
 static void store_chunky(int fd, unsigned char *R_data, unsigned char *G_data, unsigned char *B_data, int width, int height)
@@ -292,22 +313,41 @@ static void store_chunky(int fd, unsigned char *R_data, unsigned char *G_data, u
   free(buffer);
 }
 
-void store_pixmap(char *filename, unsigned char *data, int width, int height)
+/*void store_pixmap(char *filename, unsigned char *data, int width, int height)
 {
   int fd;
   long size = (long)width*height;
   int i=0;
   int j=0;
+  char caractereActuel;
+  if( (fd = open_write(filename)) < 0 )
+    return;
+    
+  put_pgm_header(fd, MAGIC_PGM, width, height, filename);
+  
+  //printf("%s \n",data);
+  //store_data(fd, data,size);
+  //for(i=0;i<height;i++=){
+  	//for (j=0;j<width;j++){
+  	FILE* fichier = fopen(filename, "w");
+  	if (fichier != NULL)
+  		
+  	fputs(data,fichier);
+  close(fd);
+}*/
+
+void store_pixmap(char *filename, unsigned char *data, int width, int height)
+{
+  int fd;
+  
   if( (fd = open_write(filename)) < 0 )
     return;
   put_pgm_header(fd, MAGIC_PGM, width, height, filename);
-  //printf("%s \n",data);
-  //store_data(fd, data,size);
-  for(i=0;i<width;i++=){
-  	for (j=0;j<height;j++){
-  		
+  store_data(fd, data, (long)width*height);
   close(fd);
 }
+
+
 
 void store_RGB_pixmap(char *filename, unsigned char *R_data, unsigned char *G_data, unsigned char *B_data, int width, int height)
 {
