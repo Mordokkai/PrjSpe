@@ -28,9 +28,9 @@ int32_t* integral_image(unsigned char* img, int width, int height) {
 
 main(int argc, char** argv){
 	unsigned char* data;
-	int width, height,lumin;
+	int width, height;
 
-	if( (argc>1) && ((data = load_pixmap(argv[1],&width,&height,&lumin)) != NULL))
+	if( (argc>1) && ((data = load_pixmap(argv[1],&width,&height)) != NULL))
 		store_pixmap("clone.pgm",data,width,lumin,height);
 
 	return 0;
