@@ -234,7 +234,7 @@ static void put_pgm_header(int fd, char *magic, int width, int height,int lumin,
 
   put_header_line(fd, magic);
   //put_header_info(fd, "# ", filename);
-  sprintf(buf, "%d %d\n%d \n", width,lumin,height);
+  sprintf(buf, "%d %d\n %d \n", width,lumin,height);
   put_header_line(fd, buf);
 }
 
