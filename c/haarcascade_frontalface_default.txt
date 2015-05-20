@@ -1,5 +1,7 @@
 # Fichier de description de cascade de classifieurs (Haar)
 # pour l'algorithme de detection d'objets
+# coordX,coordY, length, height, weigth
+# Si le test passe le seuil alors on additionne la valeur de droite sinon celle de gauche
 D 24 24
 R 6 4 12 9 -1.
 R 6 7 12 3 3.
