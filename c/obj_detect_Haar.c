@@ -28,10 +28,13 @@ void Haar_normalize_rects(Haar_Cascade *c)
   unsigned int nb_rect0;
   unsigned int nb_f = 0;
   unsigned int nb_r = 0;
+	//On parcourt tous les stages (Sy)
   for (unsigned int s = 0; s < vn(c->stage_feature); s++) {
+		//On parcourt tous les haarfeatures de ce stage (Sy)
     for (unsigned int f = 0; f < v(c->stage_feature, s); f++) {
       nb_rect0 = nb_r;
       float sum0 = 0;
+			//Parcourt des rectangles de la feature
       for (unsigned int r = 0; r < v(c->feature_rect, nb_f); r++) {
         //v(c->weight, nb_r) *= c->inv_area;
         if (r != 0) {
