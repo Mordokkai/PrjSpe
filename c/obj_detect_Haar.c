@@ -28,7 +28,7 @@ v(*stage_feature,int s) renvoie le nombre de feature dans le stage d'indice s
 v(*stage_feature_rect,nb_f) renvoie le nombre de rectangles dans le feature d'indice nb_f
 */
 
-
+//tableau àune dimension de int32_t 32 bits
 
 
 
