@@ -182,7 +182,7 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
                                    m(c->rect, 2, nb_r),
                                    m(c->rect, 3, nb_r));
         */
-        sum_f += v(c->weight, nb_r) *val;
+        sum_f += v(c->weight, nb_r) *val;	//Pondération
         nb_r++;
       }
       //if (lg) printf("idxf %d %f\n", f, sum_f);
@@ -251,7 +251,7 @@ int main(int argc, char **argv)
   MI *m;
   MI *r;
   Mr *tr;
-  FILE *trf;
+  FILE *trf;	//Pointeur vers le fichier contenant les seuils
 
   parametre_verbose=sortie=sortie_verbose=erreur=stdout;
   SEUIL_ZERO=1e-6;
@@ -268,12 +268,15 @@ int main(int argc, char **argv)
   strcpy(nomimg,argv[2]);
 
   FILE *f_c=ouvre_fichier_lecture("", argv[1], "r");
+	//On crée la structure de cascade à partir du fichier texte
   Haar_Cascade c;
   Haar_Cascade_read_list(&c, f_c);
   fclose(f_c);
   printf("Haar OK!\n");fflush(stdout);
 
-  MI8u *m8u;
+
+	//On va créer l'image intégrale
+  MI8u *m8u;	//????????????
   int i,j;
   /* lit l'image d'entrée */
   m8u=MI8u_lit_image(NULL, nomimg);
@@ -333,6 +336,11 @@ int main(int argc, char **argv)
   M4I *intcarre;  
   intcarre=M4I_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  m3n2(detect_binary), 2);
   M4I_zero(intcarre);
+/*???????????????????????*/
+
+
+
+
   /* Parcours tous les niveaux d'échelle */
   printf("Echelle\n");
   for(s=0;s<scale_level;s++)
@@ -381,5 +389,5 @@ int main(int argc, char **argv)
   MI8u_ecrit_image_P5(detect_filled, "res/detect_filled.pgm");
   M3I8u_ecrit_image_P5(pyr, "res/pyr.pgm");
   M4I_ecrit_image_P5(intcarre, "res/intcarre.pgm");
-#
+
 }
