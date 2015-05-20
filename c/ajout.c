@@ -49,9 +49,9 @@ void Vr_affiche(int i, Vr* vr, char* s){}
 
 
 
-int getNbStages() {
+int getNbStages(char* doc) {
 	//printf("jbfibfeksbfke");
-	FILE* f = fopen("haarcascade_frontalface_short.txt","r");
+	FILE* f = fopen(doc,"r");
 	int c;
 int nb=0;
 	if(f==NULL) {
@@ -72,9 +72,54 @@ int nb=0;
 
 }
 
+
+void initPlacement(FILE* f){
+	int tmp;
+	do{
+		tmp=fgetc(f);
+	}
+	while(tmp!='D');
+}
+
+
+
+//Le premier stage est le numero 0
+int getNbFeatures(int s, char* doc) {
+	FILE* f = fopen(doc,"r");
+	initPlacement(f);
+	int c;
+	int nb=0;
+	int nb_f=0;
+	if(f==NULL) {
+		printf("Problème lors de l'ouverture du fichier");
+	}
+	else{
+		//On se positionne au bon stage
+		do{
+			c = fgetc(f);
+			if(c=='S') {nb++; 
+			}
+			//printf("coucou");
+		}
+		while(nb!=s && c!=EOF);
+
+		//On compte le nombre de feature
+		do{
+			c=fgetc(f);
+			if(c=='F') {nb_f++;}
+		}
+		while(c!='S' && c!=EOF);
+	}
+	
+	return nb_f;
+	fclose(f);
+
+}
+
 int main(int argc, char *argv[]) {
-printf("coucouuuu");
-	printf("Nombre de stages: %d",getNbStages());
+	char* doc="haarcascade_frontalface_short.txt";
+	printf("Nombre de stages: %d",getNbStages(doc));
+	printf("Nombre de features de S=1: %d", getNbFeatures(0,doc));
 
 }
 
