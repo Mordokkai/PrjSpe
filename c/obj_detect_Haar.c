@@ -11,7 +11,7 @@
 
 typedef struct Haar_Cascade {
   Pixel d;
-  float area, inv_area;
+  float area, inv_area; //area c'est l'aire supérieure gauche du pixel
   MI *rect;
   Vr *weight;
   VI *feature_rect;
@@ -21,15 +21,31 @@ typedef struct Haar_Cascade {
   
 } Haar_Cascade;
 
+
+/*Fonctions manquantes
+vn(*stage_feature) renvoie le nombre de stages
+v(*stage_feature,int s) renvoie le nombre de feature dans le stage d'indice s
+v(*stage_feature_rect,nb_f) renvoie le nombre de rectangles dans le feature d'indice nb_f
+*/
+
+//tableau àune dimension de int32_t 32 bits
+
+
+
+
+
 void Haar_normalize_rects(Haar_Cascade *c)
 {
   unsigned int nb_rect0;
   unsigned int nb_f = 0;
-  unsigned int nb_r = 0;
+  unsigned int nb_r = 0; 
+	//On parcourt tous les stages (Sy)
   for (unsigned int s = 0; s < vn(c->stage_feature); s++) {
+		//On parcourt tous les haarfeatures de ce stage (Sy)
     for (unsigned int f = 0; f < v(c->stage_feature, s); f++) {
       nb_rect0 = nb_r;
       float sum0 = 0;
+			//Parcourt des rectangles de la feature
       for (unsigned int r = 0; r < v(c->feature_rect, nb_f); r++) {
         //v(c->weight, nb_r) *= c->inv_area;
         if (r != 0) {
@@ -43,17 +59,26 @@ void Haar_normalize_rects(Haar_Cascade *c)
   }
   Vr_affiche(1, c->weight , "weight :");
 }
+
+
+
+
+
+
+
 void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
 {
-  int rect_n, feat_n, s_n;
+  int rect_n, feat_n, s_n; //numero rectangle, feature, stage
   char tmp[256];
   int i;
 
 
-  fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y);
+  fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //coord pixel debut
   fscanf(file, "%s %d", tmp, &rect_n);
   fscanf(file, "%s %d", tmp, &feat_n);
   fscanf(file, "%s %d", tmp, &s_n);
+	
+	//Init ?
   c->rect= MI_alloue_special(1, 4, rect_n);
   c->weight= Vr_alloue_special(1, rect_n);
   c->feature_rect= VI_alloue_special(1, feat_n);
@@ -61,18 +86,18 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
   c->stage_feature= VI_alloue_special(1, s_n);
   c->stage_threshold= Vr_alloue_special(1, s_n);
   
-  c->area=1.0*(c->d.x-2)*(c->d.y-2);
+  c->area=1.0*(c->d.x-2)*(c->d.y-2); //Calcul de l'aire supérieure gauche du pixel
   c->inv_area=1.0/c->area;
 
-
-  MI_entree_fichier(c->rect, 4, rect_n, file);
-
-  Vr_entree_fichier(c->weight, rect_n, file);
-  VI_entree_fichier(c->feature_rect, feat_n, file);
-  Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);
+	//Construction ?
+  MI_entree_fichier(c->rect, 4, rect_n, file);			//Construction rectangle ? 4 pour le nombre de trucs à lire ?
+	Vr_entree_fichier(c->weight, rect_n, file);				//Creation poids
+  VI_entree_fichier(c->feature_rect, feat_n, file);	//Creation feature
+  Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);	//3 éléments à lire, seuil, left_value, rightvalue
   VI_entree_fichier(c->stage_feature, s_n, file);
   Vr_entree_fichier(c->stage_threshold, s_n, file);
-  /* Normalise les rectangles */
+  
+/* Normalise les rectangles */
   Haar_normalize_rects(c);
  
 
@@ -94,9 +119,14 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
 
 }
 
+
+
+
+
 /* calcul l'intégrale sur un carre de coin x, y et de largeur (tx,ty) */
 int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
 {
+//L4-L3-L2+L1
   int r=0;
   x=x-1; y=y-1;
   int x1=x+tx, y1=y+ty;
@@ -109,6 +139,11 @@ int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
   r+=m(m, x1, y1);
   return r;
 }
+
+
+
+
+
 
 int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
 {
@@ -147,7 +182,7 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
                                    m(c->rect, 2, nb_r),
                                    m(c->rect, 3, nb_r));
         */
-        sum_f += v(c->weight, nb_r) *val;
+        sum_f += v(c->weight, nb_r) *val;	//Pondération
         nb_r++;
       }
       //if (lg) printf("idxf %d %f\n", f, sum_f);
@@ -187,11 +222,27 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
   return !fail;
 }
 
+
+
+
+
+
 void message_erreur(void)
 {
   fprintf(sortie,"obj_detect_Haar \n");
 }
+
+
+
+
+
+
 void  termine_programme(void){}
+
+
+
+
+
 
 int main(int argc, char **argv)
 {
@@ -200,7 +251,7 @@ int main(int argc, char **argv)
   MI *m;
   MI *r;
   Mr *tr;
-  FILE *trf;
+  FILE *trf;	//Pointeur vers le fichier contenant les seuils
 
   parametre_verbose=sortie=sortie_verbose=erreur=stdout;
   SEUIL_ZERO=1e-6;
@@ -217,12 +268,15 @@ int main(int argc, char **argv)
   strcpy(nomimg,argv[2]);
 
   FILE *f_c=ouvre_fichier_lecture("", argv[1], "r");
+	//On crée la structure de cascade à partir du fichier texte
   Haar_Cascade c;
   Haar_Cascade_read_list(&c, f_c);
   fclose(f_c);
   printf("Haar OK!\n");fflush(stdout);
 
-  MI8u *m8u;
+
+	//On va créer l'image intégrale
+  MI8u *m8u;	//????????????
   int i,j;
   /* lit l'image d'entrée */
   m8u=MI8u_lit_image(NULL, nomimg);
@@ -282,6 +336,11 @@ int main(int argc, char **argv)
   M4I *intcarre;  
   intcarre=M4I_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  m3n2(detect_binary), 2);
   M4I_zero(intcarre);
+/*???????????????????????*/
+
+
+
+
   /* Parcours tous les niveaux d'échelle */
   printf("Echelle\n");
   for(s=0;s<scale_level;s++)
@@ -330,5 +389,5 @@ int main(int argc, char **argv)
   MI8u_ecrit_image_P5(detect_filled, "res/detect_filled.pgm");
   M3I8u_ecrit_image_P5(pyr, "res/pyr.pgm");
   M4I_ecrit_image_P5(intcarre, "res/intcarre.pgm");
-#
+
 }
