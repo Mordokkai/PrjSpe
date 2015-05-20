@@ -11,7 +11,7 @@
 
 typedef struct Haar_Cascade {
   Pixel d;
-  float area, inv_area;
+  float area, inv_area; //area c'est l'aire supérieure gauche du pixel
   MI *rect;
   Vr *weight;
   VI *feature_rect;
@@ -77,7 +77,8 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
   fscanf(file, "%s %d", tmp, &rect_n);
   fscanf(file, "%s %d", tmp, &feat_n);
   fscanf(file, "%s %d", tmp, &s_n);
-
+	
+	//Init ?
   c->rect= MI_alloue_special(1, 4, rect_n);
   c->weight= Vr_alloue_special(1, rect_n);
   c->feature_rect= VI_alloue_special(1, feat_n);
@@ -85,18 +86,18 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
   c->stage_feature= VI_alloue_special(1, s_n);
   c->stage_threshold= Vr_alloue_special(1, s_n);
   
-  c->area=1.0*(c->d.x-2)*(c->d.y-2);
+  c->area=1.0*(c->d.x-2)*(c->d.y-2); //Calcul de l'aire supérieure gauche du pixel
   c->inv_area=1.0/c->area;
 
-
+	//Construction ?
   MI_entree_fichier(c->rect, 4, rect_n, file);			//Construction rectangle ? 4 pour le nombre de trucs à lire ?
-
-  Vr_entree_fichier(c->weight, rect_n, file);				//Creation poids
+	Vr_entree_fichier(c->weight, rect_n, file);				//Creation poids
   VI_entree_fichier(c->feature_rect, feat_n, file);	//Creation feature
   Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);	//3 éléments à lire, seuil, left_value, rightvalue
   VI_entree_fichier(c->stage_feature, s_n, file);
   Vr_entree_fichier(c->stage_threshold, s_n, file);
-  /* Normalise les rectangles */
+  
+/* Normalise les rectangles */
   Haar_normalize_rects(c);
  
 
