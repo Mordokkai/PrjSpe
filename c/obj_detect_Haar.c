@@ -22,12 +22,23 @@ typedef struct Haar_Cascade {
 } Haar_Cascade;
 
 
+/*Fonctions manquantes
+vn(*stage_feature) renvoie le nombre de stages
+v(*stage_feature,int s) renvoie le nombre de feature dans le stage d'indice s
+v(*stage_feature_rect,nb_f) renvoie le nombre de rectangles dans le feature d'indice nb_f
+*/
+
+
+
+
+
+
 
 void Haar_normalize_rects(Haar_Cascade *c)
 {
   unsigned int nb_rect0;
   unsigned int nb_f = 0;
-  unsigned int nb_r = 0;
+  unsigned int nb_r = 0; //Le numéro de rectangle dans un feature d'un stage
 	//On parcourt tous les stages (Sy)
   for (unsigned int s = 0; s < vn(c->stage_feature); s++) {
 		//On parcourt tous les haarfeatures de ce stage (Sy)
