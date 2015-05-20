@@ -1,7 +1,9 @@
+#include "pixmap_io.h"
+#include <stdlib.h>
+#include <stdio.h>
 // x >
 // y V
-
-image integral_image(image i) {
+/*image integral_image(image i) {
 	image ii;
 
 	// Ligne 0
@@ -19,4 +21,16 @@ image integral_image(image i) {
 	}
 
 	return ii;
-}
+}*/
+
+main(int argc, char** argv){
+	unsigned char* data;
+	int width, height;
+	
+	if( (argc>1) && ((data = load_pixmap(argv[1],&width,&height)) != NULL))
+		store_pixmap("clone.pgm",data,width,height);
+	
+	return 0;
+} 
+
+	
