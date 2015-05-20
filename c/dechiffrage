@@ -1,0 +1,27 @@
+Pixel d .x .y
+Vr contient un poids, num rectangle
+	ou un stage threshold et num stage
+
+Mr quand c->feature threholds contient les différentes valeurs de seuils et l numéro de feature
+
+Mi alloué evc numero rectangle
+
+Vi alloué soit avec le numero de stage soit avec le numéro de feature
+Vr alloué soit avec le numero de stage soit avec le numéro de feature
+
+VI c'est feature_rect (num_feature )ou stage_feature (num_stage)
+Vr c'est threshold(num_stage) ou weight(num_rect? poids)
+MI c'est rect, structure représentant un rectangle (num + 4points)
+Mr c'est feature_threshold (num_feature et 3 seuils)
+
+
+
+
+
+Fonctions manquantes
+vn(*stage_feature) renvoie le nombre de stages
+v(*stage_feature,int s) renvoie le nombre de feature dans le stage d'indice s
+v(*stage_feature_rect,nb_f) renvoie le nombre de rectangles dans le feature d'indice nb_f
+
+m(MI* m, int x, int y) renvoie l'aire supérieure
+MI* doit être un pointeur d'image intégrale
