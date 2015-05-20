@@ -32,7 +32,7 @@ return sys_errlist[err];
 
 #include "pixmap_io.h"
 
-#define MAGIC_PGM	"P5\n"
+#define MAGIC_PGM	"P2\n"
 #define MAGIC_PPM	"P6\n"
 
 static int match_key(int fd, char *key)
@@ -120,7 +120,7 @@ static void load_data(int fd, unsigned char *data, long size)
 {
   char *buffer;
   int count;
-
+//printf("%d \n",test);
   buffer = (char *)data;
   while( size > 0 )
     {
@@ -165,11 +165,12 @@ unsigned char *load_pixmap(char *filename, int *width, int *height)
 
   if( (fd = open_read_pixmap(filename, MAGIC_PGM, width, height)) < 0)
     return NULL;
-  size = (long)*width * *height;
+  size = (long)*width * *height *3;
   data = alloc_pixmap(size);
   if( data != NULL )
     load_data(fd, data, size);
   close(fd);
+  //printf("%s \n",data);
   return data;
 }
 
@@ -229,7 +230,7 @@ static void put_pgm_header(int fd, char *magic, int width, int height, char *fil
   char buf[80];
 
   put_header_line(fd, magic);
-  put_header_info(fd, "# ", filename);
+  //put_header_info(fd, "# ", filename);
   sprintf(buf, "%d %d\n255\n", width, height);
   put_header_line(fd, buf);
 }
@@ -252,16 +253,19 @@ static void store_data(int fd, unsigned char *data, long size)
   char *buffer;
   int count;
   
+  
   buffer = (char *)data;
-  while( size > 0 )
-    {
-    count = IO_LEN;
-    if( count > size )
-      count = size;
-    write(fd, buffer, count);
-    buffer += count;
-    size -= count;
-    }
+  //while( size > 0 )
+    //{
+    //count = IO_LEN;
+    //if( count > size )
+      //count = size;
+      
+    printf("%s \n",buffer);  
+    write(fd, buffer, size);
+    //buffer += count;
+    //size -= count;
+    //}
 }
 
 static void store_chunky(int fd, unsigned char *R_data, unsigned char *G_data, unsigned char *B_data, int width, int height)
@@ -291,11 +295,17 @@ static void store_chunky(int fd, unsigned char *R_data, unsigned char *G_data, u
 void store_pixmap(char *filename, unsigned char *data, int width, int height)
 {
   int fd;
-  
+  long size = (long)width*height;
+  int i=0;
+  int j=0;
   if( (fd = open_write(filename)) < 0 )
     return;
   put_pgm_header(fd, MAGIC_PGM, width, height, filename);
-  store_data(fd, data, (long)width*height);
+  //printf("%s \n",data);
+  //store_data(fd, data,size);
+  for(i=0;i<width;i++=){
+  	for (j=0;j<height;j++){
+  		
   close(fd);
 }
 
