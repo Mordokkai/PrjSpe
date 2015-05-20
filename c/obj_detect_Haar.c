@@ -21,15 +21,20 @@ typedef struct Haar_Cascade {
   
 } Haar_Cascade;
 
+
+
 void Haar_normalize_rects(Haar_Cascade *c)
 {
   unsigned int nb_rect0;
   unsigned int nb_f = 0;
   unsigned int nb_r = 0;
+	//On parcourt tous les stages (Sy)
   for (unsigned int s = 0; s < vn(c->stage_feature); s++) {
+		//On parcourt tous les haarfeatures de ce stage (Sy)
     for (unsigned int f = 0; f < v(c->stage_feature, s); f++) {
       nb_rect0 = nb_r;
       float sum0 = 0;
+			//Parcourt des rectangles de la feature
       for (unsigned int r = 0; r < v(c->feature_rect, nb_f); r++) {
         //v(c->weight, nb_r) *= c->inv_area;
         if (r != 0) {
@@ -43,6 +48,13 @@ void Haar_normalize_rects(Haar_Cascade *c)
   }
   Vr_affiche(1, c->weight , "weight :");
 }
+
+
+
+
+
+
+
 void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
 {
   int rect_n, feat_n, s_n;
@@ -94,9 +106,14 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
 
 }
 
+
+
+
+
 /* calcul l'intégrale sur un carre de coin x, y et de largeur (tx,ty) */
 int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
 {
+//L4-L3-L2+L1
   int r=0;
   x=x-1; y=y-1;
   int x1=x+tx, y1=y+ty;
@@ -109,6 +126,11 @@ int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
   r+=m(m, x1, y1);
   return r;
 }
+
+
+
+
+
 
 int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
 {
@@ -187,11 +209,27 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
   return !fail;
 }
 
+
+
+
+
+
 void message_erreur(void)
 {
   fprintf(sortie,"obj_detect_Haar \n");
 }
+
+
+
+
+
+
 void  termine_programme(void){}
+
+
+
+
+
 
 int main(int argc, char **argv)
 {
