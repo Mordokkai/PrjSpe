@@ -5,6 +5,13 @@
 #include "vecteurs.h"
 #include "../../../image_integrale/image_integrale.h"
 
+
+
+/* MACROS*/
+#define v(a,b) a[b]
+#define m(a,i,j) a[i][j]
+#define vn(a) a.dim
+
 int main(int argc, char *argv[]) {
 	char* doc="haarcascade_frontalface_short.txt";
 	printf("Nombre de stages: %d",getNbStages(doc));
@@ -16,6 +23,9 @@ int main(int argc, char *argv[]) {
 	printf("Le rectangle 2 pour F=3 et S=2: %d, %d, %d, %d, %d", r->xi, r->yi, r->tx,r->ty,r->weight);
 	Rect* r1=getRectangle(1, 3, 2, doc);
 	printf("Le rectangle 1 pour F=3 et S=2: %d, %d, %d, %d, %d", r1->xi, r1->yi, r1->tx,r1->ty,r1->weight);
+
+
+
 }
 
 

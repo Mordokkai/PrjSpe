@@ -1,6 +1,6 @@
 // Auteur : Stephane MANCINI
 // stephane.mancini@grenoble-inp.fr
-// 
+//
 #include "base.h"
 #include "parametre.h"
 #include "image.h"
@@ -18,7 +18,7 @@ typedef struct Haar_Cascade {
   Mr *feature_threshold;
   VI *stage_feature;
   Vr *stage_threshold;
-  
+
 } Haar_Cascade;
 
 
@@ -38,7 +38,7 @@ void Haar_normalize_rects(Haar_Cascade *c)
 {
   unsigned int nb_rect0;
   unsigned int nb_f = 0;
-  unsigned int nb_r = 0; 
+  unsigned int nb_r = 0;
 	//On parcourt tous les stages (Sy)
   for (unsigned int s = 0; s < vn(c->stage_feature); s++) {
 		//On parcourt tous les haarfeatures de ce stage (Sy)
@@ -68,16 +68,16 @@ void Haar_normalize_rects(Haar_Cascade *c)
 
 void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
 {
-  int rect_n, feat_n, s_n; //numero rectangle, feature, stage
+  int rect_n, feat_n, s_n; //nombre total de rectangle, feature, stage
   char tmp[256];
   int i;
 
 
-  fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //coord pixel debut
+  fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //taille zone
   fscanf(file, "%s %d", tmp, &rect_n);
   fscanf(file, "%s %d", tmp, &feat_n);
   fscanf(file, "%s %d", tmp, &s_n);
-	
+
 	//Init ?
   c->rect= MI_alloue_special(1, 4, rect_n);
   c->weight= Vr_alloue_special(1, rect_n);
@@ -85,7 +85,7 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
   c->feature_threshold= Mr_alloue_special(1, 3, feat_n);
   c->stage_feature= VI_alloue_special(1, s_n);
   c->stage_threshold= Vr_alloue_special(1, s_n);
-  
+
   c->area=1.0*(c->d.x-2)*(c->d.y-2); //Calcul de l'aire supérieure gauche du pixel
   c->inv_area=1.0/c->area;
 
@@ -96,10 +96,10 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
   Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);	//3 éléments à lire, seuil, left_value, rightvalue
   VI_entree_fichier(c->stage_feature, s_n, file);
   Vr_entree_fichier(c->stage_threshold, s_n, file);
-  
+
 /* Normalise les rectangles */
   Haar_normalize_rects(c);
- 
+
 
 #define PREC 16
   //#define vfixe(a,prec) (trunc((a)*pow(2,prec)))/pow(2,prec)
@@ -135,7 +135,7 @@ int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
   if (x>=0)
     r-=m(m, x, y1);
   if (y>=0)
-    r-=m(m, x1, y);  
+    r-=m(m, x1, y);
   r+=m(m, x1, y1);
   return r;
 }
@@ -153,7 +153,7 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
   float variance=sqrt(variance_sq);
 
   //int lg=(o.x==14 && o.y==6);
- 
+
   unsigned int nb_f = 0;
   unsigned int nb_r = 0;
   unsigned int nb_s = 0;
@@ -170,7 +170,7 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
       // Parcours des rectangles de la feature actuelle et
       // evaluation de ces rectangles sur l'image integrale
       for (unsigned int r = 0; r < v(c->feature_rect, nb_f); r++) {
-        int val= img_int_rect_eval(img_int, 
+        int val= img_int_rect_eval(img_int,
                                    o.x+m(c->rect, 0, nb_r),
                                    o.y+m(c->rect, 1, nb_r),
                                    m(c->rect, 2, nb_r),
@@ -186,7 +186,7 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
         nb_r++;
       }
       //if (lg) printf("idxf %d %f\n", f, sum_f);
-      
+
       //printf("s %f\n", sum_f);
       // sum_f => sum_f * c->area car weight pas divise par c->area
       float th = m(c->feature_threshold, 0, nb_f);
@@ -197,19 +197,19 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
       //if (lg) printf("sum_f %f  %f th %f variance %f t %f\n", sum_f, sum_f*sum_f, th, variance_sq, t);
       if (sum_f>= 0 )
         {
-          if (th>=0) 
+          if (th>=0)
             alpha= test ? 1 : 0;
           else
             alpha=1;
         }
-      else 
+      else
         {
-          if (th>0) 
+          if (th>0)
             alpha= 0;
           else
             alpha= (!test) ? 1 : 0;
         }
-      sum_s += m(c->feature_threshold, 1+alpha, nb_f); 
+      sum_s += m(c->feature_threshold, 1+alpha, nb_f);
       //if (lg) printf("alpha : %d sum_s %f \n", alpha, sum_s);
       nb_f++;
     }
@@ -218,7 +218,7 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
     //if (lg) printf("sum_s : %f , s sth %f\n", sum_s,  v(c->stage_threshold, nb_s));
     nb_s++;
   }
-  
+
   return !fail;
 }
 
@@ -262,7 +262,7 @@ int main(int argc, char **argv)
     }
   /* Des bricoles d'initialisation */
   Texte_initialise(5);
-  
+
   printf("Go!");
   fflush(stdout);
   strcpy(nomimg,argv[2]);
@@ -319,7 +319,7 @@ int main(int argc, char **argv)
   detect_binary_filtered=M3I8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso), scale_level);
   detect_binary_filled=M3I8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso), scale_level);
   cpt_y=VI_alloue_special(1, mn0(mipmapiso));
-  
+
   M3I8u_zero(detect_binary);
   M3I8u_zero(detect_binary_filtered);
   M3I8u_zero(detect_binary_filled);
@@ -333,7 +333,7 @@ int main(int argc, char **argv)
   M3I8u *pyr;
   pyr=M3I8u_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  scale_level);
   M3I8u_zero(pyr);
-  M4I *intcarre;  
+  M4I *intcarre;
   intcarre=M4I_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  m3n2(detect_binary), 2);
   M4I_zero(intcarre);
 /*???????????????????????*/
@@ -366,7 +366,7 @@ int main(int argc, char **argv)
       for(o.y=0; o.y<mn1(scaled)-c.d.y;o.y++)
         for(o.x=0; o.x<mn0(scaled)-c.d.x;o.x++)
           {
-            //    if (  (o.x+ o.y*mn0(scaled))%1000==0) 
+            //    if (  (o.x+ o.y*mn0(scaled))%1000==0)
             // printf("%d %d\n", o.x, o.y);
             if (Haar_evaluate(&c, scaled_int, scaled_sq_int, o))
               {
@@ -378,7 +378,7 @@ int main(int argc, char **argv)
                     m(detect, (int)(o.x/sc+i), (int)(o.y/sc+j))+=10;
               }
           }
-      
+
           }
       sc*=scale;
     }

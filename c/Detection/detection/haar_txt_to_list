@@ -1,0 +1,58 @@
+#!/bin/bash
+awk '
+BEGIN { 
+n_r=0;
+n_rf=0;
+n_f=0;
+n_s=0;
+n_fs=0;
+}
+$1=="D" {
+dim=$0
+}
+$1=="R" {
+rect[n_r]=$2 " " $3 " " $4 " " $5; 
+rect_weight[n_r]=$6;
+n_r++;
+n_rf++;
+}
+$1=="F" {
+feature[n_f]=$2 " " $3 " " $4;
+feature_rect[n_f]=n_rf;
+n_rf=0;
+n_f++;
+n_fs++;
+}
+$1=="S" {
+stage_threshold[n_s]=$2
+stage_feature[n_s]=n_fs;
+n_fs=0;
+n_s++
+}
+END {
+
+print dim;
+print "rect " n_r;
+print "feature " n_f;
+print "stage " n_s;
+
+for(i=0;i<n_r;i++)
+print rect[i]
+
+for(i=0;i<n_r;i++)
+print rect_weight[i]
+
+for(i=0;i<n_f;i++)
+print feature_rect[i];
+
+for(i=0;i<n_f;i++)
+print feature[i];
+
+for(i=0;i<n_s;i++)
+print stage_feature[i];
+
+for(i=0;i<n_s;i++)
+print stage_threshold[i];
+}
+'
+haarcascade_frontalface_short.txt

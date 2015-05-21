@@ -1,20 +1,34 @@
 #include "vecteurs.h"
 
 
+MI MI_alloue_special(int useless, int dim1, int dim2){
+	MI* mi = (MI*) malloc(sizeof(VI));
+	mi->dim1=dim1;
+	mi->dim2=dim2;
+	mi->coeffs=(int *) malloc(dim1*dim2*sizeof(int));
+	return *vi;
+}
 
-
-
-Vr Vr_alloue_special(int dim, int what) {
+Vr Vr_alloue_special(int useless, int dim) {
 	Vr* vr = (Vr*) malloc(sizeof(Vr));
 	vr->dim=dim;
 	vr->coeffs=(float *) malloc(dim*sizeof(float));
 	return *vr;
 }
 
-VI VI_alloue_special(int dim, int what){
+VI VI_alloue_special(int useless, int dim){
 	VI* vi = (VI*) malloc(sizeof(VI));
 	vi->dim=dim;
 	vi->coeffs=(int *) malloc(dim*sizeof(int));
+	return *vi;
+}
+
+
+Mr Mr_alloue_special(int useless, int dim1, int dim2){
+	Mr* mr = (Mr*) malloc(sizeof(Mr));
+	mr->dim1=dim1;
+	mr->dim2=dim2;
+	mr->coeffs=(int *) malloc(dim1*dim2*sizeof(int));
 	return *vi;
 }
 

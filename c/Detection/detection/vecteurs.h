@@ -15,14 +15,18 @@ struct VI{
 typedef struct VI VI;
 
 struct MI{
-
+    int dim1;
+    int dim2;
+	int* coeffs;
 };
 
 typedef struct MI MI;
 
 
 struct Mr{
-
+    int dim1;
+    int dim2;
+    int* coeffs;
 };
 
 typedef struct Mr Mr;
