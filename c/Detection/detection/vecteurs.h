@@ -50,11 +50,10 @@ typedef struct Haar_Cascade {
 
 } Haar_Cascade;
 
-VI VI_alloue_special(int dim, int what);
-Vr Vr_alloue_special(int dim, int what);
-void Vr_desalloue(Vr* vr);
-void affiche_Vr(Vr vr);
-void affiche_VI(VI vi);
+MI* MI_alloue_special(int useless, int dim1, int dim2);
+Vr* Vr_alloue_special(int useless, int dim) ;
+VI* VI_alloue_special(int useless, int dim);
+Mr* Mr_alloue_special(int useless, int dim1, int dim2);
 
 
 
