@@ -27,17 +27,16 @@ int32_t* integral_image(unsigned char* img, int width, int height) {
 	return ii;
 }
 
-main(int argc, char** argv){
+int32_t* int_img(char* fichier, int* width, int* height, int* lumin){
 	unsigned char* data;
 	unsigned char buffer[3];
-	int width, height, lumin;
     int i, j;
     
-	if(!( (argc>1) && ((data = load_pixmap(argv[1],&width,&height,&lumin)) != NULL))) {
-		printf("Utilisation :\n./image_integrale \"fichier.pgm\"\n");
-		exit(0);
+	if( (data = load_pixmap(fichier,width,height,lumin)) == NULL) {
+		printf("Erreur à la lecture de l'image");
+		exit(1);
 	}
-	unsigned char* image = calloc(width*height, sizeof(unsigned char));
+	unsigned char* image = calloc((*width)*(*height), sizeof(unsigned char));
 	buffer[0] = '0';
 	buffer[1] = '0';
 	buffer[2] = '0';
@@ -77,6 +76,17 @@ main(int argc, char** argv){
 		}
 	}
 	
+	return integral_image(image, *width, *height);
+}
+
+main(int argc, char** argv){
+	int width, height, lumin;
+	if(argc!=2) {
+		printf("Utilisation :\n./image_integrale \"fichier.pgm\"\n");
+		exit(1);
+	}
+	int32_t* int_image = int_img(argv[1], &width, &height, &lumin);
+	
 	// Affichage de image
     /*for (j = 0; j < height; j++) {
 		for (i = 0; i < width; i++) {
@@ -84,10 +94,9 @@ main(int argc, char** argv){
 		}
 		printf("\n");
 	}*/
-	
-    int32_t* int_image = integral_image(image, width, height);
     
     // Affichage de l'image intégrale
+    int i, j;
     for (j = 0; j < height; j++) {
 		for (i = 0; i < width; i++) {
                 printf("%d\t",*(int_image+j*width+i));
