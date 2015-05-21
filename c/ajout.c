@@ -233,13 +233,14 @@ printf("stageeee");
 		char *tmp;
 		int i=0;
 		while(i<nb_r){
-			do{c=fgetc(f);} while(c!='R' && c!=EOF);
-			char* s;
-			fgets(s,10,f);
-			printf("AAAAAAAAAA %s",s);
-			fscanf(f, "%d %d %d %d %d %d",&c, &(rect->xi),&(rect->yi),&(rect->tx),&(rect->ty),&(rect->weight));
-			printf("Le rectangle 2 pour F=3 et S=3: %d, %d, %d, %d, %d", rect->xi, rect->yi, rect->tx,rect->ty,rect->weight);
-			printf("on y est");
+			do{c=fgetc(f); } while(c!='R' && c!=EOF);
+			//char* s = calloc(10,sizeof(char));
+			//fgets(s,10,f);
+			//fseek(f,2,SEEK_SET);
+			//printf("AAAAAAAAAA %s",s);
+			fscanf(f, "%d %d %d %d %d",&(rect->xi),&(rect->yi),&(rect->tx),&(rect->ty),&(rect->weight));
+			//printf("Le rectangle 2 pour F=3 et S=3: %d, %d, %d, %d, %d", rect->xi, rect->yi, rect->tx,rect->ty,rect->weight);
+			//printf("on y est");
 			i++;
 		}
 		
@@ -256,13 +257,15 @@ printf("stageeee");
 
 int main(int argc, char *argv[]) {
 	char* doc="haarcascade_frontalface_short.txt";
-	printf("Nombre de stages: %d",getNbStages(doc));
-	printf("Nombre de features de S=1: %d", getNbFeatures(0,doc));
-	printf("Le seuil pour S=1: %.16f", getSeuil(0,doc));
-	Feature* feature = getFeature(3, 1, doc);
-	printf("Le feature 3 pour S=1: %.16f, %.16f, %.16f", feature->seuil, feature->lvalue, feature->rvalue);
-	Rect* r=getRectangle(2, 3, 3, doc);
-	printf("Le rectangle 2 pour F=3 et S=3: %d, %d, %d, %d, %d", r->xi, r->yi, r->tx,r->ty,r->weight);
+	//printf("Nombre de stages: %d",getNbStages(doc));
+	//printf("Nombre de features de S=1: %d", getNbFeatures(0,doc));
+	//printf("Le seuil pour S=1: %.16f", getSeuil(0,doc));
+	//Feature* feature = getFeature(3, 1, doc);
+	//printf("Le feature 3 pour S=1: %.16f, %.16f, %.16f", feature->seuil, feature->lvalue, feature->rvalue);
+	Rect* r=getRectangle(2, 3, 2, doc);
+	printf("Le rectangle 2 pour F=3 et S=2: %d, %d, %d, %d, %d", r->xi, r->yi, r->tx,r->ty,r->weight);
+	Rect* r1=getRectangle(1, 3, 2, doc);
+	printf("Le rectangle 1 pour F=3 et S=2: %d, %d, %d, %d, %d", r1->xi, r1->yi, r1->tx,r1->ty,r1->weight);
 }
 
 
