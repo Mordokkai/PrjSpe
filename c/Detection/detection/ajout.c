@@ -1,38 +1,14 @@
-
-/* LES STRUCTURES
-
-*/
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
 #include "ajout.h"
-
-
 
 //int v(VI* vi, unsigned int s){return 0;}
 //int vn(VI* vi){return 0;}
 //int m(MI* m,int x, int y){return 0;}
 //void Vr_affiche(int i, Vr* vr, char* s){}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int getNbStages(char* doc) {
-	//printf("jbfibfeksbfke");
-	FILE* f = fopen(doc,"r");
+int getNbStages(FILE* f) {
 	int c;
 int nb=0;
 	if(f==NULL) {
@@ -48,12 +24,12 @@ int nb=0;
 		while(c!=EOF);
 	}
 	return nb;
-	fclose(f);
 
 }
 
 
 void initPlacement(FILE* f){
+	fseek(f, 0, SEEK_SET);
 	int tmp;
 	do{
 		tmp=fgetc(f);
@@ -64,8 +40,7 @@ void initPlacement(FILE* f){
 
 
 //Le premier stage est le numero 0
-int getNbFeatures(int s, char* doc) {
-	FILE* f = fopen(doc,"r");
+int getNbFeatures(int s, FILE*f) {
 	initPlacement(f);
 	int c;
 	int nb=0;
@@ -91,14 +66,12 @@ int getNbFeatures(int s, char* doc) {
 	}
 
 	return nb_f;
-	fclose(f);
 
 }
 
 //Un float est codé sur 32 bits
-float getSeuil(int n_s, char* doc) {
+float getSeuil(int n_s, FILE* f) {
 
-	FILE* f = fopen(doc,"r");
 	initPlacement(f);
 	int c;
 	int nb=-1;
@@ -117,13 +90,11 @@ float getSeuil(int n_s, char* doc) {
 		while(n_s!=nb && c!=EOF);
 		fscanf(f, "%f",&resultat);
 	return resultat;
-	fclose(f);
 	}
 }
 
 
-Feature* getFeature(int nb_f, int n_s, char* doc){
-	FILE* f = fopen(doc,"r");
+Feature* getFeature(int nb_f, int n_s, FILE* f){
 	initPlacement(f);
 	int c;
 	int nb=0;
@@ -153,14 +124,12 @@ Feature* getFeature(int nb_f, int n_s, char* doc){
 
 		fscanf(f,"%f %f %f", &(feature->seuil), &(feature->lvalue), &(feature->rvalue));
 		return feature;
-	fclose(f);
 	}
 }
 
 
 
-Rect* getRectangle(int nb_r, int nb_f, int n_s, char* doc){
-	FILE* f = fopen(doc,"r");
+Rect* getRectangle(int nb_r, int nb_f, int n_s, FILE *f){
 	initPlacement(f);
 	int c;
 	int nb=0;
@@ -198,7 +167,6 @@ Rect* getRectangle(int nb_r, int nb_f, int n_s, char* doc){
 		}
 
 		return rect;
-	fclose(f);
 	}
 
 
@@ -207,21 +175,7 @@ Rect* getRectangle(int nb_r, int nb_f, int n_s, char* doc){
 
 
 
-/*
-int main(int argc, char *argv[]) {
-	char* doc="haarcascade_frontalface_short.txt";
-	//printf("Nombre de stages: %d",getNbStages(doc));
-	//printf("Nombre de features de S=1: %d", getNbFeatures(0,doc));
-	//printf("Le seuil pour S=1: %.16f", getSeuil(0,doc));
-	//Feature* feature = getFeature(3, 1, doc);
-	//printf("Le feature 3 pour S=1: %.16f, %.16f, %.16f", feature->seuil, feature->lvalue, feature->rvalue);
-	Rect* r=getRectangle(2, 3, 2, doc);
-	printf("Le rectangle 2 pour F=3 et S=2: %d, %d, %d, %d, %d", r->xi, r->yi, r->tx,r->ty,r->weight);
-	Rect* r1=getRectangle(1, 3, 2, doc);
-	printf("Le rectangle 1 pour F=3 et S=2: %d, %d, %d, %d, %d", r1->xi, r1->yi, r1->tx,r1->ty,r1->weight);
-}
 
-*/
 
 
 
