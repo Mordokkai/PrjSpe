@@ -62,4 +62,9 @@ Vr_entree_fichier(Vr* vr, int nbLig, FILE* f);
 VI_entree_fichier(VI* vi, int nbLig, FILE* f);
 Mr_entree_fichier(Mr* mr, int nbCol, int nbLig, FILE* f);
 
+
+void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file);
+void Haar_normalize_rects(Haar_Cascade *c);
+void Vr_affiche(int i, Vr* vr , char* s);
+
 #endif

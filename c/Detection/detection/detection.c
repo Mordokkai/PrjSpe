@@ -34,6 +34,12 @@ int main(int argc, char *argv[]) {
   int i;
     Haar_Cascade* c = malloc(sizeof(Haar_Cascade));
 
+    Haar_Cascade_read_list(c,file);
+
+
+
+
+/*
   fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //taille zone
   fscanf(file, "%s %d", tmp, &rect_n);
   fscanf(file, "%s %d", tmp, &feat_n);
@@ -66,8 +72,9 @@ afficher_Vr(c->weight);
 afficher_VI(c->feature_rect);
 afficher_Mr(c->feature_threshold);
 afficher_VI(c->stage_feature);
-afficher_Vr(c->stage_threshold);
+afficher_Vr(c->stage_threshold);*/
 fclose(file);
+
 }
 
 

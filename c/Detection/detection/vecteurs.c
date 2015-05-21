@@ -1,5 +1,13 @@
 #include "vecteurs.h"
 
+
+
+/**MACROS**/
+#define v(a,i) a->coeffs[i]
+#define m(a,i,j) a->coeffs[i*a->dim2+j]
+#define mn1(a) a->dim1
+#define mn0(a) a->dim2
+#define vn(a) a->dim
 /**ALLOCATIONS**/
 
 
@@ -125,5 +133,116 @@ void afficher_VI(VI* vi){
     for(i=0;i<vi->dim;i++){
     printf("%d\n", *(vi->coeffs++));
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
+{
+  int rect_n, feat_n, s_n; //nombre total de rectangle, feature, stage
+  char tmp[256];
+  int i;
+
+
+  fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //taille zone
+  fscanf(file, "%s %d", tmp, &rect_n);
+  fscanf(file, "%s %d", tmp, &feat_n);
+  fscanf(file, "%s %d", tmp, &s_n);
+
+	//Init ?
+  c->rect= MI_alloue_special(1, 4, rect_n);
+  c->weight= Vr_alloue_special(1, rect_n);
+  c->feature_rect= VI_alloue_special(1, feat_n);
+  c->feature_threshold= Mr_alloue_special(1, 3, feat_n);
+  c->stage_feature= VI_alloue_special(1, s_n);
+  c->stage_threshold= Vr_alloue_special(1, s_n);
+
+  c->area=1.0*(c->d.x-2)*(c->d.y-2); //Calcul de l'aire supérieure gauche du pixel
+  c->inv_area=1.0/c->area;
+
+	//Construction ?
+  MI_entree_fichier(c->rect, 4, rect_n, file);			//Construction rectangle ? 4 pour le nombre de trucs à lire ?
+	Vr_entree_fichier(c->weight, rect_n, file);				//Creation poids
+  VI_entree_fichier(c->feature_rect, feat_n, file);	//Creation feature
+  Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);	//3 éléments à lire, seuil, left_value, rightvalue
+  VI_entree_fichier(c->stage_feature, s_n, file);
+  Vr_entree_fichier(c->stage_threshold, s_n, file);
+
+/* Normalise les rectangles */
+  Haar_normalize_rects(c);
+
+
+#define PREC 16
+  //#define vfixe(a,prec) (trunc((a)*pow(2,prec)))/pow(2,prec)
+
+#define vfixe(a,prec) a
+
+    int j,k;
+    for(i=0;i<vn(c->weight);i++)
+      v(c->weight, i)= vfixe(v(c->weight, i), 14);
+
+    for(j=0;j<mn1(c->feature_threshold);j++)
+      for(i=0;i<mn0(c->feature_threshold);i++)
+        m(c->feature_threshold, i, j) = vfixe( m(c->feature_threshold, i, j), PREC);
+
+    for(i=0;i<vn(c->stage_threshold);i++)
+      v(c->stage_threshold, i)= vfixe(v(c->stage_threshold, i), PREC);
+
+}
+
+
+void Haar_normalize_rects(Haar_Cascade *c)
+{
+  unsigned int nb_rect0;
+  unsigned int nb_f = 0;
+  unsigned int nb_r = 0;
+	//On parcourt tous les stages (Sy)
+	unsigned int s=0;
+  for (s = 0; s < vn(c->stage_feature); s++) {
+		//On parcourt tous les haarfeatures de ce stage (Sy)
+    unsigned int f=0;
+    for (f = 0; f < v(c->stage_feature, s); f++) {
+      nb_rect0 = nb_r;
+      float sum0 = 0;
+			//Parcourt des rectangles de la feature
+        unsigned int r=0;
+      for (r = 0; r < v(c->feature_rect, nb_f); r++) {
+        //v(c->weight, nb_r) *= c->inv_area;
+        if (r != 0) {
+          sum0 += v(c->weight, nb_r) * 1.0*( m(c->rect, 2, nb_r) * m(c->rect, 3, nb_r));
+        }
+        nb_r++;
+      }
+      v(c->weight, nb_rect0) = -sum0 / (1.0*(m(c->rect, 2, nb_rect0) * m(c->rect, 3, nb_rect0)));
+      nb_f++;
+    }
+  }
+  afficher_Vr(c->weight);
+  //Vr_affiche(1, c->weight , "weight :");
 }
 
