@@ -3,7 +3,7 @@
 #include "detection.h"
 #include "ajout.h"
 #include "vecteurs.h"
-#include "../../../image_integrale/image_integrale.h"
+#include "../../image_integrale/image_integrale.h"
 
 
 

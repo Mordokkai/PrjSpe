@@ -1,5 +1,7 @@
 #ifndef VECTEURS__H
 #define VECTEURS__H
+#include <stdio.h>
+#include <stdlib.h>
 struct Vr{
 	int dim;
 	float* coeffs;
@@ -53,4 +55,12 @@ Vr Vr_alloue_special(int dim, int what);
 void Vr_desalloue(Vr* vr);
 void affiche_Vr(Vr vr);
 void affiche_VI(VI vi);
+
+
+
+MI_entree_fichier(MI* mi, int nbCol, int nbLig, FILE* f);
+Vr_entree_fichier(Vr* vr, int nbLig, FILE* f);
+VI_entree_fichier(VI* vi, int nbLig, FILE* f);
+Mr_entree_fichier(Mr* mr, int nbCol, int nbLig, FILE* f);
+
 #endif
