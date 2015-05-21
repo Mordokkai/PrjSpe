@@ -5,8 +5,8 @@
 /**MACROS**/
 #define v(a,i) a->coeffs[i]
 #define m(a,i,j) a->coeffs[i*a->dim2+j]
-#define mn1(a) a->dim1
-#define mn0(a) a->dim2
+#define mn0(a) a->dim1
+#define mn1(a) a->dim2
 #define vn(a) a->dim
 /**ALLOCATIONS**/
 
@@ -123,8 +123,10 @@ void afficher_Mr(Mr* mr){
 void afficher_Vr(Vr* vr){
     printf("La dimension du Vr est: %d",vr->dim);
     int i=0;
+    float* p=vr->coeffs;
     for(i=0;i<vr->dim;i++){
-    printf("%f\n", *(vr->coeffs++));
+    printf("%f\n", *(p));
+    p++;
     }
 }
 void afficher_VI(VI* vi){
@@ -201,7 +203,7 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
   //#define vfixe(a,prec) (trunc((a)*pow(2,prec)))/pow(2,prec)
 
 #define vfixe(a,prec) a
-
+printf("HERE WE GO!!!!");
     int j,k;
     for(i=0;i<vn(c->weight);i++)
       v(c->weight, i)= vfixe(v(c->weight, i), 14);
