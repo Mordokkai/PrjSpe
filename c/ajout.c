@@ -254,7 +254,7 @@ printf("stageeee");
 
 
 
-
+/*
 int main(int argc, char *argv[]) {
 	char* doc="haarcascade_frontalface_short.txt";
 	//printf("Nombre de stages: %d",getNbStages(doc));
@@ -268,7 +268,7 @@ int main(int argc, char *argv[]) {
 	printf("Le rectangle 1 pour F=3 et S=2: %d, %d, %d, %d, %d", r1->xi, r1->yi, r1->tx,r1->ty,r1->weight);
 }
 
-
+*/
 
 
 
