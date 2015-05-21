@@ -1,4 +1,3 @@
-//#include "ajout.h"
 
 /* LES STRUCTURES
 
@@ -7,48 +6,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
-
-typedef struct {
-	int x;
-	int y;
-} Pixel;
-
-typedef struct {
-
-} MI;
-
-typedef struct {
-
-} Vr;
-
-typedef struct {
-	int num;
-} VI;
-
-typedef struct {
-
-} Mr;
-
-typedef struct {
-	float seuil;
-	float lvalue;
-	float rvalue;
-} Feature;
-
-typedef struct {
-	int xi;
-	int yi;
-	int tx;
-	int ty;
-	int weight;
-} Rect;
+#include "ajout.h"
 
 
 
-int v(VI* vi, unsigned int s){return 0;}
-int vn(VI* vi){return 0;}
-int m(MI* m,int x, int y){return 0;}
-void Vr_affiche(int i, Vr* vr, char* s){}
+//int v(VI* vi, unsigned int s){return 0;}
+//int vn(VI* vi){return 0;}
+//int m(MI* m,int x, int y){return 0;}
+//void Vr_affiche(int i, Vr* vr, char* s){}
 
 
 
@@ -74,12 +39,11 @@ int nb=0;
 		printf("Problème lors de l'ouverture du fichier");
 	}
 	else{
-		
+
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
+			if(c=='S') {nb++;
 			printf("%d",nb);}
-			//printf("coucou");
 		}
 		while(c!=EOF);
 	}
@@ -113,9 +77,8 @@ int getNbFeatures(int s, char* doc) {
 		//On se positionne au bon stage
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
+			if(c=='S') {nb++;
 			}
-			//printf("coucou");
 		}
 		while(nb!=s && c!=EOF);
 
@@ -126,7 +89,7 @@ int getNbFeatures(int s, char* doc) {
 		}
 		while(c!='S' && c!=EOF);
 	}
-	
+
 	return nb_f;
 	fclose(f);
 
@@ -134,7 +97,7 @@ int getNbFeatures(int s, char* doc) {
 
 //Un float est codé sur 32 bits
 float getSeuil(int n_s, char* doc) {
-	
+
 	FILE* f = fopen(doc,"r");
 	initPlacement(f);
 	int c;
@@ -147,13 +110,12 @@ float getSeuil(int n_s, char* doc) {
 		//On se positionne au bon stage
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
+			if(c=='S') {nb++;
 			}
 			//printf("coucou");
 		}
 		while(n_s!=nb && c!=EOF);
 		fscanf(f, "%f",&resultat);
-		//printf("Recupéré en poubelle: %d", tmp);
 	return resultat;
 	fclose(f);
 	}
@@ -174,19 +136,18 @@ Feature* getFeature(int nb_f, int n_s, char* doc){
 		//On se positionne au bon stage
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
+			if(c=='S') {nb++;
 			}
-			//printf("coucou");
 		}
 		while(n_s!=nb && c!=EOF);
-		
+
 		//On se positionne au bon feature
 		int num_f=0;
 		do{
 			c = fgetc(f);
-			if(c=='F') {num_f++; 
+			if(c=='F') {num_f++;
 			}
-			
+
 		}
 		while(num_f!= nb_f && c!='S' && c!=EOF);
 
@@ -212,21 +173,19 @@ Rect* getRectangle(int nb_r, int nb_f, int n_s, char* doc){
 		//On se positionne au bon stage
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
-printf("stageeee");
+			if(c=='S') {nb++;
 			}
-			
+
 		}
 		while(n_s!=nb && c!=EOF);
-		
+
 		//On se positionne au bon feature-1
 		int num_f=0;
 		do{
 			c = fgetc(f);
-			if(c=='F') {num_f++; 
-			printf("featureeee");
+			if(c=='F') {num_f++;
 			}
-			
+
 		}
 		while(num_f<= nb_f-1 && c!=EOF);
 		//On se positionne au bon rectangle
@@ -234,16 +193,10 @@ printf("stageeee");
 		int i=0;
 		while(i<nb_r){
 			do{c=fgetc(f); } while(c!='R' && c!=EOF);
-			//char* s = calloc(10,sizeof(char));
-			//fgets(s,10,f);
-			//fseek(f,2,SEEK_SET);
-			//printf("AAAAAAAAAA %s",s);
 			fscanf(f, "%d %d %d %d %d",&(rect->xi),&(rect->yi),&(rect->tx),&(rect->ty),&(rect->weight));
-			//printf("Le rectangle 2 pour F=3 et S=3: %d, %d, %d, %d, %d", rect->xi, rect->yi, rect->tx,rect->ty,rect->weight);
-			//printf("on y est");
 			i++;
 		}
-		
+
 		return rect;
 	fclose(f);
 	}
