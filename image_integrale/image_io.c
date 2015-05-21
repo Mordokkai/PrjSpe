@@ -52,9 +52,6 @@ unsigned char* lire_image(char* fichier, int* width, int* height, int* lumin) {
 			cpt2++;
 		}
 	}
-	printf("%s", data);
-	printf("\n");
-	printf("\n");
 	return image;
 }
 
@@ -90,7 +87,5 @@ void ecrire_image(char* fichier, unsigned char* image, int width, int height, in
 		}
 		cpt3++;
 	}
-	printf("%s", data);
-	printf("\n");
 	store_pixmap(fichier,data,width,lumin,height);
 }
