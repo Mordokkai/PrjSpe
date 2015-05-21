@@ -18,10 +18,10 @@ typedef struct {
 } Rect;
 
 
-int getNbStages(char* doc);
+int getNbStages();
 void initPlacement(FILE* f);
-int getNbFeatures(int s, char* doc);
-float getSeuil(int n_s, char* doc);
-Feature* getFeature(int nb_f, int n_s, char* doc);
-Rect* getRectangle(int nb_r, int nb_f, int n_s, char* doc);
+int getNbFeatures(int s, FILE * f);
+float getSeuil(int n_s, FILE * f);
+Feature* getFeature(int nb_f, int n_s, FILE * f);
+Rect* getRectangle(int nb_r, int nb_f, int n_s, FILE * f);
 #endif
