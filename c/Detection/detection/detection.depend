@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1432200635 source:/home/mordokkai/Bureau/PrjSpe/c/Detection/detection/ajout.c
+	<stdlib.h>
+	<stdio.h>
+	<inttypes.h>
+	"ajout.h"
+
+1432200406 /home/mordokkai/Bureau/PrjSpe/c/Detection/detection/ajout.h
+
+1432200343 source:/home/mordokkai/Bureau/PrjSpe/c/Detection/detection/detection.c
+	<stdlib.h>
+	<stdio.h>
+	"detection.h"
+	"ajout.h"
+	"vecteurs.h"
+	"../../../image_integrale/image_integrale.h"
+
+1432199754 /home/mordokkai/Bureau/PrjSpe/c/Detection/detection/detection.h
+
+1432200542 /home/mordokkai/Bureau/PrjSpe/c/Detection/detection/vecteurs.h
+
+1432197504 /home/mordokkai/Bureau/PrjSpe/image_integrale/image_integrale.h
+
+1432200509 source:/home/mordokkai/Bureau/PrjSpe/c/Detection/detection/vecteurs.c
+	"vecteurs.h"
+

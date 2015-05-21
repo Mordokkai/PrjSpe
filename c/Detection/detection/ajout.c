@@ -1,4 +1,3 @@
-//#include "ajout.h"
 
 /* LES STRUCTURES
 
@@ -7,48 +6,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
-
-typedef struct {
-	int x;
-	int y;
-} Pixel;
-
-typedef struct {
-
-} MI;
-
-typedef struct {
-
-} Vr;
-
-typedef struct {
-	int num;
-} VI;
-
-typedef struct {
-
-} Mr;
-
-typedef struct {
-	float seuil;
-	float lvalue;
-	float rvalue;
-} Feature;
-
-typedef struct {
-	int xi;
-	int yi;
-	int tx;
-	int ty;
-	int weight;
-} Rect;
+#include "ajout.h"
 
 
 
-int v(VI* vi, unsigned int s){return 0;}
-int vn(VI* vi){return 0;}
-int m(MI* m,int x, int y){return 0;}
-void Vr_affiche(int i, Vr* vr, char* s){}
+//int v(VI* vi, unsigned int s){return 0;}
+//int vn(VI* vi){return 0;}
+//int m(MI* m,int x, int y){return 0;}
+//void Vr_affiche(int i, Vr* vr, char* s){}
 
 
 
@@ -74,12 +39,11 @@ int nb=0;
 		printf("Problème lors de l'ouverture du fichier");
 	}
 	else{
-		
+
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
+			if(c=='S') {nb++;
 			printf("%d",nb);}
-			//printf("coucou");
 		}
 		while(c!=EOF);
 	}
@@ -113,9 +77,8 @@ int getNbFeatures(int s, char* doc) {
 		//On se positionne au bon stage
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
+			if(c=='S') {nb++;
 			}
-			//printf("coucou");
 		}
 		while(nb!=s && c!=EOF);
 
@@ -126,7 +89,7 @@ int getNbFeatures(int s, char* doc) {
 		}
 		while(c!='S' && c!=EOF);
 	}
-	
+
 	return nb_f;
 	fclose(f);
 
@@ -134,7 +97,7 @@ int getNbFeatures(int s, char* doc) {
 
 //Un float est codé sur 32 bits
 float getSeuil(int n_s, char* doc) {
-	
+
 	FILE* f = fopen(doc,"r");
 	initPlacement(f);
 	int c;
@@ -147,13 +110,12 @@ float getSeuil(int n_s, char* doc) {
 		//On se positionne au bon stage
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
+			if(c=='S') {nb++;
 			}
 			//printf("coucou");
 		}
 		while(n_s!=nb && c!=EOF);
 		fscanf(f, "%f",&resultat);
-		//printf("Recupéré en poubelle: %d", tmp);
 	return resultat;
 	fclose(f);
 	}
@@ -174,19 +136,18 @@ Feature* getFeature(int nb_f, int n_s, char* doc){
 		//On se positionne au bon stage
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
+			if(c=='S') {nb++;
 			}
-			//printf("coucou");
 		}
 		while(n_s!=nb && c!=EOF);
-		
+
 		//On se positionne au bon feature
 		int num_f=0;
 		do{
 			c = fgetc(f);
-			if(c=='F') {num_f++; 
+			if(c=='F') {num_f++;
 			}
-			
+
 		}
 		while(num_f!= nb_f && c!='S' && c!=EOF);
 
@@ -212,37 +173,30 @@ Rect* getRectangle(int nb_r, int nb_f, int n_s, char* doc){
 		//On se positionne au bon stage
 		do{
 			c = fgetc(f);
-			if(c=='S') {nb++; 
-printf("stageeee");
+			if(c=='S') {nb++;
 			}
-			
+
 		}
 		while(n_s!=nb && c!=EOF);
-		
+
 		//On se positionne au bon feature-1
 		int num_f=0;
 		do{
 			c = fgetc(f);
-			if(c=='F') {num_f++; 
-			printf("featureeee");
+			if(c=='F') {num_f++;
 			}
-			
+
 		}
 		while(num_f<= nb_f-1 && c!=EOF);
 		//On se positionne au bon rectangle
 		char *tmp;
 		int i=0;
 		while(i<nb_r){
-			do{c=fgetc(f);} while(c!='R' && c!=EOF);
-			char* s;
-			fgets(s,10,f);
-			printf("AAAAAAAAAA %s",s);
-			fscanf(f, "%d %d %d %d %d %d",&c, &(rect->xi),&(rect->yi),&(rect->tx),&(rect->ty),&(rect->weight));
-			printf("Le rectangle 2 pour F=3 et S=3: %d, %d, %d, %d, %d", rect->xi, rect->yi, rect->tx,rect->ty,rect->weight);
-			printf("on y est");
+			do{c=fgetc(f); } while(c!='R' && c!=EOF);
+			fscanf(f, "%d %d %d %d %d",&(rect->xi),&(rect->yi),&(rect->tx),&(rect->ty),&(rect->weight));
 			i++;
 		}
-		
+
 		return rect;
 	fclose(f);
 	}
@@ -253,19 +207,21 @@ printf("stageeee");
 
 
 
-
+/*
 int main(int argc, char *argv[]) {
 	char* doc="haarcascade_frontalface_short.txt";
-	printf("Nombre de stages: %d",getNbStages(doc));
-	printf("Nombre de features de S=1: %d", getNbFeatures(0,doc));
-	printf("Le seuil pour S=1: %.16f", getSeuil(0,doc));
-	Feature* feature = getFeature(3, 1, doc);
-	printf("Le feature 3 pour S=1: %.16f, %.16f, %.16f", feature->seuil, feature->lvalue, feature->rvalue);
-	Rect* r=getRectangle(2, 3, 3, doc);
-	printf("Le rectangle 2 pour F=3 et S=3: %d, %d, %d, %d, %d", r->xi, r->yi, r->tx,r->ty,r->weight);
+	//printf("Nombre de stages: %d",getNbStages(doc));
+	//printf("Nombre de features de S=1: %d", getNbFeatures(0,doc));
+	//printf("Le seuil pour S=1: %.16f", getSeuil(0,doc));
+	//Feature* feature = getFeature(3, 1, doc);
+	//printf("Le feature 3 pour S=1: %.16f, %.16f, %.16f", feature->seuil, feature->lvalue, feature->rvalue);
+	Rect* r=getRectangle(2, 3, 2, doc);
+	printf("Le rectangle 2 pour F=3 et S=2: %d, %d, %d, %d, %d", r->xi, r->yi, r->tx,r->ty,r->weight);
+	Rect* r1=getRectangle(1, 3, 2, doc);
+	printf("Le rectangle 1 pour F=3 et S=2: %d, %d, %d, %d, %d", r1->xi, r1->yi, r1->tx,r1->ty,r1->weight);
 }
 
-
+*/
 
 
 
