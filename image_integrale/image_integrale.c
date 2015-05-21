@@ -28,20 +28,29 @@ int32_t* integral_image(unsigned char* img, int width, int height) {
 
 main(int argc, char** argv){
 	unsigned char* image;
-	int width, height;
+	int width, height, lumin;
     int i, j;
+    int tab= 0;
 
-    image = load_pixmap("../img/feep.pgm",&width,&height);
+    image = load_pixmap("../img/feep.pgm",&width,&height,&lumin);
+    printf("%c \n \n \n",image[5]);
 	for (i=0; i < width*height; i++){
-		printf("%d\n", atoi(image+i));
+		printf("%d  ", atoi(image+i));
+		if(tab == width -1)
+		{
+			printf("\n");
+			tab = 0;
+		}	
+		tab++;
+		
 	}
-    for (j = 0; j < height; j++) {
+    /*for (j = 0; j < height; j++) {
 		for (i = 0; i < width; i++) {
                 printf("%d ",(unsigned char) atoi(image+j*width+i));
 		}
 		printf("\n");
 	}
-    int32_t* int_image = integral_image(image, width, height);
+    int32_t* int_image = integral_image(image, width, height);*/
     /*for (j = 0; j < height; j++) {
 		for (i = 0; i < width; i++) {
                 printf("%d ",*(int_image+j*width+i));
