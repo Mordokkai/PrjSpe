@@ -62,21 +62,33 @@ void affiche_VI(VI vi){
 /**CONSTRUCTION**/
 MI_entree_fichier(MI* mi, int nbCol, int nbLig, FILE* f){
 int i=0;
-char s[255];
-while(i<nbLig){
-    fscanf(f,"%d %d %d %d",&(mi->coeffs)[4*i+3],&(mi->coeffs)[4*i+2],&(mi->coeffs)[4*i+1],&(mi->coeffs)[4*i+0],&s);
+while(i<nbLig*nbCol){
+    fscanf(f,"%d ",&(mi->coeffs)[i]);
     i++;
 }
 }
 
 Vr_entree_fichier(Vr* vr, int nbLig, FILE* f){
-
+int i=0;
+while(i<nbLig){
+    fscanf(f,"%f",&(vr->coeffs)[i]);
+    i++;
+}
 }
 VI_entree_fichier(VI* vi, int nbLig, FILE* f){
-
+int i=0;
+while(i<nbLig){
+    fscanf(f,"%d",&(vi->coeffs)[i]);
+    i++;
+}
 }
 Mr_entree_fichier(Mr* mr, int nbCol, int nbLig, FILE* f){
-
+int i=0;
+while(i<nbLig*nbCol){
+    fscanf(f,"%f ",&(mr->coeffs)[i]);
+    //printf("youpi");
+    i++;
+}
 }
 
 
@@ -88,5 +100,30 @@ void afficher_MI(MI* mi){
     }
 }
 
+void afficher_Mr(Mr* mr){
+    printf("Les dimensions du Mr sont: %d %d",mr->dim1,mr->dim2);
+    int i=0;
+    for(i=0;i<mr->dim2;i++){
+        int j=0;
+        for(j=0;j<mr->dim1;j++){
+            printf("%f ", *(mr->coeffs++));
+        }
+        printf("\n");
+    }
+}
 
+void afficher_Vr(Vr* vr){
+    printf("La dimension du Vr est: %d",vr->dim);
+    int i=0;
+    for(i=0;i<vr->dim;i++){
+    printf("%f\n", *(vr->coeffs++));
+    }
+}
+void afficher_VI(VI* vi){
+    printf("La dimension du VI est: %d",vi->dim);
+    int i=0;
+    for(i=0;i<vi->dim;i++){
+    printf("%d\n", *(vi->coeffs++));
+    }
+}
 

@@ -28,7 +28,7 @@ typedef struct MI MI;
 struct Mr{
     int dim1;
     int dim2;
-    int* coeffs;
+    float* coeffs;
 };
 
 typedef struct Mr Mr;

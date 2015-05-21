@@ -62,7 +62,12 @@ Vr_entree_fichier(c->weight, rect_n, file);				//Creation poids
 
 
 afficher_MI(c->rect);
-
+afficher_Vr(c->weight);
+afficher_VI(c->feature_rect);
+afficher_Mr(c->feature_threshold);
+afficher_VI(c->stage_feature);
+afficher_Vr(c->stage_threshold);
+fclose(file);
 }
 
 
