@@ -4,13 +4,18 @@
 #include "ajout.h"
 #include "vecteurs.h"
 #include "../../image_integrale/image_integrale.h"
-
+#include <cmath>
 
 
 /* MACROS*/
-#define v(a,b) a[b]
-#define m(a,i,j) a[i][j]
-#define vn(a) a.dim
+
+
+
+#define v(a,i) a->coeffs[i]
+#define m(a,i,j) a->coeffs[i*a->dim2+j]
+#define mn0(a) a->dim1
+#define mn1(a) a->dim2
+#define vn(a) a->dim
 
 int main(int argc, char **argv) {
 	/*char* file="haarcascade_frontalface_short.txt";
@@ -112,136 +117,139 @@ afficher_Vr(c->stage_threshold);*/
   fclose(f_c);
   printf("Haar OK!\n");
 
+
+/**FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF**/
+
+
+//On va créer l'image intégrale
+  //MI8u *m8u;	//????????????
+  int i,j;
+  /* lit l'image d'entrée */
+MI* mi=construit_Image_Integrale(nomimg);
+  //m8u=MI8u_lit_image(NULL, nomimg);
+
+  printf("Img OK!\n");fflush(stdout);
+  //MI8u_visualise(m8u, 1 , "&", "img");
+
+  /**FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF**/
+
+
+  /* convertit en 32 bits */
+  //m=MI_alloue_special(1, mn0(m8u),  mn1(m8u));
+  //toMxx(m, m8u);
+
+  //M3I *mipmapiso;
+  //MI_taille triso;
+  float scale=0.83;
+  int filter_threshold=12;
+  int filter_size=6;
+
+  int  scale_level=-log(min(mn0(m)/(c.d.x+2), mn1(m)/(c.d.y+2)))/log(scale)+1;
+
+  int level=-scale_level*log(scale)/log(2)+2;
+
+  printf("scale_level=%d level=%d\n", scale_level, level);
+
+  //mipmapiso=M3I_alloue_special(1, mn0(m), mn1(m), level);
+  /* Construit la mipmap qui  servira pour tous les niveaux d'échelle */
+  //mipmap_gen_iso_MI(mipmapiso, triso,  m, level);
+  //M3I_visualise(mipmapiso, 1 , "&", "mipmapiso");
+  /* Allocations diverses */
+  MI *scaled, *scaled_int, *scaled_sq, *scaled_sq_int, *mt;
+  //MI *detect;
+  //MI8u  *detect_filled;
+  //M3I8u *detect_binary,*detect_binary_filtered,*detect_binary_filled;
+  //VI *cpt_y;
+
+  //scaled=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
+  //MI* scaled= mi;
+
+  //scaled_int=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
+  //scaled_sq=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
+  //scaled_sq_int=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
+  //mt=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
+  //detect=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
+  //detect_filled=MI8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
+
+  //detect_binary=M3I8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso), scale_level);
+  //detect_binary_filtered=M3I8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso), scale_level);
+  //detect_binary_filled=M3I8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso), scale_level);
+  //cpt_y=VI_alloue_special(1, mn0(mipmapiso));
+
+  //M3I8u_zero(detect_binary);
+  //M3I8u_zero(detect_binary_filtered);
+  //M3I8u_zero(detect_binary_filled);
+  //VI_zero(cpt_y);
+  //MI_cst(detect, 128);
+  //float sc;
+  //int s;
+
+  //sc=1.0;
+
+  //M3I8u *pyr;
+  //pyr=M3I8u_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  scale_level);
+  //M3I8u_zero(pyr);
+  //M4I *intcarre;
+  //intcarre=M4I_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  m3n2(detect_binary), 2);
+  //M4I_zero(intcarre);
+/*???????????????????????*/
+
+
+
+
+  /* Parcours tous les niveaux d'échelle */
+  //printf("Echelle\n");
+ // for(s=0;s<scale_level;s++)
+    //{
+      //printf("s=%d\n",s);
+      /* Construit  chaque niveau à partir de la mipmap */
+     // scale_from_mipmap_iso_img_MI(scaled, mipmapiso , triso,  sc);
+      /* Calcule le carre, l'image intégrale et l'image intégrale du carre */
+      MI_carre(scaled_sq, scaled);
+      img_integral_MI(scaled_int, scaled);
+      img_integral_MI(scaled_sq_int, scaled_sq);
+      /*for(int ii=0; ii<m4n0(intcarre);ii++)
+        for(int jj=0; jj<m4n1(intcarre);jj++)
+          {
+            m3(pyr, ii, jj, s)=m(scaled, ii, jj);
+            m4(intcarre, ii, jj, s, 0)=m(scaled_int, ii, jj);
+            m4(intcarre, ii, jj, s, 1)=m(scaled_sq_int, ii, jj);
+          }*/
+      //int  r;
+      Pixel o;
+      printf("Haar evaluate\n");
+      /* Pour tous les pixels de l'image, detecte une zone */
+      for(o.y=0; o.y<mn1(mi)-c.d.y;o.y++){
+        for(o.x=0; o.x<mn0(mi)-c.d.x;o.x++)
+          {
+            //    if (  (o.x+ o.y*mn0(scaled))%1000==0)
+            // printf("%d %d\n", o.x, o.y);
+            if (Haar_evaluate(&c, scaled_int, scaled_sq_int, o))
+              {
+                printf("DETECTEEEE");
+                //m3(detect_binary, o.x, o.y, s)=255;
+                /* si trouve une zone, ajoute nbre de détections (*2)*/
+                //int i,j;
+                //for(i=0;i<c.d.x/sc;i++)
+                  //for(j=0;j<c.d.y/sc;j++)
+                    //m(detect, (int)(o.x/sc+i), (int)(o.y/sc+j))+=10;
+              }
+          }
+
+          }
+      //sc*=scale;
+    //}
+ //M3I8u_ecrit_image_P5(detect_binary, "res/detect_binary.pgm");
+  //M3I8u_ecrit_image_P5(detect_binary_filtered, "res/detect_binary_filtered.pgm");
+  //Mxxmul(detect_filled, detect_filled, mipmapiso);
+  //MI8u_visualise(detect_filled, 1, "&", "detect_filled");
+  //MI8u_ecrit_image_P5(detect_filled, "res/detect_filled.pgm");
+  //M3I8u_ecrit_image_P5(pyr, "res/pyr.pgm");
+  //M4I_ecrit_image_P5(intcarre, "res/intcarre.pgm");
+
+
 }
-//
-//	//On va créer l'image intégrale
-//  MI8u *m8u;	//????????????
-//  int i,j;
-//  /* lit l'image d'entrée */
-//  m8u=MI8u_lit_image(NULL, nomimg);
-//  printf("Img OK!\n");fflush(stdout);
-//  //MI8u_visualise(m8u, 1 , "&", "img");
-//  /* convertit en 32 bits */
-//  m=MI_alloue_special(1, mn0(m8u),  mn1(m8u));
-//  toMxx(m, m8u);
-//
-//  M3I *mipmapiso;
-//  MI_taille triso;
-//  float scale=0.83;
-//  int filter_threshold=12;
-//  int filter_size=6;
-//
-//  int  scale_level=-log(min(mn0(m)/(c.d.x+2), mn1(m)/(c.d.y+2)))/log(scale)+1;
-//
-//  int level=-scale_level*log(scale)/log(2)+2;
-//
-//  printf("scale_level=%d level=%d\n", scale_level, level);
-//  mipmapiso=M3I_alloue_special(1, mn0(m), mn1(m), level);
-//  /* Construit la mipmap qui  servira pour tous les niveaux d'échelle */
-//  mipmap_gen_iso_MI(mipmapiso, triso,  m, level);
-//  //M3I_visualise(mipmapiso, 1 , "&", "mipmapiso");
-//  /* Allocations diverses */
-//  MI *scaled, *scaled_int, *scaled_sq, *scaled_sq_int, *mt;
-//  MI *detect;
-//  MI8u  *detect_filled;
-//  M3I8u *detect_binary,*detect_binary_filtered,*detect_binary_filled;
-//  VI *cpt_y;
-//  scaled=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
-//  scaled_int=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
-//  scaled_sq=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
-//  scaled_sq_int=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
-//  mt=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
-//  detect=MI_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
-//  detect_filled=MI8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso));
-//
-//  detect_binary=M3I8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso), scale_level);
-//  detect_binary_filtered=M3I8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso), scale_level);
-//  detect_binary_filled=M3I8u_alloue_special(1, mn0(mipmapiso),  mn1(mipmapiso), scale_level);
-//  cpt_y=VI_alloue_special(1, mn0(mipmapiso));
-//
-//  M3I8u_zero(detect_binary);
-//  M3I8u_zero(detect_binary_filtered);
-//  M3I8u_zero(detect_binary_filled);
-//  VI_zero(cpt_y);
-//  MI_cst(detect, 128);
-//  float sc;
-//  int s;
-//
-//  sc=1.0;
-//
-//  M3I8u *pyr;
-//  pyr=M3I8u_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  scale_level);
-//  M3I8u_zero(pyr);
-//  M4I *intcarre;
-//  intcarre=M4I_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  m3n2(detect_binary), 2);
-//  M4I_zero(intcarre);
-///*???????????????????????*/
-//
-//
-//
-//
-//  /* Parcours tous les niveaux d'échelle */
-//  printf("Echelle\n");
-//  for(s=0;s<scale_level;s++)
-//    {
-//      printf("s=%d\n",s);
-//      /* Construit  chaque niveau à partir de la mipmap */
-//      scale_from_mipmap_iso_img_MI(scaled, mipmapiso , triso,  sc);
-//      /* Calcule le carre, l'image intégrale et l'image intégrale du carre */
-//      MI_carre(scaled_sq, scaled);
-//      img_integral_MI(scaled_int, scaled);
-//      img_integral_MI(scaled_sq_int, scaled_sq);
-//      for(int ii=0; ii<m4n0(intcarre);ii++)
-//        for(int jj=0; jj<m4n1(intcarre);jj++)
-//          {
-//            m3(pyr, ii, jj, s)=m(scaled, ii, jj);
-//            m4(intcarre, ii, jj, s, 0)=m(scaled_int, ii, jj);
-//            m4(intcarre, ii, jj, s, 1)=m(scaled_sq_int, ii, jj);
-//          }
-//      int  r;
-//      Pixel o;
-//      printf("Haar evaluate\n");
-//      /* Pour tous les pixels de l'image, detecte une zone */
-//      for(o.y=0; o.y<mn1(scaled)-c.d.y;o.y++)
-//        for(o.x=0; o.x<mn0(scaled)-c.d.x;o.x++)
-//          {
-//            //    if (  (o.x+ o.y*mn0(scaled))%1000==0)
-//            // printf("%d %d\n", o.x, o.y);
-//            if (Haar_evaluate(&c, scaled_int, scaled_sq_int, o))
-//              {
-//                m3(detect_binary, o.x, o.y, s)=255;
-//                /* si trouve une zone, ajoute nbre de détections (*2)*/
-//                int i,j;
-//                for(i=0;i<c.d.x/sc;i++)
-//                  for(j=0;j<c.d.y/sc;j++)
-//                    m(detect, (int)(o.x/sc+i), (int)(o.y/sc+j))+=10;
-//              }
-//          }
-//
-//          }
-//      sc*=scale;
-//    }
-// M3I8u_ecrit_image_P5(detect_binary, "res/detect_binary.pgm");
-//  M3I8u_ecrit_image_P5(detect_binary_filtered, "res/detect_binary_filtered.pgm");
-//  Mxxmul(detect_filled, detect_filled, mipmapiso);
-//  //MI8u_visualise(detect_filled, 1, "&", "detect_filled");
-//  MI8u_ecrit_image_P5(detect_filled, "res/detect_filled.pgm");
-//  M3I8u_ecrit_image_P5(pyr, "res/pyr.pgm");
-//  M4I_ecrit_image_P5(intcarre, "res/intcarre.pgm");
-//
-//}
 
-
-/*
-
-
-
-
-fclose(file);
-
-}
-
-*/
 
 
 
