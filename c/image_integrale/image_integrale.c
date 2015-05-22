@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
-#include "image_io.h"
+#include "image_io.c"
 // x >
 // y V
 // *(data+j*width+i)
@@ -28,7 +28,7 @@ int32_t* integral_image(unsigned char* img, int width, int height) {
 	return ii;
 }
 
-main(int argc, char** argv){
+/*main(int argc, char** argv){
 	int width, height, lumin;
 	if(argc!=2) {
 		printf("Utilisation :\n./image_integrale \"fichier.pgm\"\n");
@@ -36,8 +36,8 @@ main(int argc, char** argv){
 	}
 	unsigned char* image = lire_image(argv[1], &width, &height, &lumin);
 	int32_t* int_image = integral_image(image, width, height);
-	ecrire_image("clone.pgm", image, width, height, lumin);
-	
+	ecrire_image("clone.pgm", image, width, height, lumin);*/
+
 	// Affichage de image
 	/*int i, j;
 	for (j = 0; j < height; j++) {
@@ -46,7 +46,7 @@ main(int argc, char** argv){
 		}
 		printf("\n");
 	}*/
-    
+
     // Affichage de l'image intégrale
     /*int i, j;
     for (j = 0; j < height; j++) {
@@ -55,15 +55,15 @@ main(int argc, char** argv){
 		}
 		printf("\n");
 	}*/
-	
+
 	// Clonage d'une image
 	/*unsigned char* data;
 	int width, height,lumin;
 
 	if( (argc>1) && ((data = load_pixmap(argv[1],&width,&height,&lumin)) != NULL))
-		store_pixmap("clone.pgm",data,width,lumin,height);*/
+		store_pixmap("clone.pgm",data,width,lumin,height);
 
 	return 0;
 }
-
+*/
 

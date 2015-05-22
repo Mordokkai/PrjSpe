@@ -35,8 +35,8 @@ int main(int argc, char *argv[]) {
     Haar_Cascade* c = malloc(sizeof(Haar_Cascade));
 
     Haar_Cascade_read_list(c,file);
-
-
+    MI* mi=construit_Image_Integrale("../../../img/feep.pgm");
+    afficher_MI(mi);
 
 
 /*

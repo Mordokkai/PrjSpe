@@ -67,4 +67,6 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file);
 void Haar_normalize_rects(Haar_Cascade *c);
 void Vr_affiche(int i, Vr* vr , char* s);
 
+MI* construit_Image_Integrale(char* nom_img);
+
 #endif

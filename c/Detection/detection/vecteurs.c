@@ -1,5 +1,11 @@
 #include "vecteurs.h"
-
+#include "../../image_integrale/pixmap_io.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <inttypes.h>
+#include <string.h>
+#include "../../image_integrale/image_io.h"
+#include "../../image_integrale/image_integrale.h"
 
 
 /**MACROS**/
@@ -104,7 +110,11 @@ void afficher_MI(MI* mi){
     printf("Les dimensions du MI sont: %d %d",mi->dim1,mi->dim2);
     int i=0;
     for(i=0;i<mi->dim2;i++){
-    printf("%d %d %d %d \n", *(mi->coeffs++),*(mi->coeffs++),*(mi->coeffs++),*(mi->coeffs++));
+        int j=0;
+        for(j=0;j<mi->dim1;j++){
+            printf("%d ", *(mi->coeffs++));
+        }
+        printf("\n");
     }
 }
 
@@ -138,7 +148,24 @@ void afficher_VI(VI* vi){
 }
 
 
+MI* construit_Image_Integrale(char* nom_img){
+    /**On recupère l'image intégrale**/
+    int width, height, lumin;
+    unsigned char* image = lire_image(nom_img, &width, &height, &lumin);
+	int32_t* int_image = integral_image(image, width, height);
+	/**On la met dans la matrice**/
+	MI* mi= MI_alloue_special(1,width,height);
+	mi->coeffs=(int *)int_image;
+	return mi;
+	/*int i=0;
+	for(i=0;i<height;i++){
+        int j=0;
+        for(j=0;j<width;j++){
+            mi[i*width+j]=int_image[i*width+j];
 
+        }
+	}*/
+}
 
 
 
