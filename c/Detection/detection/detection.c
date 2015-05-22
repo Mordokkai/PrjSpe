@@ -4,13 +4,13 @@
 #include "ajout.h"
 #include "vecteurs.h"
 #include "../../image_integrale/image_integrale.h"
-#include <cmath>
+#include <math.h>
 
 
 /* MACROS*/
 
 
-
+#define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define v(a,i) a->coeffs[i]
 #define m(a,i,j) a->coeffs[i*a->dim2+j]
 #define mn0(a) a->dim1
@@ -125,7 +125,7 @@ afficher_Vr(c->stage_threshold);*/
   //MI8u *m8u;	//????????????
   int i,j;
   /* lit l'image d'entrée */
-MI* mi=construit_Image_Integrale(nomimg);
+//MI* mi=construit_Image_Integrale(nomimg);
   //m8u=MI8u_lit_image(NULL, nomimg);
 
   printf("Img OK!\n");fflush(stdout);
@@ -205,9 +205,14 @@ MI* mi=construit_Image_Integrale(nomimg);
       /* Construit  chaque niveau à partir de la mipmap */
      // scale_from_mipmap_iso_img_MI(scaled, mipmapiso , triso,  sc);
       /* Calcule le carre, l'image intégrale et l'image intégrale du carre */
-      MI_carre(scaled_sq, scaled);
-      img_integral_MI(scaled_int, scaled);
-      img_integral_MI(scaled_sq_int, scaled_sq);
+
+      scaled_int=construit_Image_Integrale(nomimg);
+      scaled_sq_int=construit_Image_Integrale_Carre(nomimg);
+      afficher_MI(scaled_int);
+      afficher_MI(scaled_sq_int);
+      //MI_carre(scaled_sq, scaled);
+      //img_integral_MI(scaled_int, scaled);
+      //img_integral_MI(scaled_sq_int, scaled_sq);
       /*for(int ii=0; ii<m4n0(intcarre);ii++)
         for(int jj=0; jj<m4n1(intcarre);jj++)
           {
@@ -218,15 +223,17 @@ MI* mi=construit_Image_Integrale(nomimg);
       //int  r;
       Pixel o;
       printf("Haar evaluate\n");
+      int cpt=0;
       /* Pour tous les pixels de l'image, detecte une zone */
-      for(o.y=0; o.y<mn1(mi)-c.d.y;o.y++){
-        for(o.x=0; o.x<mn0(mi)-c.d.x;o.x++)
+      for(o.y=0; o.y<mn1(scaled_int)-c.d.y;o.y++){
+        for(o.x=0; o.x<mn0(scaled_int)-c.d.x;o.x++)
           {
             //    if (  (o.x+ o.y*mn0(scaled))%1000==0)
             // printf("%d %d\n", o.x, o.y);
             if (Haar_evaluate(&c, scaled_int, scaled_sq_int, o))
               {
-                printf("DETECTEEEE");
+                printf("DETECTEEEE %d %d", o.x, o.y);
+                cpt++;
                 //m3(detect_binary, o.x, o.y, s)=255;
                 /* si trouve une zone, ajoute nbre de détections (*2)*/
                 //int i,j;
@@ -237,6 +244,7 @@ MI* mi=construit_Image_Integrale(nomimg);
           }
 
           }
+          printf("Il y a: %d visages détéctés.",cpt);
       //sc*=scale;
     //}
  //M3I8u_ecrit_image_P5(detect_binary, "res/detect_binary.pgm");

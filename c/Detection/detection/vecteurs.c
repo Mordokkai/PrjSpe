@@ -173,6 +173,25 @@ MI* construit_Image_Integrale(char* nom_img){
 	}*/
 }
 
+MI* construit_Image_Integrale_Carre(char* nom_img){
+    /**On recupère l'image intégrale**/
+    int width, height, lumin;
+    unsigned char* image = lire_image(nom_img, &width, &height, &lumin);
+	int32_t* square_int=integral_image_carre(image, width, height);
+	/**On la met dans la matrice**/
+	MI* mi= MI_alloue_special(1,width,height);
+	mi->coeffs=(int *)square_int;
+	return mi;
+	/*int i=0;
+	for(i=0;i<height;i++){
+        int j=0;
+        for(j=0;j<width;j++){
+            mi[i*width+j]=int_image[i*width+j];
+
+        }
+	}*/
+}
+
 
 
 
@@ -229,14 +248,14 @@ void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
   Vr_entree_fichier(c->stage_threshold, s_n, file);
 
 /* Normalise les rectangles */
-  Haar_normalize_rects(c);
+  //Haar_normalize_rects(c);
 
 
 #define PREC 16
   //#define vfixe(a,prec) (trunc((a)*pow(2,prec)))/pow(2,prec)
 
 #define vfixe(a,prec) a
-printf("HERE WE GO!!!!");
+//printf("HERE WE GO!!!!");
     int j,k;
     for(i=0;i<vn(c->weight);i++)
       v(c->weight, i)= vfixe(v(c->weight, i), 14);
@@ -277,7 +296,7 @@ void Haar_normalize_rects(Haar_Cascade *c)
       nb_f++;
     }
   }
-  afficher_Vr(c->weight);
+  //afficher_Vr(c->weight);
   //Vr_affiche(1, c->weight , "weight :");
 }
 
@@ -290,15 +309,15 @@ int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
   int x1=x+tx, y1=y+ty;
   if (x>=0 && y>=0){
     r+= m(m, x, y);
-    printf("r vaut: %d",r);
+    //printf("r vaut: %d",r);
     }
   if (x>=0){
     r-=m(m, x, y1);
-    printf("r vaut: %d",r);
+    //printf("r vaut: %d",r);
     }
   if (y>=0){
     r-=m(m, x1, y);
-    printf("r vaut: %d",r);
+    //printf("r vaut: %d",r);
     }
   r+=m(m, x1, y1);
   return r;
@@ -345,6 +364,7 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
                                    m(c->rect, 2, nb_r),
                                    m(c->rect, 3, nb_r)
                                    );
+        //printf("ok");
         /*
           if (lg) printf("v %d %d %d %d %d\n", val, o.x+m(c->rect, 0, nb_r),
                                    o.y+m(c->rect, 1, nb_r),
@@ -385,6 +405,8 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
     // Test l'étage
     fail = (sum_s < v(c->stage_threshold, nb_s));
     //if (lg) printf("sum_s : %f , s sth %f\n", sum_s,  v(c->stage_threshold, nb_s));
+   // if(fail) printf("Feature: %d stage raté",nb_f,nb_s);
+    //else printf("Feature: %d reussi stage %d",nb_f,nb_s);
     nb_s++;
   }
 
