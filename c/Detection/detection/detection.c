@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
 
     Haar_Cascade_read_list(c,file);
     MI* mi=construit_Image_Integrale("../../../img/feep.pgm");
-    afficher_MI(mi);
-
+    //afficher_MI(mi);
+    printf("Valeur deduite: %d",img_int_rect_eval(mi,0,0,24,7));
 
 /*
   fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //taille zone

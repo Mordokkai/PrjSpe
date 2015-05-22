@@ -76,16 +76,18 @@ void affiche_VI(VI vi){
 /**CONSTRUCTION**/
 MI_entree_fichier(MI* mi, int nbCol, int nbLig, FILE* f){
 int i=0;
+int* p=mi->coeffs;
 while(i<nbLig*nbCol){
-    fscanf(f,"%d ",&(mi->coeffs)[i]);
+    fscanf(f,"%d ",&(p)[i]);
     i++;
 }
 }
 
 Vr_entree_fichier(Vr* vr, int nbLig, FILE* f){
 int i=0;
+int* p=vr->coeffs;
 while(i<nbLig){
-    fscanf(f,"%f",&(vr->coeffs)[i]);
+    fscanf(f,"%f",&(p)[i]);
     i++;
 }
 }
@@ -98,8 +100,9 @@ while(i<nbLig){
 }
 Mr_entree_fichier(Mr* mr, int nbCol, int nbLig, FILE* f){
 int i=0;
+float* r=mr->coeffs;
 while(i<nbLig*nbCol){
-    fscanf(f,"%f ",&(mr->coeffs)[i]);
+    fscanf(f,"%f ",&(r)[i]);
     //printf("youpi");
     i++;
 }
@@ -109,10 +112,11 @@ while(i<nbLig*nbCol){
 void afficher_MI(MI* mi){
     printf("Les dimensions du MI sont: %d %d",mi->dim1,mi->dim2);
     int i=0;
+    int* p=mi->coeffs;
     for(i=0;i<mi->dim2;i++){
         int j=0;
         for(j=0;j<mi->dim1;j++){
-            printf("%d ", *(mi->coeffs++));
+            printf("%d ", *(p++));
         }
         printf("\n");
     }
@@ -121,10 +125,11 @@ void afficher_MI(MI* mi){
 void afficher_Mr(Mr* mr){
     printf("Les dimensions du Mr sont: %d %d",mr->dim1,mr->dim2);
     int i=0;
+    float* p=mr->coeffs;
     for(i=0;i<mr->dim2;i++){
         int j=0;
         for(j=0;j<mr->dim1;j++){
-            printf("%f ", *(mr->coeffs++));
+            printf("%f ", *(p++));
         }
         printf("\n");
     }
@@ -142,8 +147,9 @@ void afficher_Vr(Vr* vr){
 void afficher_VI(VI* vi){
     printf("La dimension du VI est: %d",vi->dim);
     int i=0;
+    int* p=vi->coeffs;
     for(i=0;i<vi->dim;i++){
-    printf("%d\n", *(vi->coeffs++));
+    printf("%d\n", *(p++));
     }
 }
 
@@ -274,4 +280,37 @@ void Haar_normalize_rects(Haar_Cascade *c)
   afficher_Vr(c->weight);
   //Vr_affiche(1, c->weight , "weight :");
 }
+
+/* calcul l'intégrale sur un carre de coin x, y et de largeur (tx,ty) */
+int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
+{
+//L4-L3-L2+L1
+  int r=0;
+  x=x-1; y=y-1;
+  int x1=x+tx, y1=y+ty;
+  if (x>=0 && y>=0){
+    printf("aaaa");
+    r+= m(m, x, y);
+    printf("r vaut: %d",r);
+    }
+  if (x>=0){
+    printf("bbbb");
+    r-=m(m, x, y1);
+    printf("r vaut: %d",r);
+    }
+  if (y>=0){
+    printf("cccc");
+    r-=m(m, x1, y);
+    printf("r vaut: %d",r);
+    }
+    printf("dddd");
+  r+=m(m, x1, y1);
+  return r;
+}
+
+
+
+
+
+
 

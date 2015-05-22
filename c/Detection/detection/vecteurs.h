@@ -68,5 +68,5 @@ void Haar_normalize_rects(Haar_Cascade *c);
 void Vr_affiche(int i, Vr* vr , char* s);
 
 MI* construit_Image_Integrale(char* nom_img);
-
+int img_int_rect_eval(MI *m, int x , int y, int tx, int ty);
 #endif
