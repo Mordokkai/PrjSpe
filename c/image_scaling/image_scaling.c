@@ -1,124 +1,59 @@
-#include<iostream>
+#include "../image_integrale/pixmap_io.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <inttypes.h>
+#include <string.h>
+#include "../image_integrale/image_io.h"
 
-class RawBitMap
-{
-public:
-    RawBitMap():_data(NULL), _width(0),_height(0)
-    {};
-
-    bool Initialise()
+void Resample(char* fichier, int newWidth, int newHeight)
     {
-        // Set a basic 2 by 2 bitmap for testing.
-        //
-        if(_data != NULL)
-            delete[] _data;
+    	int width,height,lumin;
+    	int cy = 0;
+    	int cx = 0;
+    	int pixel;
+    	int i = 0;
+    	int nearestMatch;
+		unsigned char* data = lire_image(fichier,&width,&height,&lumin);
+        unsigned char* newData = (unsigned char *)malloc(newWidth * newHeight * 3);
 
-        _width = 2;
-        _height = 2;    
-        _data = new unsigned char[ GetByteCount() ];
-        
-        //
-        _data[0] = 0;   // Pixels(0,0) red value
-        _data[1] = 1;   // Pixels(0,0) green value
-        _data[2] = 2;   // Pixels(0,0) blue value
-        _data[3] = 253; // Pixels(1,0)
-        _data[4] = 254;
-        _data[5] = 255;
-        _data[6] = 253; // Pixels(0,1)
-        _data[7] = 254;
-        _data[8] = 255;
-        _data[9] = 0;   // Pixels(1,1)
-        _data[10] = 1;
-        _data[11] = 2;  
+        double scaleWidth =  (double)newWidth / (double)width;
+        double scaleHeight = (double)newHeight / (double)height;
 
-        return true;
-    }
-
-    // Perform a basic 'pixel' enlarging resample.
-    bool Resample(int newWidth, int newHeight)
-    {
-        if(_data == NULL) return false;
-        //
-        // Get a new buuffer to interpolate into
-        unsigned char* newData = new unsigned char [newWidth * newHeight * 3];
-
-        double scaleWidth =  (double)newWidth / (double)_width;
-        double scaleHeight = (double)newHeight / (double)_height;
-
-        for(int cy = 0; cy < newHeight; cy++)
+        for(cy = 0; cy < newHeight; cy++)
         {
-            for(int cx = 0; cx < newWidth; cx++)
+            for(cx = 0; cx < newWidth; cx++)
             {
-                int pixel = (cy * (newWidth *3)) + (cx*3);
-                int nearestMatch =  (((int)(cy / scaleHeight) * (_width *3)) + ((int)(cx / scaleWidth) *3) );
+                pixel = (cy * (newWidth *3)) + (cx*3);
+                nearestMatch =  (((int)(cy / scaleHeight) * (width *3)) + ((int)(cx / scaleWidth) *3) );
                 
-                newData[pixel    ] =  _data[nearestMatch    ];
-                newData[pixel + 1] =  _data[nearestMatch + 1];
-                newData[pixel + 2] =  _data[nearestMatch + 2];
+                newData[pixel    ] =  data[nearestMatch    ];
+                newData[pixel + 1] =  data[nearestMatch + 1];
+                newData[pixel + 2] =  data[nearestMatch + 2];
             }
         }
-
-        //
-        delete[] _data;
-        _data = newData;
-        _width = newWidth;
-        _height = newHeight; 
-
-        return true;
-    }
-
-    // Show the values of the Bitmap for demo.
-    void ShowData()
-    {
-        std::cout << "Bitmap data:" << std::endl;
-        std::cout << "============" << std::endl;
-        std::cout << "Width:  " << _width  << std::endl;
-        std::cout << "Height: " << _height  << std::endl;
-        std::cout << "Data:" << std::endl;
-
-        for(int cy = 0; cy < _height; cy++)
-        {
-            for(int cx = 0; cx < _width; cx++)
-            {
-                int pixel = (cy * (_width *3)) + (cx*3);
-                std::cout << "rgb(" << (int)_data[pixel] << "," << (int)_data[pixel+1] << "," << (int)_data[pixel+2] << ") ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << "_________________________________________________________" << std::endl;
-    }
-
-
-    // Return the total number of bytes in the Bitmap.
-    inline int GetByteCount()
-    {
-        return (_width * _height * 3);
+        FILE* fichierOut = fopen("group_scaled.pgm","w");
+        //on ecrit d'abord l'entete
+        fprintf(fichierOut,"%s\n%d %d\n%d\n","P2",newWidth,newHeight,lumin);
+        for(i=0;i < newWidth * newHeight * 3;i++)
+	{
+		fprintf(fichierOut,"%d\n",newData[i]);
+	}
+        fclose(fichierOut);
+        //delete[] _data;
+        //_data = newData;
+        //_width = newWidth;
+        //_height = newHeight;
     }
     
-private:
-    int _width;
-    int _height;
-    unsigned char* _data;
-
-};
-
-
-int main(int argc, char* argv[])
+main()
 {
-	RawBitMap bitMap;
-
-    bitMap.Initialise();
-    bitMap.ShowData();
-
-    if (!bitMap.Resample(4,4))
-        std::cout << "Failed to resample bitMap:" << std::endl ; 
-    bitMap.ShowData();
-
-    bitMap.Initialise();
-    if (!bitMap.Resample(3,3))
-        std::cout << "Failed to resample bitMap:" << std::endl ;
-    bitMap.ShowData();
-    
-
-    return 0;
+	//int width;
+	//int height;
+	//int lumin;
+	int newWidth = 80;
+	int newHeight = 60;
+	
+	Resample("../../img/groupe1_160x120a.pgm",newWidth,newHeight);
+	
 }
+	
