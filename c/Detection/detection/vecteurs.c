@@ -289,24 +289,149 @@ int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
   x=x-1; y=y-1;
   int x1=x+tx, y1=y+ty;
   if (x>=0 && y>=0){
-    printf("aaaa");
     r+= m(m, x, y);
     printf("r vaut: %d",r);
     }
   if (x>=0){
-    printf("bbbb");
     r-=m(m, x, y1);
     printf("r vaut: %d",r);
     }
   if (y>=0){
-    printf("cccc");
     r-=m(m, x1, y);
     printf("r vaut: %d",r);
     }
-    printf("dddd");
   r+=m(m, x1, y1);
   return r;
 }
+
+
+
+
+
+
+
+
+
+int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
+{
+  float mean=img_int_rect_eval(img_int, o.x+1, o.y+1, c->d.x-2, c->d.y-2);
+  float sq_mean=img_int_rect_eval(img_sq_int, o.x+1, o.y+1, c->d.x-2, c->d.y-2);
+  double variance_sq=sq_mean*c->area-mean*mean; // variance * c->area**2
+  float variance=sqrt(variance_sq);
+
+  //int lg=(o.x==14 && o.y==6);
+
+  unsigned int nb_f = 0;
+  unsigned int nb_r = 0;
+  unsigned int nb_s = 0;
+  float sum_s;
+  int fail = 0;
+  // Parcours des etages de la cascade
+  while (nb_s < vn(c->stage_threshold) && !fail) {
+    sum_s = 0;
+
+    // Parcours des features de l'etage actuel
+    unsigned int f=0;
+    for (f = 0; f < v(c->stage_feature, nb_s); f++) {
+      float sum_f = 0;
+
+      // Parcours des rectangles de la feature actuelle et
+      // evaluation de ces rectangles sur l'image integrale
+      unsigned int r=0;
+      for (r = 0; r < v(c->feature_rect, nb_f); r++) {
+        int val= img_int_rect_eval(img_int,
+                                   o.x+m(c->rect, 0, nb_r),
+                                   o.y+m(c->rect, 1, nb_r),
+                                   m(c->rect, 2, nb_r),
+                                   m(c->rect, 3, nb_r)
+                                   );
+        /*
+          if (lg) printf("v %d %d %d %d %d\n", val, o.x+m(c->rect, 0, nb_r),
+                                   o.y+m(c->rect, 1, nb_r),
+                                   m(c->rect, 2, nb_r),
+                                   m(c->rect, 3, nb_r));
+        */
+        sum_f += v(c->weight, nb_r) *val;	//Pondération
+        nb_r++;
+      }
+      //if (lg) printf("idxf %d %f\n", f, sum_f);
+
+      //printf("s %f\n", sum_f);
+      // sum_f => sum_f * c->area car weight pas divise par c->area
+      float th = m(c->feature_threshold, 0, nb_f);
+      float t = th*th*variance_sq;
+      //   Test les features de l'étage
+      int test = (sum_f*sum_f) >= t;
+      int alpha;
+      //if (lg) printf("sum_f %f  %f th %f variance %f t %f\n", sum_f, sum_f*sum_f, th, variance_sq, t);
+      if (sum_f>= 0 )
+        {
+          if (th>=0)
+            alpha= test ? 1 : 0;
+          else
+            alpha=1;
+        }
+      else
+        {
+          if (th>0)
+            alpha= 0;
+          else
+            alpha= (!test) ? 1 : 0;
+        }
+      sum_s += m(c->feature_threshold, 1+alpha, nb_f);
+      //if (lg) printf("alpha : %d sum_s %f \n", alpha, sum_s);
+      nb_f++;
+    }
+    // Test l'étage
+    fail = (sum_s < v(c->stage_threshold, nb_s));
+    //if (lg) printf("sum_s : %f , s sth %f\n", sum_s,  v(c->stage_threshold, nb_s));
+    nb_s++;
+  }
+
+  return !fail;
+}
+
+
+void message_erreur(void)
+{
+  //fprintf(sortie,"obj_detect_Haar \n");
+  printf("Erreur dans la détection");
+}
+
+void  termine_programme(void){}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
