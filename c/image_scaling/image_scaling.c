@@ -12,9 +12,10 @@ void Resample(char* fichier, int newWidth, int newHeight)
     	int cx = 0;
     	int pixel;
     	int i = 0;
+    	int j = 0;
     	int nearestMatch;
 		unsigned char* data = lire_image(fichier,&width,&height,&lumin);
-        unsigned char* newData = (unsigned char *)malloc(newWidth * newHeight * 3);
+        unsigned char* newData = (unsigned char *)malloc(newWidth * newHeight);
 
         double scaleWidth =  (double)newWidth / (double)width;
         double scaleHeight = (double)newHeight / (double)height;
@@ -23,20 +24,23 @@ void Resample(char* fichier, int newWidth, int newHeight)
         {
             for(cx = 0; cx < newWidth; cx++)
             {
-                pixel = (cy * (newWidth *3)) + (cx*3);
-                nearestMatch =  (((int)(cy / scaleHeight) * (width *3)) + ((int)(cx / scaleWidth) *3) );
+                pixel = (cy * (newWidth)) + (cx);
+                nearestMatch =  (((int)(cy / scaleHeight) * (width)) + ((int)(cx / scaleWidth)) );
                 
                 newData[pixel    ] =  data[nearestMatch    ];
                 newData[pixel + 1] =  data[nearestMatch + 1];
                 newData[pixel + 2] =  data[nearestMatch + 2];
             }
         }
-        FILE* fichierOut = fopen("group_scaled.pgm","w");
+        FILE* fichierOut = fopen("group_scaled_final.pgm","w");
         //on ecrit d'abord l'entete
         fprintf(fichierOut,"%s\n%d %d\n%d\n","P2",newWidth,newHeight,lumin);
-        for(i=0;i < newWidth * newHeight * 3;i++)
+        for(i=0;i < newWidth * newHeight;i++)
 	{
-		fprintf(fichierOut,"%d\n",newData[i]);
+			fprintf(fichierOut,"%d ",newData[i]);
+			j++;
+			if (j == newWidth - 1)
+				fprintf(fichierOut,"\n");	
 	}
         fclose(fichierOut);
         //delete[] _data;
@@ -50,10 +54,10 @@ main()
 	//int width;
 	//int height;
 	//int lumin;
-	int newWidth = 80;
-	int newHeight = 60;
+	int newWidth = 256;
+	int newHeight = 256;
 	
-	Resample("../../img/groupe1_160x120a.pgm",newWidth,newHeight);
+	Resample("../../img/barbara.pgm",newWidth,newHeight);
 	
 }
 	
