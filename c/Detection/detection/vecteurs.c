@@ -10,7 +10,7 @@
 
 /**MACROS**/
 #define v(a,i) a->coeffs[i]
-#define m(a,i,j) a->coeffs[i*a->dim2+j]
+#define m(a,i,j) a->coeffs[j*a->dim1+i]
 #define mn0(a) a->dim1
 #define mn1(a) a->dim2
 #define vn(a) a->dim
@@ -110,7 +110,7 @@ while(i<nbLig*nbCol){
 
 
 void afficher_MI(MI* mi){
-    printf("Les dimensions du MI sont: %d %d",mi->dim1,mi->dim2);
+    printf("Les dimensions du MI sont: %d %d \n",mi->dim1,mi->dim2);
     int i=0;
     int* p=mi->coeffs;
     for(i=0;i<mi->dim2;i++){

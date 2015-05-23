@@ -114,6 +114,17 @@ afficher_Vr(c->stage_threshold);*/
 	//On crée la structure de cascade à partir du fichier texte
   Haar_Cascade c;
   Haar_Cascade_read_list(&c, f_c);
+  /**Affichage de la cascade**/
+/**Testé, le readlist n'a aucun pb**/
+//afficher_MI(c.rect);
+//afficher_Vr(c.weight);
+//afficher_VI(c.feature_rect);
+//afficher_Mr(c.feature_threshold);
+//afficher_VI(c.stage_feature);
+//afficher_Vr(c.stage_threshold);
+
+/**Fin affichage**/
+
   fclose(f_c);
   printf("Haar OK!\n");
 
@@ -140,15 +151,15 @@ afficher_Vr(c->stage_threshold);*/
 
   //M3I *mipmapiso;
   //MI_taille triso;
-  float scale=0.83;
-  int filter_threshold=12;
-  int filter_size=6;
+  //float scale=0.83;
+  //int filter_threshold=12;
+  //int filter_size=6;
 
-  int  scale_level=-log(min(mn0(m)/(c.d.x+2), mn1(m)/(c.d.y+2)))/log(scale)+1;
+  //int  scale_level=-log(min(mn0(m)/(c.d.x+2), mn1(m)/(c.d.y+2)))/log(scale)+1;
 
-  int level=-scale_level*log(scale)/log(2)+2;
+  //int level=-scale_level*log(scale)/log(2)+2;
 
-  printf("scale_level=%d level=%d\n", scale_level, level);
+  //printf("scale_level=%d level=%d\n", scale_level, level);
 
   //mipmapiso=M3I_alloue_special(1, mn0(m), mn1(m), level);
   /* Construit la mipmap qui  servira pour tous les niveaux d'échelle */
@@ -208,8 +219,8 @@ afficher_Vr(c->stage_threshold);*/
 
       scaled_int=construit_Image_Integrale(nomimg);
       scaled_sq_int=construit_Image_Integrale_Carre(nomimg);
-      afficher_MI(scaled_int);
-      afficher_MI(scaled_sq_int);
+      //afficher_MI(scaled_int);
+      //afficher_MI(scaled_sq_int);
       //MI_carre(scaled_sq, scaled);
       //img_integral_MI(scaled_int, scaled);
       //img_integral_MI(scaled_sq_int, scaled_sq);
@@ -225,6 +236,7 @@ afficher_Vr(c->stage_threshold);*/
       printf("Haar evaluate\n");
       int cpt=0;
       /* Pour tous les pixels de l'image, detecte une zone */
+      printf("Image de : %d %d",mn1(scaled_int),mn0(scaled_int));
       for(o.y=0; o.y<mn1(scaled_int)-c.d.y;o.y++){
         for(o.x=0; o.x<mn0(scaled_int)-c.d.x;o.x++)
           {
