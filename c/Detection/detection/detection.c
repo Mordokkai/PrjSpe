@@ -237,7 +237,7 @@ afficher_Vr(c->stage_threshold);*/
       printf("Haar evaluate\n");
       int cpt=0;
       /* Pour tous les pixels de l'image, detecte une zone */
-     /* printf("Image de : %d %d",mn1(scaled_int),mn0(scaled_int));
+      printf("Image de : %d %d",mn1(scaled_int),mn0(scaled_int));
       for(o.y=0; o.y<mn1(scaled_int)-c.d.y;o.y++){
         for(o.x=0; o.x<mn0(scaled_int)-c.d.x;o.x++)
           {
@@ -257,11 +257,11 @@ afficher_Vr(c->stage_threshold);*/
                 //for(i=0;i<c.d.x/sc;i++)
                   //for(j=0;j<c.d.y/sc;j++)
                     //m(detect, (int)(o.x/sc+i), (int)(o.y/sc+j))+=10;
-             // }
-          //}
+              }
+          }
 
-         // }
-          printf("Il y a: %d visages détéctés.",cpt);
+          }
+          printf("Il y a: %d cadres détéctés.",cpt);
           out_visage(nomimg, cadres, cpt, c);
       //sc*=scale;
     //}
