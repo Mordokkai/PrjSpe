@@ -73,5 +73,7 @@ int img_int_rect_eval(MI *m, int x , int y, int tx, int ty);
 int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o);
 void  termine_programme(void);
 void message_erreur(void);
+void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c);
+void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c);
 
 #endif

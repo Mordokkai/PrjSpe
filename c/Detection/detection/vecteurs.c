@@ -193,8 +193,65 @@ MI* construit_Image_Integrale_Carre(char* nom_img){
 }
 
 
+void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c){
+    int i=0;
+    for(i=0;i<mi->dim2;i++){
+        m(mi,50,i)=0;
+    }
+    /*
+    for(i=p.x;i<p.x+c.d.x;i++){
+        m(mi,i,p.y)=0;
+    }
+    i=0;
+    for(i=p.x;i<p.x+c.d.x;i++){
+        m(mi,i,p.y+c.d.y)=0;
+    }
+    i=0;
+    for(i=p.y;i>p.y-c.d.y;i--){
+        m(mi,p.x,i)=0;
+    }
+    i=0;
+    for(i=p.y;i>p.y-c.d.y;i--){
+        m(mi,p.x+c.d.x,i)=0;
+    }*/
+}
 
+void ecrire_sortie_MI(FILE* f, MI* mi){
+    fprintf(f,"P2\n%d %d\n255\n",mi->dim1,mi->dim2);
+    int i=0;
+    for(i=0;i<mi->dim1;i++){
+        int j=0;
+        for(j=0;j<mi->dim2;j++){
+            fprintf(f,"%d ",m(mi,i,j));
+        }
+        fprintf(f,"\n");
+    }
 
+}
+
+void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c){
+    FILE*f_in = fopen(nom_img_in,"r");
+
+    FILE* f_out = fopen("sortie.pgm","wa");
+
+    int width, height, lumin;
+    unsigned char* image = lire_image(nom_img_in, &width, &height, &lumin);
+    printf("Affichage des données lues");
+
+    printf("La luminosité est de %d",lumin);
+	MI* mi= MI_alloue_special(1,width,height);
+	mi->coeffs=(int32_t *)image;
+/*
+	int i=0;
+	while(i< nb_Cadres){
+        colorer_Pixel(mi,*p,c);
+        p++;
+        i++;
+	}*/
+	//ecrire_sortie_MI(f_out,mi);
+	ecrire_image("sortie.pgm", mi->coeffs, width, height, lumin);
+	fclose(f_out);
+}
 
 
 

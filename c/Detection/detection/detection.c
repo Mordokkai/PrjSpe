@@ -12,7 +12,7 @@
 
 #define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define v(a,i) a->coeffs[i]
-#define m(a,i,j) a->coeffs[i*a->dim2+j]
+
 #define mn0(a) a->dim1
 #define mn1(a) a->dim2
 #define vn(a) a->dim
@@ -233,10 +233,11 @@ afficher_Vr(c->stage_threshold);*/
           }*/
       //int  r;
       Pixel o;
+      Pixel* cadres=calloc(2000,sizeof(Pixel)); /**Il est fort improbable d'avoir plus de 2000 cadres détéctés**/
       printf("Haar evaluate\n");
       int cpt=0;
       /* Pour tous les pixels de l'image, detecte une zone */
-      printf("Image de : %d %d",mn1(scaled_int),mn0(scaled_int));
+     /* printf("Image de : %d %d",mn1(scaled_int),mn0(scaled_int));
       for(o.y=0; o.y<mn1(scaled_int)-c.d.y;o.y++){
         for(o.x=0; o.x<mn0(scaled_int)-c.d.x;o.x++)
           {
@@ -245,6 +246,10 @@ afficher_Vr(c->stage_threshold);*/
             if (Haar_evaluate(&c, scaled_int, scaled_sq_int, o))
               {
                 printf("DETECTEEEE %d %d", o.x, o.y);
+                Pixel p;
+                p.x=o.x;
+                p.y=o.y;
+                cadres[cpt]=p;
                 cpt++;
                 //m3(detect_binary, o.x, o.y, s)=255;
                 /* si trouve une zone, ajoute nbre de détections (*2)*/
@@ -252,11 +257,12 @@ afficher_Vr(c->stage_threshold);*/
                 //for(i=0;i<c.d.x/sc;i++)
                   //for(j=0;j<c.d.y/sc;j++)
                     //m(detect, (int)(o.x/sc+i), (int)(o.y/sc+j))+=10;
-              }
-          }
+             // }
+          //}
 
-          }
+         // }
           printf("Il y a: %d visages détéctés.",cpt);
+          out_visage(nomimg, cadres, cpt, c);
       //sc*=scale;
     //}
  //M3I8u_ecrit_image_P5(detect_binary, "res/detect_binary.pgm");
