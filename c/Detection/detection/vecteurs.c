@@ -233,9 +233,11 @@ void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c){
         m(mi,p.x+c.d.x,i)=250;
     }
      i=0;//Le pb
-    for(i=p.x;i<p.x+c.d.x;i++){
+    for(i=p.x;i<p.x+c.d.x;i++){//pb car p.y+c.d.y est nul selon l'image résultat
+        printf("la somme : %d",p.y+c.d.y);
         //printf("gaedvjayztdjyatzd %d %d",i,p.y+c.d.y);
-        m(mi,i,p.y+c.d.y)=250;
+        int z=p.y+c.d.y;
+        m(mi,i,z)=250;
     }
 }
 
