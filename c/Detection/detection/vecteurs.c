@@ -279,8 +279,8 @@ MI* fusion_cadre_image(MI* img, MI* cadre){
 void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c){
   FILE*f_in = fopen(nom_img_in,"r");
     //FILE* f_out = fopen("sortie.pgm","w");
-    int* width, *height, *lumin;
-    int* image = lire_entree_IM(nom_img_in, &width, &height, &lumin);
+    int width, height, lumin;
+    int* image = lire_entree_IM(nom_img_in, &width, &height, &lumin);///////////
     //fclose(f_in);
     printf("Affichage des données lues");
     printf("La luminosité est de %d",lumin);

@@ -161,15 +161,10 @@ afficher_Vr(c->stage_threshold);*/
 
   //M3I *mipmapiso;
   //MI_taille triso;
-  //float scale=0.83;
+  float scale=0.83;
   //int filter_threshold=12;
   //int filter_size=6;
 
-  //int  scale_level=-log(min(mn0(m)/(c.d.x+2), mn1(m)/(c.d.y+2)))/log(scale)+1;
-
-  //int level=-scale_level*log(scale)/log(2)+2;
-
-  //printf("scale_level=%d level=%d\n", scale_level, level);
 
   //mipmapiso=M3I_alloue_special(1, mn0(m), mn1(m), level);
   /* Construit la mipmap qui  servira pour tous les niveaux d'échelle */
@@ -202,10 +197,10 @@ afficher_Vr(c->stage_threshold);*/
   //M3I8u_zero(detect_binary_filled);
   //VI_zero(cpt_y);
   //MI_cst(detect, 128);
-  //float sc;
-  //int s;
+    float sc;
+  int s;
 
-  //sc=1.0;
+  sc=1.0;
 
   //M3I8u *pyr;
   //pyr=M3I8u_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  scale_level);
@@ -216,17 +211,27 @@ afficher_Vr(c->stage_threshold);*/
 /*???????????????????????*/
 
 
-
+/** lire l'image une premiere fois**/
+FILE* f_in=fopen(nomimg,"r");
+int width,height,lumin;
+int* image_c=lire_entree_IM(f_in,&width,&height,&lumin);
+printf("TAILLLEEE: %d",width*height);
+MI* image=MI_alloue_special(1,width,height);
+image->coeffs=image_c;
+int  scale_level=-log(min(mn0(image)/(c.d.x+2), mn1(image)/(c.d.y+2)))/log(scale)+1;
+int level=-scale_level*log(scale)/log(2)+2;
+printf("scale_level=%d level=%d\n", scale_level, level);
 
   /* Parcours tous les niveaux d'échelle */
-  //printf("Echelle\n");
- // for(s=0;s<scale_level;s++)
-    //{
-      //printf("s=%d\n",s);
+  printf("Echelle\n");
+  for(s=0;s<scale_level;s++)
+    {
+      printf("s=%d\n",s);
       /* Construit  chaque niveau à partir de la mipmap */
      // scale_from_mipmap_iso_img_MI(scaled, mipmapiso , triso,  sc);
       /* Calcule le carre, l'image intégrale et l'image intégrale du carre */
 
+        scaling(image,image->dim1,image->dim2,(int)floor(image->dim1*sc),(int)floor(image->dim2*sc));
       scaled_int=construit_Image_Integrale(nomimg);
       scaled_sq_int=construit_Image_Integrale_Carre(nomimg);
       //afficher_MI(scaled_int);
@@ -274,8 +279,10 @@ afficher_Vr(c->stage_threshold);*/
           printf("Il y a: %d cadres détéctés.",cpt);
           FILE* f_im=fopen(nomimg,"r");
           out_visage(f_im, cadres, cpt, c);
-      //sc*=scale;
-    //}
+      sc*=scale;
+      free(image->coeffs);
+      free(image);
+    }
  //M3I8u_ecrit_image_P5(detect_binary, "res/detect_binary.pgm");
   //M3I8u_ecrit_image_P5(detect_binary_filtered, "res/detect_binary_filtered.pgm");
   //Mxxmul(detect_filled, detect_filled, mipmapiso);

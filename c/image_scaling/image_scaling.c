@@ -49,14 +49,14 @@ void Resample(char* fichier, int newWidth, int newHeight)
         //_height = newHeight;
 }
 
-unsigned char* scaling(unsigned char* data, int width, int height, int newWidth, int newHeight) {
-	int cy = 0;
-	int cx = 0;
-	int pixel;
-	int i = 0;
-	int j = 0;
-	int nearestMatch;
-    unsigned char* newData = (unsigned char *)malloc(newWidth * newHeight);
+int* scaling(int* data, int width, int height, int newWidth, int newHeight) {
+	long long int cy = 0;
+	long long int cx = 0;
+	long long int pixel;
+	long long int i = 0;
+	long long int j = 0;
+	long long int nearestMatch;
+    int* newData = (int *)calloc(newWidth * newHeight,sizeof(int));
 
     double scaleWidth =  (double)newWidth / (double)width;
     double scaleHeight = (double)newHeight / (double)height;
@@ -68,11 +68,14 @@ unsigned char* scaling(unsigned char* data, int width, int height, int newWidth,
             pixel = (cy * (newWidth)) + (cx);
             nearestMatch =  (((int)(cy / scaleHeight) * (width)) + ((int)(cx / scaleWidth)) );
 
-            newData[pixel    ] =  data[nearestMatch    ];
+            newData[pixel] =  data[nearestMatch    ];
             newData[pixel + 1] =  data[nearestMatch + 1];
+            //if(nearestMatch+2>width * height ||pixel+2>width * height )
+            //printf("fuck");
             newData[pixel + 2] =  data[nearestMatch + 2];
         }
     }
+
 }
     /*
 main()
