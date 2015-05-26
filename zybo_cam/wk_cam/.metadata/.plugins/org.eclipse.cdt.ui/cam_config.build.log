@@ -1,0 +1,7 @@
+12:26:03 **** Clean-only build of configuration Debug for project cam_config ****
+make clean 
+rm -rf  ./src/main.o  ./src/main.d  cam_config.elf.size  cam_config.elf
+ 
+
+12:26:03 Build Finished (took 70ms)
+

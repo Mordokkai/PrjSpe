@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]../../fsbl/Debug/fsbl.elf
+	../../../zybo_cam_ise/zybo_cam/system_top.bit
+	../Debug/cam_config.elf
+}

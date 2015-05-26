@@ -1,0 +1,85 @@
+12:25:21 **** Clean-only build of configuration Debug for project cam_config ****
+make clean 
+rm -rf  ./src/main.o  ./src/main.d  cam_config.elf.size  cam_config.elf
+ 
+12:25:21 **** Clean-only build of project zybo_cam_bsp ****
+make -k clean 
+rm -rf ps7_cortexa9_0
+12:25:22 **** Build of project zybo_cam_bsp ****
+make -k all 
+libgen -hw ../zybo_simple_hw_platform/system.xml\
+	       \
+	       -pe ps7_cortexa9_0 \
+	       -log libgen.log \
+	       system.mss
+libgen
+Xilinx EDK 14.7 Build EDK_P.20131013
+Copyright (c) 1995-2012 Xilinx, Inc.  All rights reserved.
+
+Command Line: libgen -hw ../zybo_simple_hw_platform/system.xml -pe
+ps7_cortexa9_0 -log libgen.log system.mss 
+
+
+Staging source files.
+Running DRCs.
+Running generate.
+Running post_generate.
+Running include - 'gmake -s include "COMPILER=arm-xilinx-eabi-gcc"
+"ARCHIVER=arm-xilinx-eabi-ar" "COMPILER_FLAGS= -O2 -c"
+"EXTRA_COMPILER_FLAGS=-g"'.
+
+Running libs - 'gmake -s libs "COMPILER=arm-xilinx-eabi-gcc"
+"ARCHIVER=arm-xilinx-eabi-ar" "COMPILER_FLAGS= -O2 -c"
+"EXTRA_COMPILER_FLAGS=-g"'.
+Compiling standalone
+arm-xilinx-eabi-ar: creating ../../../lib/libxil.a
+Compiling devcfg
+Compiling dmaps
+Compiling iicps
+Compiling scugic
+Compiling scutimer
+Compiling scuwdt
+Compiling uartps
+Compiling xadcps
+Compiling cpu_cortexa9
+Running execs_generate.
+Finished building libraries
+12:25:41 **** Auto Build of configuration Debug for project test ****
+make all 
+make: Nothing to be done for `all'.
+12:25:42 **** Auto Build of configuration Debug for project fsbl ****
+make all 
+make: Nothing to be done for `all'.
+12:25:42 **** Build of configuration Debug for project cam_config ****
+make all 
+Building file: ../src/main.c
+Invoking: ARM gcc compiler
+arm-xilinx-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -I../../zybo_cam_bsp/ps7_cortexa9_0/include -MMD -MP -MF"src/main.d" -MT"src/main.d" -o "src/main.o" "../src/main.c"
+Finished building: ../src/main.c
+ 
+Building target: cam_config.elf
+Invoking: ARM gcc linker
+arm-xilinx-eabi-gcc -Wl,-T -Wl,../src/lscript.ld -L../../zybo_cam_bsp/ps7_cortexa9_0/lib -o "cam_config.elf"  ./src/main.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
+Finished building target: cam_config.elf
+ 
+Invoking: ARM Print Size
+arm-xilinx-eabi-size cam_config.elf  |tee "cam_config.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+  96688	   2320	  30172	 129180	  1f89c	cam_config.elf
+Finished building: cam_config.elf.size
+ 
+12:26:03 **** Clean-only build of configuration Debug for project cam_config ****
+make clean 
+rm -rf  ./src/main.o  ./src/main.d  cam_config.elf.size  cam_config.elf
+ 
+12:26:03 **** Clean-only build of configuration Debug for project fsbl ****
+make clean 
+rm -rf  ./src/ddr_init.o ./src/ff.o ./src/fsbl_handoff.o ./src/fsbl_hooks.o ./src/image_mover.o ./src/main.o ./src/md5.o ./src/mmc.o ./src/nand.o ./src/nor.o ./src/pcap.o ./src/ps7_init.o ./src/qspi.o ./src/rsa.o ./src/sd.o  ./src/ddr_init.d ./src/ff.d ./src/fsbl_hooks.d ./src/image_mover.d ./src/main.d ./src/md5.d ./src/mmc.d ./src/nand.d ./src/nor.d ./src/pcap.d ./src/ps7_init.d ./src/qspi.d ./src/rsa.d ./src/sd.d  fsbl.elf.size  ./src/fsbl_handoff.d  fsbl.elf
+ 
+12:26:03 **** Clean-only build of configuration Debug for project test ****
+make clean 
+rm -rf  ./src/helloworld.o ./src/platform.o  ./src/helloworld.d ./src/platform.d  test.elf.size  test.elf
+ 
+12:26:03 **** Clean-only build of project zybo_cam_bsp ****
+make -k clean 
+rm -rf ps7_cortexa9_0

@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1432576504 source:/home/swallak/Documents/SLE 2A/Projet_Spé/PrjSpe/c/detection_2/main.c
+	<stdio.h>
+	<stdlib.h>
+	"pgm.h"
+
+1432576126 source:/home/swallak/Documents/SLE 2A/Projet_Spé/PrjSpe/c/detection_2/pgm.c
+	"pgm.h"
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<pthread.h>
+	<string.h>
+
+1432568187 /home/swallak/Documents/SLE 2A/Projet_Spé/PrjSpe/c/detection_2/pgm.h
+	<stdint.h>
+	<stdio.h>
+
