@@ -47,17 +47,73 @@ void Resample(char* fichier, int newWidth, int newHeight)
         //_data = newData;
         //_width = newWidth;
         //_height = newHeight;
-    }
-    
-main()
-{
-	//int width;
-	//int height;
-	//int lumin;
-	int newWidth = 256;
-	int newHeight = 256;
-	
-	Resample("../../img/barbara.pgm",newWidth,newHeight);
-	
 }
+
+unsigned char* scaling(unsigned char* data, int width, int height, int newWidth, int newHeight) {
+	int cy = 0;
+	int cx = 0;
+	int pixel;
+	int i = 0;
+	int j = 0;
+	int nearestMatch;
+    unsigned char* newData = (unsigned char *)malloc(newWidth * newHeight);
+
+    double scaleWidth =  (double)newWidth / (double)width;
+    double scaleHeight = (double)newHeight / (double)height;
+
+    for(cy = 0; cy < newHeight; cy++)
+    {
+        for(cx = 0; cx < newWidth; cx++)
+        {
+            pixel = (cy * (newWidth)) + (cx);
+            nearestMatch =  (((int)(cy / scaleHeight) * (width)) + ((int)(cx / scaleWidth)) );
+            
+            newData[pixel    ] =  data[nearestMatch    ];
+            newData[pixel + 1] =  data[nearestMatch + 1];
+            newData[pixel + 2] =  data[nearestMatch + 2];
+        }
+    }
+    return newData;
+}
+
+/*unsigned char* lire_entree_IM(FILE* f, int *width, int *height, int *lumin){
+    char tmp[10];
+    fscanf(f,"%s %d %d %d",tmp, width,height,lumin);
+    int i=0;
+    unsigned char* mi=calloc((*width)*(*height),sizeof(unsigned char));
+    unsigned char* q=mi;
+    for(i=0;i<(*width)*(*height);i++){
+        fscanf(f,"%d",(unsigned int*)q);
+        q++;
+    }
+    return mi;
+}*/
+    
+/*main()
+{
+	int width, height, lumin, cpt=1;
+	char fichier_out[10];
+	unsigned char * redim;
+	
+	printf("Debut Lecture\n");
+	//unsigned char * image = lire_image("../../img/lena.ascii.pgm",&width,&height,&lumin);
+	FILE* fichier_in = fopen("../../img/lena.ascii.pgm","r");
+	unsigned char * image = (unsigned char *)lire_entree_IM(fichier_in,&width,&height,&lumin);
+	fclose(fichier_in);
+	ecrire_image("clone.pgm", image, width, height, lumin);
+	int newWidth = width;
+	int newHeight = height;
+	
+	while(newWidth > 24 && newHeight > 24) {
+		printf("Boucle %d\n", cpt);
+		newWidth = newWidth/1.25;
+		newHeight = newHeight/1.25;
+		redim = scaling(image, width, height, newWidth, newHeight);
+		sprintf(fichier_out, "img%d.pgm", cpt);
+		ecrire_image(fichier_out, redim, newWidth, newHeight, lumin);
+		cpt++;
+		free(redim);
+	}
+	
+}*/
 	
