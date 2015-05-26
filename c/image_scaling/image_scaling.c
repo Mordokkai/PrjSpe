@@ -73,6 +73,7 @@ unsigned char* scaling(unsigned char* data, int width, int height, int newWidth,
             newData[pixel + 2] =  data[nearestMatch + 2];
         }
     }
+    return newData;
 }
     /*
 main()
@@ -90,7 +91,7 @@ main()
 
 
 
-/*unsigned char* lire_entree_IM(FILE* f, int *width, int *height, int *lumin){
+unsigned char* lire_entree_IM(FILE* f, int *width, int *height, int *lumin){
     char tmp[10];
     fscanf(f,"%s %d %d %d",tmp, width,height,lumin);
     int i=0;
@@ -101,9 +102,9 @@ main()
         q++;
     }
     return mi;
-}*/
+}
 
-/*main()
+main()
 {
 	int width, height, lumin, cpt=1;
 	char fichier_out[10];
@@ -129,6 +130,6 @@ main()
 		free(redim);
 	}
 
-}*/
+}
 
 
