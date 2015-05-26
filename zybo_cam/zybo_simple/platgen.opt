@@ -1,0 +1,13 @@
+-p
+xc7z010clg400-3
+-lang
+vhdl
+-intstyle
+ise
+-toplevel
+no
+-ti
+system_i
+-msg
+__xps/ise/xmsgprops.lst
+system.mhs

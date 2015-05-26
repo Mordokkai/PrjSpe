@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;cam_config_bsp&apos;" deleteContents="true" description="Delete resource &apos;cam_config_bsp&apos;" element1="/cam_config_bsp" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1431530814218"/>&#x0A;<refactoring comment="Delete resource &apos;cam_config&apos;" deleteContents="true" description="Delete resource &apos;cam_config&apos;" element1="/cam_config" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1431530849408"/>
+</session>

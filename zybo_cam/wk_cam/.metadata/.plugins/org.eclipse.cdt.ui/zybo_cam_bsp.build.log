@@ -1,0 +1,6 @@
+12:26:03 **** Clean-only build of project zybo_cam_bsp ****
+make -k clean 
+rm -rf ps7_cortexa9_0
+
+12:26:03 Build Finished (took 267ms)
+

@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]../../fsbl/Debug/fsbl.elf
+	../../../wk_cam/zybo_simple_hw_platform/system.bit
+	../Debug/test.elf
+}
