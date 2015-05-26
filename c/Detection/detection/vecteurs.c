@@ -122,10 +122,10 @@ void afficher_MI(MI* mi){
     }
 }
 
-void ecrire_image_pgm(MI* mi){
+void ecrire_image_pgm(MI* mi, char* nomimg){
     printf("Les dimensions du MI sont: %d %d \n",mi->dim1,mi->dim2);
     int i=0;
-    FILE*f =fopen("coucou.pgm","r+");
+    FILE*f =fopen(nomimg,"r+");
     fprintf(f,"P2\n%d %d\n255\n",mi->dim1,mi->dim2);
     int* p=mi->coeffs;
     for(i=0;i<mi->dim2;i++){
@@ -234,23 +234,21 @@ void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c){
     }
      i=0;//Le pb
     for(i=p.x;i<p.x+c.d.x;i++){//pb car p.y+c.d.y est nul selon l'image résultat
-        printf("la somme : %d",p.y+c.d.y);
+        //printf("la somme : %d",p.y+c.d.y);
         //printf("gaedvjayztdjyatzd %d %d",i,p.y+c.d.y);
         int z=p.y+c.d.y;
         m(mi,i,z)=250;
     }
 }
 
-int* lire_entree_IM(FILE* f, int width, int height, int lumin){
+unsigned char* lire_entree_IM(FILE* f, int* width, int* height, int* lumin){
     char tmp[10];
-    fscanf(f,"%s %d %d %d",&tmp, &width,&height,&lumin);
+    fscanf(f,"%s %d %d %d",tmp,width,height,lumin);
     int i=0;
-    int* mi=calloc(width*height,sizeof(int));
-   // printf("youhou");
-    int* q=mi;
-    for(i=0;i<width*height;i++){
+    unsigned char* mi=calloc(*width* *height,sizeof(unsigned char));
+    unsigned char* q=mi;
+    for(i=0;i<*width* *height;i++){
         fscanf(f,"%d",q);
-        printf("un de plus");
         q++;
     }
     return mi;
@@ -273,9 +271,10 @@ void ecrire_sortie_MI(FILE* f, MI* mi){
 
 void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c){
   FILE*f_in = fopen(nom_img_in,"r");
-    FILE* f_out = fopen("sortie.pgm","wa");
-    int width, height, lumin;
-    unsigned char* image = lire_image(nom_img_in, &width, &height, &lumin);
+    //FILE* f_out = fopen("sortie.pgm","w");
+    int* width, *height, *lumin;
+    unsigned char* image = lire_entree_IM(nom_img_in, &width, &height, &lumin);
+    //fclose(f_in);
     printf("Affichage des données lues");
     printf("La luminosité est de %d",lumin);
     MI* mi= MI_alloue_special(1,width,height);
@@ -289,10 +288,10 @@ void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c){
         p++;
         i++;
     }
-    ecrire_image_pgm(mi);
+    ecrire_image_pgm(mi,"sortie.pgm");
 //ecrire_sortie_MI(f_out,mi);
 //ecrire_image("sortie.pgm", mi->coeffs, width, height, lumin);
-fclose(f_out);
+//fclose(f_out);
 }
 
 

@@ -26,7 +26,7 @@ void Resample(char* fichier, int newWidth, int newHeight)
             {
                 pixel = (cy * (newWidth)) + (cx);
                 nearestMatch =  (((int)(cy / scaleHeight) * (width)) + ((int)(cx / scaleWidth)) );
-                
+
                 newData[pixel    ] =  data[nearestMatch    ];
                 newData[pixel + 1] =  data[nearestMatch + 1];
                 newData[pixel + 2] =  data[nearestMatch + 2];
@@ -40,7 +40,7 @@ void Resample(char* fichier, int newWidth, int newHeight)
 			fprintf(fichierOut,"%d ",newData[i]);
 			j++;
 			if (j == newWidth - 1)
-				fprintf(fichierOut,"\n");	
+				fprintf(fichierOut,"\n");
 	}
         fclose(fichierOut);
         //delete[] _data;
@@ -48,7 +48,7 @@ void Resample(char* fichier, int newWidth, int newHeight)
         //_width = newWidth;
         //_height = newHeight;
     }
-    
+    /*
 main()
 {
 	//int width;
@@ -56,8 +56,8 @@ main()
 	//int lumin;
 	int newWidth = 256;
 	int newHeight = 256;
-	
+
 	Resample("../../img/barbara.pgm",newWidth,newHeight);
-	
-}
-	
+
+}*/
+

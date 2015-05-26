@@ -114,6 +114,16 @@ afficher_Vr(c->stage_threshold);*/
 	//On crée la structure de cascade à partir du fichier texte
   Haar_Cascade c;
   Haar_Cascade_read_list(&c, f_c);
+
+
+
+
+
+
+
+
+
+
   /**Affichage de la cascade**/
 /**Testé, le readlist n'a aucun pb**/
 //afficher_MI(c.rect);
@@ -262,7 +272,8 @@ afficher_Vr(c->stage_threshold);*/
 
           }
           printf("Il y a: %d cadres détéctés.",cpt);
-          out_visage(nomimg, cadres, cpt, c);
+          FILE* f_im=fopen(nomimg,"r");
+          out_visage(f_im, cadres, cpt, c);
       //sc*=scale;
     //}
  //M3I8u_ecrit_image_P5(detect_binary, "res/detect_binary.pgm");
