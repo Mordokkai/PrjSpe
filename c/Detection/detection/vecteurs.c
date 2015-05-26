@@ -52,7 +52,10 @@ void Vr_desalloue(Vr* vr){
 	free(vr->coeffs);
 	free(vr);
 }
-
+void MI_desalloue(MI* mi){
+	free(mi->coeffs);
+	free(mi);
+}
 
 void affiche_Vr(Vr vr){
 	int i;
@@ -122,16 +125,16 @@ void afficher_MI(MI* mi){
     }
 }
 
-void ecrire_image_pgm(MI* mi){
+void ecrire_image_pgm(MI* mi,FILE* f_out){
     printf("Les dimensions du MI sont: %d %d \n",mi->dim1,mi->dim2);
     int i=0;
-    FILE*f =fopen("coucou.pgm","r+");
-    fprintf(f,"P2\n%d %d\n255\n",mi->dim1,mi->dim2);
+    //FILE*f =fopen("coucou.pgm","r+");
+    fprintf(f_out,"P2\n%d %d\n255\n",mi->dim1,mi->dim2);
     int* p=mi->coeffs;
     for(i=0;i<mi->dim2;i++){
         int j=0;
         for(j=0;j<mi->dim1;j++){
-            fprintf(f,"%d ", *(p++));
+            fprintf(f_out,"%d ", *(p++));
         }
         printf("\n");
     }
@@ -171,49 +174,52 @@ void afficher_VI(VI* vi){
 
 MI* construit_Image_Integrale(char* nom_img){
     /**On recupère l'image intégrale**/
-    int width, height, lumin;
-    unsigned char* image = lire_image(nom_img, &width, &height, &lumin);
+    int width=0, height=0, lumin=255;
+    //unsigned char* image = lire_image(nom_img, &width, &height, &lumin);
+    FILE* f= fopen(nom_img,"r");
+    MI* image_mi=lire_entree_IM(f);
+    int* image=image_mi->coeffs;
+    //printf("Les params: %d %d %d",width,height,lumin);
+    fclose(f);
+    //printf("coucou");
 	int32_t* int_image = integral_image(image, width, height);
 	/**On la met dans la matrice**/
-	MI* mi= MI_alloue_special(1,width,height);
+	//MI* mi= MI_alloue_special(1,width,height);
+	MI* mi=calloc(1,sizeof(MI));
+	mi->dim1=width;
+	mi->dim2=height;
 	mi->coeffs=(int *)int_image;
-	return mi;
-	/*int i=0;
-	for(i=0;i<height;i++){
-        int j=0;
-        for(j=0;j<width;j++){
-            mi[i*width+j]=int_image[i*width+j];
+	free(int_image);
+	MI_desalloue(image_mi);
 
-        }
-	}*/
+	return mi;
 }
 
 MI* construit_Image_Integrale_Carre(char* nom_img){
     /**On recupère l'image intégrale**/
-    int width, height, lumin;
-    unsigned char* image = lire_image(nom_img, &width, &height, &lumin);
+    int width=0, height=0, lumin=255;
+    //unsigned char* image = lire_image(nom_img, &width, &height, &lumin);
+     FILE* f= fopen(nom_img,"r");
+    MI* image_mi=lire_entree_IM(f);
+    int* image=image_mi->coeffs;
+    //printf("Les params: %d %d %d",width,height,lumin);
+    fclose(f);
 	int32_t* square_int=integral_image_carre(image, width, height);
 	/**On la met dans la matrice**/
-	MI* mi= MI_alloue_special(1,width,height);
+	//MI* mi= MI_alloue_special(1,width,height);
+	MI* mi=calloc(1,sizeof(MI));
+	mi->dim1=width;
+	mi->dim2=height;
 	mi->coeffs=(int *)square_int;
-	return mi;
-	/*int i=0;
-	for(i=0;i<height;i++){
-        int j=0;
-        for(j=0;j<width;j++){
-            mi[i*width+j]=int_image[i*width+j];
+	free(square_int);
+	MI_desalloue(image_mi);
 
-        }
-	}*/
+	return mi;
 }
 
 
 void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c){
     int i=0;
-    //printf("Ecrit en %d %d",p.x,p.y);
-    //m(mi,p.x,p.y)=250;
-     //m(mi,p.x+c.d.x,p.y+c.d.y)=250;
-
 
     /**La barre supérieure**/
     for(i=p.x;i<p.x+c.d.x;i++){
@@ -232,31 +238,36 @@ void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c){
     for(i=p.y;i<p.y+c.d.y;i++){
         m(mi,p.x+c.d.x,i)=250;
     }
-     i=0;//Le pb
+    /**La barre inférieure**/
+     i=0;
     for(i=p.x;i<p.x+c.d.x;i++){//pb car p.y+c.d.y est nul selon l'image résultat
-        printf("la somme : %d",p.y+c.d.y);
         //printf("gaedvjayztdjyatzd %d %d",i,p.y+c.d.y);
-        int z=p.y+c.d.y;
+        int z=p.y+c.d.y; //Varaibale intermédiaire totalement inutile normalement mais ne marche pas sans
         m(mi,i,z)=250;
     }
 }
 
-int* lire_entree_IM(FILE* f, int width, int height, int lumin){
+MI* lire_entree_IM(FILE* f){
     char tmp[10];
+    int width,height,lumin;
     fscanf(f,"%s %d %d %d",&tmp, &width,&height,&lumin);
     int i=0;
-    int* mi=calloc(width*height,sizeof(int));
+    MI* mi= MI_alloue_special(1,width,height);
+    //int* mi=calloc(width*height,sizeof(int));
    // printf("youhou");
-    int* q=mi;
-    for(i=0;i<width*height;i++){
+    int* q=mi->coeffs;
+    for(i=0;i<width* height;i++){
         fscanf(f,"%d",q);
-        printf("un de plus");
+        //printf("un de plus");
         q++;
     }
     return mi;
 }
 
-
+void lire_entree_IM_param(FILE* f, int* width, int* height, int* lumin){
+    char tmp[10];
+    fscanf(f,"%s %d %d %d",&tmp, width,height,lumin);
+}
 
 
 
@@ -271,13 +282,28 @@ void ecrire_sortie_MI(FILE* f, MI* mi){
 
 }
 
+MI* fusion_cadre_image(MI* img, MI* cadre){
+    int i=0;
+    for(i=0;i<img->dim1*img->dim2;i++){
+        img->coeffs[i]+=cadre->coeffs[i];
+    }
+    return img;
+}
+
+
+
+
 void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c){
-  FILE*f_in = fopen(nom_img_in,"r");
-    FILE* f_out = fopen("sortie.pgm","wa");
+  FILE* f_in = fopen(nom_img_in,"rw");
+    //FILE* f_out = fopen("sortie.pgm","wa");
     int width, height, lumin;
-    unsigned char* image = lire_image(nom_img_in, &width, &height, &lumin);
-    printf("Affichage des données lues");
-    printf("La luminosité est de %d",lumin);
+
+    //unsigned char* image = lire_image(nom_img_in, &width, &height, &lumin);
+     //FILE* f= fopen(nom_img,"r");
+    MI* image_mi=lire_entree_IM(f_in);
+    int* image=image_mi->coeffs;
+    //printf("Affichage des données lues");
+    //printf("La luminosité est de %d",lumin);
     MI* mi= MI_alloue_special(1,width,height);
     //mi->coeffs=(int32_t *)image;
 
@@ -285,14 +311,19 @@ void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c){
     while(i< nb_Cadres){
         colorer_Pixel(mi,*p,c);
 
-        //printf("couleur");
+        printf("couleur");
         p++;
         i++;
     }
-    ecrire_image_pgm(mi);
+    MI* mi_img= lire_entree_IM(f_in);
+    MI* mi_result=fusion_cadre_image(mi_img,mi);
+    ecrire_image_pgm(mi_result,f_in);
+    free(image);
+    MI_desalloue(mi);
 //ecrire_sortie_MI(f_out,mi);
 //ecrire_image("sortie.pgm", mi->coeffs, width, height, lumin);
-fclose(f_out);
+fclose(f_in);
+//fclose(f_out);
 }
 
 

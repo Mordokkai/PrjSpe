@@ -4,8 +4,9 @@
 #include <inttypes.h>
 #include <string.h>
 #include "../image_integrale/image_io.h"
+#include "../Detection/detection/vecteurs.h"
 
-void Resample(char* fichier, int newWidth, int newHeight)
+void Resample(FILE* fichier, int newWidth, int newHeight)
     {
     	int width,height,lumin;
     	int cy = 0;
@@ -14,9 +15,19 @@ void Resample(char* fichier, int newWidth, int newHeight)
     	int i = 0;
     	int j = 0;
     	int nearestMatch;
-		unsigned char* data = lire_image(fichier,&width,&height,&lumin);
-        unsigned char* newData = (unsigned char *)malloc(newWidth * newHeight);
-
+		//unsigned char* data = lire_image(fichier,&width,&height,&lumin);
+        //unsigned char* newData = (unsigned char *)malloc(newWidth * newHeight);
+        MI* mi=lire_entree_IM(fichier);
+        width=mi->dim1;
+        height=mi->dim2;
+        lumin=255;//il faudrait changer la structure
+        int* data=mi->coeffs;
+        //printf("jsbfdskfysdkufgksudygfkusdygfusgyd");
+       // printf("%d",(mi->coeffs)[0]);
+        //while(1);
+        //int* newData = (int *)calloc(newWidth * newHeight,sizeof(int));
+        MI* newDataMi= MI_alloue_special(1,newWidth,newHeight);
+        int* newData=newDataMi->coeffs;
         double scaleWidth =  (double)newWidth / (double)width;
         double scaleHeight = (double)newHeight / (double)height;
 
@@ -26,29 +37,36 @@ void Resample(char* fichier, int newWidth, int newHeight)
             {
                 pixel = (cy * (newWidth)) + (cx);
                 nearestMatch =  (((int)(cy / scaleHeight) * (width)) + ((int)(cx / scaleWidth)) );
-                
-                newData[pixel    ] =  data[nearestMatch    ];
+                //printf("nearest= %d",nearestMatch);
+                newData[pixel] =  data[nearestMatch];
                 newData[pixel + 1] =  data[nearestMatch + 1];
                 newData[pixel + 2] =  data[nearestMatch + 2];
             }
         }
-        FILE* fichierOut = fopen("group_scaled_final.pgm","w");
+        int pk=0;
+        //while(pk<100000000000)pk++;
+         fclose(fichier);
+        FILE* fichierOut = fopen("lena.ascii.pgm","w");
+        ecrire_image_pgm(newDataMi,fichierOut);
+        free(data);
+         MI_desalloue(newDataMi);
         //on ecrit d'abord l'entete
-        fprintf(fichierOut,"%s\n%d %d\n%d\n","P2",newWidth,newHeight,lumin);
-        for(i=0;i < newWidth * newHeight;i++)
-	{
-			fprintf(fichierOut,"%d ",newData[i]);
-			j++;
-			if (j == newWidth - 1)
-				fprintf(fichierOut,"\n");	
-	}
+        //fprintf(fichierOut,"%s\n%d %d\n%d\n","P2",newWidth,newHeight,lumin);
+       // for(i=0;i < newWidth * newHeight;i++)
+	//{
+		//	fprintf(fichierOut,"%d ",newData[i]);
+			//j++;
+			//if (j == newWidth - 1)
+			//	fprintf(fichierOut,"\n");
+	//}
         fclose(fichierOut);
+
         //delete[] _data;
         //_data = newData;
         //_width = newWidth;
-        //_height = newHeight;
+        //_height = newHeight;*/
     }
-    
+ /*
 main()
 {
 	//int width;
@@ -56,8 +74,8 @@ main()
 	//int lumin;
 	int newWidth = 256;
 	int newHeight = 256;
-	
+
 	Resample("../../img/barbara.pgm",newWidth,newHeight);
-	
-}
-	
+
+}*/
+

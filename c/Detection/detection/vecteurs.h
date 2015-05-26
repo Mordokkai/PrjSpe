@@ -54,7 +54,7 @@ MI* MI_alloue_special(int useless, int dim1, int dim2);
 Vr* Vr_alloue_special(int useless, int dim) ;
 VI* VI_alloue_special(int useless, int dim);
 Mr* Mr_alloue_special(int useless, int dim1, int dim2);
-
+void MI_desalloue(MI* mi);
 
 
 MI_entree_fichier(MI* mi, int nbCol, int nbLig, FILE* f);
@@ -75,5 +75,5 @@ void  termine_programme(void);
 void message_erreur(void);
 void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c);
 void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c);
-
+MI* lire_entree_IM(FILE* f);
 #endif

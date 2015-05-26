@@ -3,6 +3,7 @@
 #include "detection.h"
 #include "ajout.h"
 #include "vecteurs.h"
+#include <unistd.h>
 #include "../../image_integrale/image_integrale.h"
 #include <math.h>
 
@@ -18,6 +19,8 @@
 #define vn(a) a->dim
 
 int main(int argc, char **argv) {
+    //close(4403);
+    //while(1);
 	/*char* file="haarcascade_frontalface_short.txt";
 	FILE* doc = fopen(file, "r");
 	printf("\nNombre de stages: %d",getNbStages(doc));
@@ -151,15 +154,21 @@ afficher_Vr(c->stage_threshold);*/
 
   //M3I *mipmapiso;
   //MI_taille triso;
-  //float scale=0.83;
+  float scale=0.83;
   //int filter_threshold=12;
   //int filter_size=6;
 
-  //int  scale_level=-log(min(mn0(m)/(c.d.x+2), mn1(m)/(c.d.y+2)))/log(scale)+1;
+  /**Rajout du scale**/
+  int width_param,height_param,lumin_param;
+  FILE* f_param=fopen(nomimg,"r");
+    lire_entree_IM_param(f_param,&width_param,&height_param,&lumin_param);
+fclose(f_param);
 
-  //int level=-scale_level*log(scale)/log(2)+2;
+  int  scale_level=-log(min(width_param/(c.d.x+2), height_param/(c.d.y+2)))/log(scale)+1;
 
-  //printf("scale_level=%d level=%d\n", scale_level, level);
+  int level=-scale_level*log(scale)/log(2)+2;
+
+  printf("scale_level=%d level=%d\n", scale_level, level);
 
   //mipmapiso=M3I_alloue_special(1, mn0(m), mn1(m), level);
   /* Construit la mipmap qui  servira pour tous les niveaux d'échelle */
@@ -192,10 +201,11 @@ afficher_Vr(c->stage_threshold);*/
   //M3I8u_zero(detect_binary_filled);
   //VI_zero(cpt_y);
   //MI_cst(detect, 128);
-  //float sc;
-  //int s;
+  float sc;
+  int s;
 
-  //sc=1.0;
+  sc=1;
+
 
   //M3I8u *pyr;
   //pyr=M3I8u_alloue_special(1,  m3n0(detect_binary),  m3n1(detect_binary),  scale_level);
@@ -210,9 +220,20 @@ afficher_Vr(c->stage_threshold);*/
 
   /* Parcours tous les niveaux d'échelle */
   //printf("Echelle\n");
- // for(s=0;s<scale_level;s++)
-    //{
-      //printf("s=%d\n",s);
+  for(s=0;s<scale_level;s++)
+    {
+    printf("Echelle!");
+    f_param=fopen(nomimg,"r");
+        lire_entree_IM_param(f_param,&width_param,&height_param,&lumin_param);
+      fclose(f_param);
+      printf("s=%d\n",s);
+      printf("%d %d",width_param,height_param);
+      printf("%f %f",sc*width_param,sc*height_param);
+      //On va resizer l'image comme il faut
+    f_param=fopen(nomimg,"r");
+      Resample(f_param,(int)(sc*width_param),(int)(sc*height_param));
+      //fclose(f_param);
+      //while(1);
       /* Construit  chaque niveau à partir de la mipmap */
      // scale_from_mipmap_iso_img_MI(scaled, mipmapiso , triso,  sc);
       /* Calcule le carre, l'image intégrale et l'image intégrale du carre */
@@ -233,7 +254,7 @@ afficher_Vr(c->stage_threshold);*/
           }*/
       //int  r;
       Pixel o;
-      Pixel* cadres=calloc(2000,sizeof(Pixel)); /**Il est fort improbable d'avoir plus de 2000 cadres détéctés**/
+      Pixel* cadres=calloc(200,sizeof(Pixel)); /**Il est fort improbable d'avoir plus de 2000 cadres détéctés**/
       printf("Haar evaluate\n");
       int cpt=0;
       /* Pour tous les pixels de l'image, detecte une zone */
@@ -261,10 +282,12 @@ afficher_Vr(c->stage_threshold);*/
           }
 
           }
+
           printf("Il y a: %d cadres détéctés.",cpt);
           out_visage(nomimg, cadres, cpt, c);
-      //sc*=scale;
-    //}
+          free(cadres);
+      sc*=scale;
+    }
  //M3I8u_ecrit_image_P5(detect_binary, "res/detect_binary.pgm");
   //M3I8u_ecrit_image_P5(detect_binary_filtered, "res/detect_binary_filtered.pgm");
   //Mxxmul(detect_filled, detect_filled, mipmapiso);
