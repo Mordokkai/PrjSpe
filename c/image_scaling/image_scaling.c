@@ -73,7 +73,7 @@ unsigned char* scaling(unsigned char* data, int width, int height, int newWidth,
             newData[pixel + 2] =  data[nearestMatch + 2];
         }
     }
-
+}
     /*
 main()
 {
