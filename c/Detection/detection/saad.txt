@@ -1,0 +1,1 @@
+cat haarcascade_frontalface_short.txt | bash haar_txt_to_list > vide.txt
