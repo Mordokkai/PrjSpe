@@ -88,4 +88,5 @@ void ecrire_image(char* fichier, unsigned char* image, int width, int height, in
 		cpt3++;
 	}
 	store_pixmap(fichier,data,width,lumin,height);
+	free(data);
 }

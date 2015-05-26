@@ -96,10 +96,8 @@ unsigned char* lire_entree_IM(FILE* f, int *width, int *height, int *lumin){
     fscanf(f,"%s %d %d %d",tmp, width,height,lumin);
     int i=0;
     unsigned char* mi=calloc((*width)*(*height),sizeof(unsigned char));
-    unsigned char* q=mi;
     for(i=0;i<(*width)*(*height);i++){
-        fscanf(f,"%d",(unsigned int*)q);
-        q++;
+        fscanf(f,"%d",(unsigned int*)(mi+i));
     }
     return mi;
 }
@@ -111,7 +109,6 @@ main()
 	unsigned char * redim;
 
 	printf("Debut Lecture\n");
-	//unsigned char * image = lire_image("../../img/lena.ascii.pgm",&width,&height,&lumin);
 	FILE* fichier_in = fopen("../../img/lena.ascii.pgm","r");
 	unsigned char * image = (unsigned char *)lire_entree_IM(fichier_in,&width,&height,&lumin);
 	fclose(fichier_in);
@@ -129,6 +126,7 @@ main()
 		cpt++;
 		free(redim);
 	}
+	free(image);
 
 }
 
