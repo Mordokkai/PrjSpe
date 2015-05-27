@@ -3,6 +3,7 @@
 
 #include"pgm.h"
 #include"integralpgm.h"
+#include"classiefier.h"
 int main(int argc, char ** argv)
 {
     pgmFormat* pgm;
@@ -16,16 +17,17 @@ int main(int argc, char ** argv)
         pgm=readPgm(f);
         if(pgm == NULL)
             printf("not a pgm file");
-        else
-            printPgm(*pgm);
+    //printPgm(*pgm);
 
-    //linearNormalization(pgm);
-    //printPgm(*pgm);
-    //histogramEqualization(pgm);
-    //printPgm(*pgm);
-    integralPgm integral = generateIntegralPgm(*pgm);
-    printIntegralPgm(integral);
-    fclose(f);
+
+
+////    fclose(f);
+    printf("\n****\nCASCADE****\n");
+    Cascade* cascade = openCascade("../../cascade/haarcascade_frontalface_short.txt");
+    printf("\n*****\SCANING*****\n");
+    scanPgm(cascade,pgm);
+
+
 
     return 0;
 }

@@ -11,9 +11,13 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="groupe1_160x120a.pgm" />
 				<Compiler>
+					<Add option="-Wshadow" />
+					<Add option="-Winit-self" />
+					<Add option="-Wmain" />
 					<Add option="-g" />
-					<Add option='&quot;-std=c99&quot;  &quot;-pthread&quot;' />
+					<Add option='&quot;-std=c99&quot;  &quot;-pthread&quot; -Wno-format' />
 				</Compiler>
 				<Linker>
 					<Add option="-pthread" />

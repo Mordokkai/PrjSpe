@@ -108,10 +108,11 @@ void printPgm(pgmFormat pgm)
 void savePgm (pgmFormat pgm, char* filename){
     //printing the histogram
     printf("Saving file...\n");
-    FILE* f= fopen(filename, "w");
+    FILE* f= fopen(filename, "w+");
     if(f==NULL)
     {
         printf("Error saving the file");
+        return;
     }
     fprintf(f, "%c%c\n%u %u\n%u\n", pgm.magicNumber[0], pgm.magicNumber[1],pgm.width, pgm.height, pgm.maxValue);
     fflush(f);
