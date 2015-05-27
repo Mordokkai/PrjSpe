@@ -13,7 +13,9 @@ integralPgm generateIntegralPgm(pgmFormat pgm){
     integral.width=pgm.width;
 
     //initiliazition
+
     integral.values=(int32_t **)malloc(integral.height*sizeof(int32_t*));
+
     for(int i=0; i<integral.height; i++)
     {
         integral.values[i]=malloc(integral.width*sizeof(int32_t));
@@ -23,7 +25,7 @@ integralPgm generateIntegralPgm(pgmFormat pgm){
         }
     }
 
-    uint32_t calculate(uint16_t i, uint16_t j)
+    uint32_t calculate(int32_t i, int32_t j)
     {
         if(integral.values[i][j]!=-1)
             return integral.values[i][j];
@@ -51,7 +53,7 @@ integralPgm generateIntegralPgm(pgmFormat pgm){
 
 }
 
-#define PRINTING_WIDTH "%6d"
+#define PRINTING_WIDTH "%6d "
 
 void printIntegralPgm(integralPgm integral){
     printf("***INGRAL-PGM***\n");
