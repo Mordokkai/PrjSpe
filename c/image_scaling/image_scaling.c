@@ -26,7 +26,7 @@ void Resample(char* fichier, int newWidth, int newHeight)
             {
                 pixel = (cy * (newWidth)) + (cx);
                 nearestMatch =  (((int)(cy / scaleHeight) * (width)) + ((int)(cx / scaleWidth)) );
-                
+
                 newData[pixel    ] =  data[nearestMatch    ];
                 newData[pixel + 1] =  data[nearestMatch + 1];
                 newData[pixel + 2] =  data[nearestMatch + 2];
@@ -40,15 +40,42 @@ void Resample(char* fichier, int newWidth, int newHeight)
 			fprintf(fichierOut,"%d ",newData[i]);
 			j++;
 			if (j == newWidth - 1)
-				fprintf(fichierOut,"\n");	
+				fprintf(fichierOut,"\n");
 	}
         fclose(fichierOut);
         //delete[] _data;
         //_data = newData;
         //_width = newWidth;
         //_height = newHeight;
+}
+
+unsigned char* scaling(unsigned char* data, int width, int height, int newWidth, int newHeight) {
+	int cy = 0;
+	int cx = 0;
+	int pixel;
+	int i = 0;
+	int j = 0;
+	int nearestMatch;
+    unsigned char* newData = (unsigned char *)malloc(newWidth * newHeight);
+
+    double scaleWidth =  (double)newWidth / (double)width;
+    double scaleHeight = (double)newHeight / (double)height;
+
+    for(cy = 0; cy < newHeight; cy++)
+    {
+        for(cx = 0; cx < newWidth; cx++)
+        {
+            pixel = (cy * (newWidth)) + (cx);
+            nearestMatch =  (((int)(cy / scaleHeight) * (width)) + ((int)(cx / scaleWidth)) );
+
+            newData[pixel    ] =  data[nearestMatch    ];
+            newData[pixel + 1] =  data[nearestMatch + 1];
+            newData[pixel + 2] =  data[nearestMatch + 2];
+        }
     }
-    
+    return newData;
+}
+    /*
 main()
 {
 	//int width;
@@ -56,8 +83,51 @@ main()
 	//int lumin;
 	int newWidth = 256;
 	int newHeight = 256;
-	
+
 	Resample("../../img/barbara.pgm",newWidth,newHeight);
-	
+
+}*/
+
+
+
+
+unsigned char* lire_entree_IM(FILE* f, int *width, int *height, int *lumin){
+    char tmp[10];
+    fscanf(f,"%s %d %d %d",tmp, width,height,lumin);
+    int i=0;
+    unsigned char* mi=calloc((*width)*(*height),sizeof(unsigned char));
+    for(i=0;i<(*width)*(*height);i++){
+        fscanf(f,"%d",(unsigned int*)(mi+i));
+    }
+    return mi;
 }
-	
+
+main()
+{
+	int width, height, lumin, cpt=1;
+	char fichier_out[10];
+	unsigned char * redim;
+
+	printf("Debut Lecture\n");
+	FILE* fichier_in = fopen("../../img/lena.ascii.pgm","r");
+	unsigned char * image = (unsigned char *)lire_entree_IM(fichier_in,&width,&height,&lumin);
+	fclose(fichier_in);
+	ecrire_image("clone.pgm", image, width, height, lumin);
+	int newWidth = width;
+	int newHeight = height;
+
+	while(newWidth > 24 && newHeight > 24) {
+		printf("Boucle %d\n", cpt);
+		newWidth = newWidth/1.25;
+		newHeight = newHeight/1.25;
+		redim = scaling(image, width, height, newWidth, newHeight);
+		sprintf(fichier_out, "img%d.pgm", cpt);
+		ecrire_image(fichier_out, redim, newWidth, newHeight, lumin);
+		cpt++;
+		free(redim);
+	}
+	free(image);
+
+}
+
+

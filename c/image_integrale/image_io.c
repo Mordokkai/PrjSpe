@@ -56,9 +56,9 @@ unsigned char* lire_image(char* fichier, int* width, int* height, int* lumin) {
 }
 
 void ecrire_image(char* fichier, unsigned char* image, int width, int height, int lumin) {
-	int i;
+	int i=0;
 	unsigned char* data;
-	unsigned char buffer[4];
+	unsigned char buffer[5];
 	int cpt = 0, cpt2 = 0, cpt3 = 0;
 	data = calloc(width * height * 4, sizeof(unsigned char));
 	for (i = 0; i < width * height; i++){
@@ -88,4 +88,5 @@ void ecrire_image(char* fichier, unsigned char* image, int width, int height, in
 		cpt3++;
 	}
 	store_pixmap(fichier,data,width,lumin,height);
+	free(data);
 }

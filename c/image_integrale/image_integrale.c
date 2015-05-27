@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
-#include "image_io.c"
+#include "image_io.h"
 // x >
 // y V
 // *(data+j*width+i)
