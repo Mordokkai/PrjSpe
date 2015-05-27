@@ -50,14 +50,15 @@ void Resample(char* fichier, int newWidth, int newHeight)
 }
 
 int* scaling(int* data, int width, int height, int newWidth, int newHeight) {
+    if(width==newWidth) {printf("on y passe") ;return data;}
 	long long int cy = 0;
 	long long int cx = 0;
 	long long int pixel;
 	long long int i = 0;
 	long long int j = 0;
 	long long int nearestMatch;
-    int* newData = (int *)calloc(newWidth * newHeight,sizeof(int));
-
+    //int* newData = (int *)malloc(newWidth * newHeight*sizeof(int));
+    int newData[1024*1024];
     double scaleWidth =  (double)newWidth / (double)width;
     double scaleHeight = (double)newHeight / (double)height;
 
@@ -66,15 +67,20 @@ int* scaling(int* data, int width, int height, int newWidth, int newHeight) {
         for(cx = 0; cx < newWidth; cx++)
         {
             pixel = (cy * (newWidth)) + (cx);
-            nearestMatch =  (((int)(cy / scaleHeight) * (width)) + ((int)(cx / scaleWidth)) );
+            nearestMatch =  (((int)floor((cy / scaleHeight))* (width)) + ((int)floor((cx / scaleWidth))) );
 
             newData[pixel] =  data[nearestMatch    ];
             newData[pixel + 1] =  data[nearestMatch + 1];
             //if(nearestMatch+2>width * height ||pixel+2>width * height )
             //printf("fuck");
-            newData[pixel + 2] =  data[nearestMatch + 2];
+            newData[pixel + 2] =  data[nearestMatch+2];
+
         }
     }
+
+
+
+    return newData;
 
 }
     /*
@@ -92,8 +98,8 @@ main()
 
 
 
-
-/*unsigned char* lire_entree_IM(FILE* f, int *width, int *height, int *lumin){
+/*
+unsigned char* lire_entree_IM(FILE* f, int *width, int *height, int *lumin){
     char tmp[10];
     fscanf(f,"%s %d %d %d",tmp, width,height,lumin);
     int i=0;
@@ -104,9 +110,9 @@ main()
         q++;
     }
     return mi;
-}*/
+}
 
-/*main()
+main()
 {
 	int width, height, lumin, cpt=1;
 	char fichier_out[10];
@@ -132,6 +138,6 @@ main()
 		free(redim);
 	}
 
-}*/
-
+}
+*/
 

@@ -8,7 +8,7 @@ unsigned char* lire_image(char* fichier, int* width, int* height, int* lumin) {
 	unsigned char* data;
 	unsigned char buffer[3];
     int i, j;
-    
+
 	if( (data = load_pixmap(fichier,width,height,lumin)) == NULL) {
 		printf("Erreur à la lecture de l'image");
 		exit(1);

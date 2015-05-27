@@ -14,8 +14,8 @@
 #define mn0(a) a->dim1
 #define mn1(a) a->dim2
 #define vn(a) a->dim
-/**ALLOCATIONS**/
 
+int SORTIE =0;//Variable globale pour les noms des fichiers de sortie
 
 MI* MI_alloue_special(int useless, int dim1, int dim2){
 	MI* mi = (MI*) malloc(sizeof(VI));
@@ -53,7 +53,6 @@ void Vr_desalloue(Vr* vr){
 	free(vr);
 }
 
-
 void affiche_Vr(Vr vr){
 	int i;
   printf("[ ");
@@ -66,48 +65,48 @@ void affiche_Vr(Vr vr){
 /**AFFICHAGE**/
 void affiche_VI(VI vi){
 	int i;
-  printf("[ ");
-  for(i = 0; i < vi.dim; i++) {
-    printf("%d ", vi.coeffs[i]);
-  }
-  printf("]");
+    printf("[ ");
+    for(i = 0; i < vi.dim; i++) {
+        printf("%d ", vi.coeffs[i]);
+    }
+    printf("]");
 }
 
 /**CONSTRUCTION**/
 MI_entree_fichier(MI* mi, int nbCol, int nbLig, FILE* f){
-int i=0;
-int* p=mi->coeffs;
-while(i<nbLig*nbCol){
-    fscanf(f,"%d ",&(p)[i]);
-    i++;
-}
+    int i=0;
+    int* p=mi->coeffs;
+    while(i<nbLig*nbCol){
+        fscanf(f,"%d ",&(p)[i]);
+        i++;
+    }
 }
 
 Vr_entree_fichier(Vr* vr, int nbLig, FILE* f){
-int i=0;
-int* p=vr->coeffs;
-while(i<nbLig){
-    fscanf(f,"%f",&(p)[i]);
-    i++;
-}
-}
-VI_entree_fichier(VI* vi, int nbLig, FILE* f){
-int i=0;
-while(i<nbLig){
-    fscanf(f,"%d",&(vi->coeffs)[i]);
-    i++;
-}
-}
-Mr_entree_fichier(Mr* mr, int nbCol, int nbLig, FILE* f){
-int i=0;
-float* r=mr->coeffs;
-while(i<nbLig*nbCol){
-    fscanf(f,"%f ",&(r)[i]);
-    //printf("youpi");
-    i++;
-}
+    int i=0;
+    int* p=vr->coeffs;
+    while(i<nbLig){
+        fscanf(f,"%f",&(p)[i]);
+        i++;
+    }
 }
 
+VI_entree_fichier(VI* vi, int nbLig, FILE* f){
+    int i=0;
+    while(i<nbLig){
+        fscanf(f,"%d",&(vi->coeffs)[i]);
+        i++;
+    }
+}
+
+Mr_entree_fichier(Mr* mr, int nbCol, int nbLig, FILE* f){
+    int i=0;
+    float* r=mr->coeffs;
+    while(i<nbLig*nbCol){
+        fscanf(f,"%f ",&(r)[i]);
+        i++;
+    }
+}
 
 void afficher_MI(MI* mi){
     printf("Les dimensions du MI sont: %d %d \n",mi->dim1,mi->dim2);
@@ -155,8 +154,8 @@ void afficher_Vr(Vr* vr){
     int i=0;
     float* p=vr->coeffs;
     for(i=0;i<vr->dim;i++){
-    printf("%f\n", *(p));
-    p++;
+        printf("%f\n", *(p));
+        p++;
     }
 }
 void afficher_VI(VI* vi){
@@ -164,62 +163,37 @@ void afficher_VI(VI* vi){
     int i=0;
     int* p=vi->coeffs;
     for(i=0;i<vi->dim;i++){
-    printf("%d\n", *(p++));
+        printf("%d\n", *(p++));
     }
 }
 
 
-MI* construit_Image_Integrale(char* nom_img){
+MI* construit_Image_Integrale(MI* image){
     /**On recupère l'image intégrale**/
-    int width, height, lumin;
-    unsigned char* image = lire_image(nom_img, &width, &height, &lumin);
-	int32_t* int_image = integral_image(image, width, height);
+	int32_t* int_image = integral_image(image->coeffs, image->dim1, image->dim2);
 	/**On la met dans la matrice**/
-	MI* mi= MI_alloue_special(1,width,height);
-	mi->coeffs=(int *)int_image;
+	MI* mi= MI_alloue_special(1,image->dim1,image->dim2);
+	mi->coeffs=int_image;
 	return mi;
-	/*int i=0;
-	for(i=0;i<height;i++){
-        int j=0;
-        for(j=0;j<width;j++){
-            mi[i*width+j]=int_image[i*width+j];
-
-        }
-	}*/
 }
 
-MI* construit_Image_Integrale_Carre(char* nom_img){
+MI* construit_Image_Integrale_Carre(MI* image){
     /**On recupère l'image intégrale**/
-    int width, height, lumin;
-    unsigned char* image = lire_image(nom_img, &width, &height, &lumin);
-	int32_t* square_int=integral_image_carre(image, width, height);
+	int32_t* square_int=integral_image_carre(image->coeffs, image->dim1, image->dim2);
 	/**On la met dans la matrice**/
-	MI* mi= MI_alloue_special(1,width,height);
-	mi->coeffs=(int *)square_int;
+	MI* mi= MI_alloue_special(1,image->dim1,image->dim2);
+	mi->coeffs=square_int;
 	return mi;
-	/*int i=0;
-	for(i=0;i<height;i++){
-        int j=0;
-        for(j=0;j<width;j++){
-            mi[i*width+j]=int_image[i*width+j];
-
-        }
-	}*/
 }
 
 
 void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c){
     int i=0;
-    //printf("Ecrit en %d %d",p.x,p.y);
-    //m(mi,p.x,p.y)=250;
-     //m(mi,p.x+c.d.x,p.y+c.d.y)=250;
-
 
     /**La barre supérieure**/
     for(i=p.x;i<p.x+c.d.x;i++){
         m(mi,i,p.y)=250;
     }
-
 
     /**La barre de gauche**/
     i=0;
@@ -232,10 +206,8 @@ void colorer_Pixel(MI* mi, Pixel p, Haar_Cascade c){
     for(i=p.y;i<p.y+c.d.y;i++){
         m(mi,p.x+c.d.x,i)=250;
     }
-     i=0;//Le pb
-    for(i=p.x;i<p.x+c.d.x;i++){//pb car p.y+c.d.y est nul selon l'image résultat
-        //printf("la somme : %d",p.y+c.d.y);
-        //printf("gaedvjayztdjyatzd %d %d",i,p.y+c.d.y);
+    i=0;
+    for(i=p.x;i<p.x+c.d.x;i++){
         int z=p.y+c.d.y;
         m(mi,i,z)=250;
     }
@@ -270,228 +242,126 @@ void ecrire_sortie_MI(FILE* f, MI* mi){
 }
 MI* fusion_cadre_image(MI* img, MI* cadre){
     int i=0;
-    for(i=0;i<img->dim1*img->dim2;i++){
-        img->coeffs[i]+=cadre->coeffs[i];
+    for(i=0;i<(int)(img->dim1*img->dim2);i++){
+        cadre->coeffs[i]+=img->coeffs[i];
     }
-    return img;
+    return cadre;
 }
 
-void out_visage(char* nom_img_in, Pixel* p, int nb_Cadres, Haar_Cascade c){
-  FILE*f_in = fopen(nom_img_in,"r");
-    //FILE* f_out = fopen("sortie.pgm","w");
-    int width, height, lumin;
-    int* image = lire_entree_IM(nom_img_in, &width, &height, &lumin);///////////
-    //fclose(f_in);
+void out_visage(MI* mi_img, Pixel* p, int nb_Cadres, Haar_Cascade c){
     printf("Affichage des données lues");
-    printf("La luminosité est de %d",lumin);
-    MI* mi= MI_alloue_special(1,width,height);
-    MI* mi_img= MI_alloue_special(1,width,height);
-    mi_img->coeffs= image;
-    //mi->coeffs=(int32_t *)image;
-
+    MI* mi= MI_alloue_special(1,mi_img->dim1,mi_img->dim2);
     int i=0;
     while(i< nb_Cadres){
         colorer_Pixel(mi,*p,c);
-
-        //printf("couleur");
         p++;
         i++;
     }
+    char carac = 'a'+SORTIE;
+    SORTIE++;
+    char addc[11]={'r','e','s','u','l','t','a','t','/',carac,'\0'};
     mi=fusion_cadre_image(mi_img,mi);
-    ecrire_image_pgm(mi,"sortie.pgm");
-//ecrire_sortie_MI(f_out,mi);
-//ecrire_image("sortie.pgm", mi->coeffs, width, height, lumin);
-//fclose(f_out);
+    ecrire_image_pgm(mi,addc);
 }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**Les fonctions principales de l'algorithme**/
 
 void Haar_Cascade_read_list(Haar_Cascade *c, FILE *file)
 {
-  int rect_n, feat_n, s_n; //nombre total de rectangle, feature, stage
-  char tmp[256];
-  int i;
+    int rect_n, feat_n, s_n; //nombre total de rectangle, feature, stage
+    char tmp[256];
+    int i;
 
+    fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //taille zone
+    fscanf(file, "%s %d", tmp, &rect_n);
+    fscanf(file, "%s %d", tmp, &feat_n);
+    fscanf(file, "%s %d", tmp, &s_n);
 
-  fscanf(file, "%s %d %d", tmp, &c->d.x, &c->d.y); //taille zone
-  fscanf(file, "%s %d", tmp, &rect_n);
-  fscanf(file, "%s %d", tmp, &feat_n);
-  fscanf(file, "%s %d", tmp, &s_n);
+    //Init
+    c->rect= MI_alloue_special(1, 4, rect_n);
+    c->weight= Vr_alloue_special(1, rect_n);
+    c->feature_rect= VI_alloue_special(1, feat_n);
+    c->feature_threshold= Mr_alloue_special(1, 3, feat_n);
+    c->stage_feature= VI_alloue_special(1, s_n);
+    c->stage_threshold= Vr_alloue_special(1, s_n);
 
-	//Init ?
-  c->rect= MI_alloue_special(1, 4, rect_n);
-  c->weight= Vr_alloue_special(1, rect_n);
-  c->feature_rect= VI_alloue_special(1, feat_n);
-  c->feature_threshold= Mr_alloue_special(1, 3, feat_n);
-  c->stage_feature= VI_alloue_special(1, s_n);
-  c->stage_threshold= Vr_alloue_special(1, s_n);
-
-  c->area=1.0*(c->d.x-2)*(c->d.y-2); //Calcul de l'aire supérieure gauche du pixel
-  c->inv_area=1.0/c->area;
+    c->area=1.0*(c->d.x-2)*(c->d.y-2); //Calcul de l'aire supérieure gauche du pixel
+    c->inv_area=1.0/c->area;
 
 	//Construction ?
-  MI_entree_fichier(c->rect, 4, rect_n, file);			//Construction rectangle ? 4 pour le nombre de trucs à lire ?
+    MI_entree_fichier(c->rect, 4, rect_n, file);			//Construction rectangle ? 4 pour le nombre de trucs à lire ?
 	Vr_entree_fichier(c->weight, rect_n, file);				//Creation poids
-  VI_entree_fichier(c->feature_rect, feat_n, file);	//Creation feature
-  Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);	//3 éléments à lire, seuil, left_value, rightvalue
-  VI_entree_fichier(c->stage_feature, s_n, file);
-  Vr_entree_fichier(c->stage_threshold, s_n, file);
+    VI_entree_fichier(c->feature_rect, feat_n, file);	//Creation feature
+    Mr_entree_fichier(c->feature_threshold, 3, feat_n, file);	//3 éléments à lire, seuil, left_value, rightvalue
+    VI_entree_fichier(c->stage_feature, s_n, file);
+    Vr_entree_fichier(c->stage_threshold, s_n, file);
 
-/* Normalise les rectangles */
-  //Haar_normalize_rects(c);
-
-
-#define PREC 16
-  //#define vfixe(a,prec) (trunc((a)*pow(2,prec)))/pow(2,prec)
-
-#define vfixe(a,prec) a
-//printf("HERE WE GO!!!!");
-    int j,k;
-    for(i=0;i<vn(c->weight);i++)
-      v(c->weight, i)= vfixe(v(c->weight, i), 14);
-
-    for(j=0;j<mn1(c->feature_threshold);j++)
-      for(i=0;i<mn0(c->feature_threshold);i++)
-        m(c->feature_threshold, i, j) = vfixe( m(c->feature_threshold, i, j), PREC);
-
-    for(i=0;i<vn(c->stage_threshold);i++)
-      v(c->stage_threshold, i)= vfixe(v(c->stage_threshold, i), PREC);
-
-}
-
-
-void Haar_normalize_rects(Haar_Cascade *c)
-{
-  unsigned int nb_rect0;
-  unsigned int nb_f = 0;
-  unsigned int nb_r = 0;
-	//On parcourt tous les stages (Sy)
-	unsigned int s=0;
-  for (s = 0; s < vn(c->stage_feature); s++) {
-		//On parcourt tous les haarfeatures de ce stage (Sy)
-    unsigned int f=0;
-    for (f = 0; f < v(c->stage_feature, s); f++) {
-      nb_rect0 = nb_r;
-      float sum0 = 0;
-			//Parcourt des rectangles de la feature
-        unsigned int r=0;
-      for (r = 0; r < v(c->feature_rect, nb_f); r++) {
-        //v(c->weight, nb_r) *= c->inv_area;
-        if (r != 0) {
-          sum0 += v(c->weight, nb_r) * 1.0*( m(c->rect, 2, nb_r) * m(c->rect, 3, nb_r));
-        }
-        nb_r++;
-      }
-      v(c->weight, nb_rect0) = -sum0 / (1.0*(m(c->rect, 2, nb_rect0) * m(c->rect, 3, nb_rect0)));
-      nb_f++;
-    }
-  }
-  //afficher_Vr(c->weight);
-  //Vr_affiche(1, c->weight , "weight :");
 }
 
 /* calcul l'intégrale sur un carre de coin x, y et de largeur (tx,ty) */
 int img_int_rect_eval(MI *m, int x , int y, int tx, int ty)
 {
 //L4-L3-L2+L1
-  int r=0;
-  x=x-1; y=y-1;
-  int x1=x+tx, y1=y+ty;
-  if (x>=0 && y>=0){
-    r+= m(m, x, y);
-    //printf("r vaut: %d",r);
+    int r=0;
+    x=x-1; y=y-1;
+    int x1=x+tx, y1=y+ty;
+    if (x>=0 && y>=0){
+        r+= m(m, x, y);
     }
-  if (x>=0){
-    r-=m(m, x, y1);
-    //printf("r vaut: %d",r);
+    if (x>=0){
+        r-=m(m, x, y1);
     }
-  if (y>=0){
-    r-=m(m, x1, y);
-    //printf("r vaut: %d",r);
+    if (y>=0){
+        r-=m(m, x1, y);
     }
-  r+=m(m, x1, y1);
-  return r;
+    r+=m(m, x1, y1);
+    return r;
 }
-
-
-
-
-
-
-
-
 
 int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
 {
-  float mean=img_int_rect_eval(img_int, o.x+1, o.y+1, c->d.x-2, c->d.y-2);
-  float sq_mean=img_int_rect_eval(img_sq_int, o.x+1, o.y+1, c->d.x-2, c->d.y-2);
-  double variance_sq=sq_mean*c->area-mean*mean; // variance * c->area**2
-  float variance=sqrt(variance_sq);
+    float mean=img_int_rect_eval(img_int, o.x+1, o.y+1, c->d.x-2, c->d.y-2);
+    float sq_mean=img_int_rect_eval(img_sq_int, o.x+1, o.y+1, c->d.x-2, c->d.y-2);
+    double variance_sq=sq_mean*c->area-mean*mean; // variance * c->area**2
+    float variance=sqrt(variance_sq);
 
-  //int lg=(o.x==14 && o.y==6);
+    unsigned int nb_f = 0;
+    unsigned int nb_r = 0;
+    unsigned int nb_s = 0;
+    float sum_s;
+    int fail = 0;
+    // Parcours des etages de la cascade
+    while (nb_s < vn(c->stage_threshold) && !fail) {
+        sum_s = 0;
 
-  unsigned int nb_f = 0;
-  unsigned int nb_r = 0;
-  unsigned int nb_s = 0;
-  float sum_s;
-  int fail = 0;
-  // Parcours des etages de la cascade
-  while (nb_s < vn(c->stage_threshold) && !fail) {
-    sum_s = 0;
+        // Parcours des features de l'etage actuel
+        unsigned int f=0;
+        for (f = 0; f < v(c->stage_feature, nb_s); f++) {
+            float sum_f = 0;
 
-    // Parcours des features de l'etage actuel
-    unsigned int f=0;
-    for (f = 0; f < v(c->stage_feature, nb_s); f++) {
-      float sum_f = 0;
-
-      // Parcours des rectangles de la feature actuelle et
-      // evaluation de ces rectangles sur l'image integrale
-      unsigned int r=0;
-      for (r = 0; r < v(c->feature_rect, nb_f); r++) {
-        int val= img_int_rect_eval(img_int,
+            // Parcours des rectangles de la feature actuelle et
+            // evaluation de ces rectangles sur l'image integrale
+            unsigned int r=0;
+            for (r = 0; r < v(c->feature_rect, nb_f); r++) {
+                int val= img_int_rect_eval(img_int,
                                    o.x+m(c->rect, 0, nb_r),
                                    o.y+m(c->rect, 1, nb_r),
                                    m(c->rect, 2, nb_r),
                                    m(c->rect, 3, nb_r)
                                    );
-        //printf("ok");
-        /*
-          if (lg) printf("v %d %d %d %d %d\n", val, o.x+m(c->rect, 0, nb_r),
-                                   o.y+m(c->rect, 1, nb_r),
-                                   m(c->rect, 2, nb_r),
-                                   m(c->rect, 3, nb_r));
-        */
-        sum_f += v(c->weight, nb_r) *val;	//Pondération
-        nb_r++;
-      }
-      //if (lg) printf("idxf %d %f\n", f, sum_f);
 
-      //printf("s %f\n", sum_f);
-      // sum_f => sum_f * c->area car weight pas divise par c->area
+                sum_f += v(c->weight, nb_r) *val;	//Pondération
+                nb_r++;
+            }
+
       float th = m(c->feature_threshold, 0, nb_f);
       float t = th*th*variance_sq;
       //   Test les features de l'étage
       int test = (sum_f*sum_f) >= t;
       int alpha;
-      //if (lg) printf("sum_f %f  %f th %f variance %f t %f\n", sum_f, sum_f*sum_f, th, variance_sq, t);
       if (sum_f>= 0 )
         {
           if (th>=0)
@@ -507,14 +377,10 @@ int Haar_evaluate(Haar_Cascade *c, MI *img_int, MI* img_sq_int, Pixel o)
             alpha= (!test) ? 1 : 0;
         }
       sum_s += m(c->feature_threshold, 1+alpha, nb_f);
-      //if (lg) printf("alpha : %d sum_s %f \n", alpha, sum_s);
       nb_f++;
     }
     // Test l'étage
     fail = (sum_s < v(c->stage_threshold, nb_s));
-    //if (lg) printf("sum_s : %f , s sth %f\n", sum_s,  v(c->stage_threshold, nb_s));
-   // if(fail) printf("Feature: %d stage raté",nb_f,nb_s);
-    //else printf("Feature: %d reussi stage %d",nb_f,nb_s);
     nb_s++;
   }
 
@@ -529,43 +395,4 @@ void message_erreur(void)
 }
 
 void  termine_programme(void){}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
