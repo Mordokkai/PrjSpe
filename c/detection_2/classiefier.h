@@ -53,14 +53,14 @@ typedef struct Stage
 
 Cascade* openCascade(char* filename);
 Stage loadNextStage(Cascade* cascade);
-bool scaleFeature(Feature* f, Cascade* cascade, uint16_t coef, integralPgm integral);
 
 
-long double stageEvaluation(Stage stage, Detector detector, integralPgm* ii);
+long double stageEvaluation(Stage stage, Detector detector, integralPgm* ii, integralPgm* ii_sq);
 long double rectangleEvaluation(Rectangle r, Detector d, integralPgm* ii);
-long double FeatureEvalution(Feature f, Detector d, integralPgm* ii);
+long double FeatureEvalution(Feature f, Detector d, integralPgm* ii, integralPgm* ii_sq);
+bool hasPassedStage(Stage stage, Detector detector, integralPgm* ii, integralPgm* ii_sq);
+void printDetector(Detector d, FILE*f);
 
-bool hasPassedStage(Stage stage, Detector detector, integralPgm* ii);
 void printStage( Stage stage);
 
 

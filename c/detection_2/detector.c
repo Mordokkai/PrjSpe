@@ -158,30 +158,46 @@ long double rectangleEvaluation(Rectangle r, Detector d, integralPgm* ii){
 
 
 }
-long double featureEvalution(Feature f, Detector d, integralPgm* ii)
+long double featureEvalution(Feature f, Detector d, integralPgm* ii, integralPgm* ii_sq)
 {
     long double value = 0;
     for (int i=0; i<f.type; i++)
         value+= rectangleEvaluation(f.rect[i],d,ii);
-    if(value>=f.f)
+
+    double variance_sq;
+    double mean;
+
+    Rectangle r;
+    r.x=0;
+    r.y=0;
+    r.h=d.window.height;
+    r.w=d.window.width;
+    r.weight=1;
+
+    double s=r.h*r.w;
+
+    mean=rectangleEvaluation(r,d,ii)/s;
+    variance_sq=mean*mean - rectangleEvaluation(r,d,ii_sq)/(s);
+
+    if(value*value>=f.f*f.f*variance_sq)
         value+=f.gt;
     else
         value+=f.ls;
     return value;
 }
 
-long double stageEvaluation(Stage stage, Detector detector, integralPgm* ii){
+long double stageEvaluation(Stage stage, Detector detector, integralPgm* ii, integralPgm* ii_sq){
 
     long double value =0;
     for (int i=0; i<stage.numberOfFeatures; i++)
-        value+= featureEvalution(stage.features[i],detector,ii);
+        value+= featureEvalution(stage.features[i],detector,ii, ii_sq);
     return value;
 
 }
 
-bool hasPassedStage(Stage stage, Detector detector, integralPgm* ii)
+bool hasPassedStage(Stage stage, Detector detector, integralPgm* ii, integralPgm* ii_sq)
 {
-    return stageEvaluation(stage, detector, ii)>= stage.threshold;
+    return stageEvaluation(stage, detector, ii, ii_sq)>= stage.threshold;
 }
 
 void scanPgm(Cascade* cascade, pgmFormat *i)
@@ -190,38 +206,39 @@ void scanPgm(Cascade* cascade, pgmFormat *i)
         d.window= cascade->D;
         d.x=0;
         d.y=0;
-        integralPgm ii;
+        integralPgm ii, ii_sq;
+
+        //savePgm(*i,"test.pgm");
         ii= generateIntegralPgm(*i);
+        ii_sq=generateIntegralPgm_sq(*i);
 
         //printIntegralPgm(*ii);
 
-        Stage s;
+        Stage s,s2,s3;
         s= loadNextStage(cascade);
+        s2=loadNextStage(cascade);
+        s3=loadNextStage(cascade);
         int stageNumber =1;
-        bool laststage = false;
-        while(!laststage)
-        {
-            laststage= s.last;
+        bool laststage = s.last;
+
             while(d.y + d.window.height < ii.height)
             {
                 d.x=0;
                 while(d.x +d.window.width < ii.width)
                 {
-                    if(hasPassedStage(s,d,&ii))
-                    {
-                        printf("\n---------\nDector: %d %d \nstage:%d\n---", d.x, d.y, stageNumber);
-                    }
+//                    if(hasPassedStage(s,d,&ii,&ii_sq ))
+//                    {
+//                        printf("\n---------\nDector: %d %d \nstage:%d\n---", d.x, d.y, 1);
+//                    }
+//                    if(hasPassedStage(s2,d,&ii,&ii_sq))
+//                        printf("\n---------\nDector: %d %d \nstage:%d\n---", d.x, d.y, 2);
+                    if(hasPassedStage(s2,d,&ii,&ii_sq)&&hasPassedStage(s,d,&ii,&ii_sq)&&hasPassedStage(s3,d,&ii,&ii_sq))
+                        printf("\n%d %d stage:%d   ", d.x, d.y, 3);
+
                     d.x++;
                 }
                 d.y++;
             }
-            if(laststage)
-                break;
-            s=loadNextStage(cascade);
-            stageNumber++;
-        }
 
 }
-
-void printDetector(Detector d, FILE*f);
 

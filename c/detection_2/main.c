@@ -17,9 +17,9 @@ int main(int argc, char ** argv)
         pgm=readPgm(f);
         if(pgm == NULL)
             printf("not a pgm file");
-    //printPgm(*pgm);
 
-
+    histogramEqualization(pgm);
+    savePgm(*pgm,"test.pgm");
 
 ////    fclose(f);
     printf("\n****\nCASCADE****\n");
