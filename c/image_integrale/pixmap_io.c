@@ -9,12 +9,12 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #define O_BINARY 0
-#define IO_LEN	(1<<30)	
+#define IO_LEN	(1<<30)
 #endif
 
 #if defined(THINK_C) || defined(__MWERKS__)
 #include <unix.h>
-#define IO_LEN	(1<<14)	
+#define IO_LEN	(1<<14)
 #endif
 
 #ifndef FALSE
@@ -188,7 +188,7 @@ unsigned char *load_pixmap(char *filename, int *width, int *height, int* lumin)
   *R_data = alloc_pixmap(size);
   *G_data = alloc_pixmap(size);
   *B_data = alloc_pixmap(size);
-  
+
   if( (*R_data != NULL) && (*G_data != NULL ) && (*B_data != NULL ))
     {
     load_chunky(fd, *R_data, *G_data, *B_data, *width, *height);
@@ -255,16 +255,16 @@ static int open_write(char *filename)
 {
   char *buffer;
   int count;
-  
-  
+
+
   buffer = (char *)data;
   //while( size > 0 )
     //{
     //count = IO_LEN;
     //if( count > size )
       //count = size;
-      
-    printf("%s \n",buffer);  
+
+    printf("%s \n",buffer);
     write(fd, buffer, size);
     //buffer += count;
     //size -= count;
@@ -282,8 +282,8 @@ static void store_data(int fd, unsigned char *data, long size)
     count = IO_LEN;
     if( count > size )
      count = size;
-      
-    //printf("%s \n",buffer);  
+
+    //printf("%s \n",buffer);
     write(fd, buffer, strlen(buffer)*sizeof(char));
     buffer += count;
     size -= count;
@@ -323,16 +323,16 @@ static void store_chunky(int fd, unsigned char *R_data, unsigned char *G_data, u
   char caractereActuel;
   if( (fd = open_write(filename)) < 0 )
     return;
-    
+
   put_pgm_header(fd, MAGIC_PGM, width, height, filename);
-  
+
   //printf("%s \n",data);
   //store_data(fd, data,size);
   //for(i=0;i<height;i++=){
   	//for (j=0;j<width;j++){
   	FILE* fichier = fopen(filename, "w");
   	if (fichier != NULL)
-  		
+
   	fputs(data,fichier);
   close(fd);
 }*/
@@ -340,7 +340,7 @@ static void store_chunky(int fd, unsigned char *R_data, unsigned char *G_data, u
 void store_pixmap(char *filename, unsigned char *data, int width, int height, int lumin)
 {
   int fd;
-  
+
   if( (fd = open_write(filename)) < 0 )
     return;
   put_pgm_header(fd, MAGIC_PGM, width, height,lumin, filename);
@@ -353,7 +353,7 @@ void store_pixmap(char *filename, unsigned char *data, int width, int height, in
 /*void store_RGB_pixmap(char *filename, unsigned char *R_data, unsigned char *G_data, unsigned char *B_data, int width, int height)
 {
   int fd;
-  
+
   if( (fd = open_write(filename)) < 0 )
     return;
   put_pgm_header(fd, MAGIC_PPM, width, height, filename);

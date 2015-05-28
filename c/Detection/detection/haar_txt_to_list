@@ -1,4 +1,5 @@
 #!/bin/bash
+
 awk '
 BEGIN { 
 n_r=0;
@@ -55,4 +56,3 @@ for(i=0;i<n_s;i++)
 print stage_threshold[i];
 }
 '
-haarcascade_frontalface_short.txt

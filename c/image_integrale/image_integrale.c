@@ -7,7 +7,13 @@
 // x >
 // y V
 // *(data+j*width+i)
-int32_t* integral_image(unsigned char* img, int width, int height) {
+int32_t* integral_image(int* img_non_caste, int width, int height) {
+    //on caste
+    unsigned char* img=malloc(width*height*sizeof(unsigned char));
+    int iii=0;
+    for(iii=0;iii<width*height;iii++){
+        img[iii]=(unsigned char)img_non_caste[iii];
+    }
 	int32_t* ii = calloc(width*height, sizeof(int32_t));
 	int i,j;
 
@@ -28,7 +34,12 @@ int32_t* integral_image(unsigned char* img, int width, int height) {
 	return ii;
 }
 
-int32_t* integral_image_carre(unsigned char* img, int width, int height) {
+int32_t* integral_image_carre(int* img_non_caste, int width, int height) {
+    unsigned char* img=malloc(width*height*sizeof(unsigned char));
+    int iii=0;
+    for(iii=0;iii<width*height;iii++){
+        img[iii]=(unsigned char)img_non_caste[iii];
+    }
 	int32_t* ii = calloc(width*height, sizeof(int32_t));
 	int i,j;
 
