@@ -1,7 +1,7 @@
 #include<stdbool.h>
 #include<stdlib.h>
 #include<stdio.h>
-#include"classiefier.h"
+#include"detector.h"
 #include"pgm.h"
 #include"integralpgm.h"
 
@@ -46,6 +46,7 @@ parse: //ignoring comments
 
 
 Stage loadNextStage(Cascade* cascade){
+
 
     Stage s;
     fpos_t curpos;
@@ -132,16 +133,15 @@ void printStage(Stage stage){
 
 }
 
-
-
 long double rectangleEvaluation(Rectangle r, Detector d, integralPgm* ii){
+
 
     int32_t ax = d.x+r.x-1;
     int32_t ay = d.y+r.y-1;
-    int32_t bx= ax + r.w +1;
+    int32_t bx= ax + r.w;
     int32_t by=ay;
     int32_t cx=ax;
-    int32_t cy=ay+r.h+1;
+    int32_t cy=ay+r.h;
     int32_t dx=bx;
     int32_t dy=cy;
 
@@ -179,7 +179,26 @@ long double featureEvalution(Feature f, Detector d, integralPgm* ii, integralPgm
     mean=rectangleEvaluation(r,d,ii)/s;
     variance_sq=mean*mean - rectangleEvaluation(r,d,ii_sq)/(s);
 
-    if(value*value>=f.f*f.f*variance_sq)
+    bool test = value*value >= f.f*f.f*variance_sq;
+
+    int alpha;
+
+    if (value>= 0 )
+        {
+          if (f.f>=0)
+            alpha= test ? 1 : 0;
+          else
+            alpha=1;
+        }
+    else
+        {
+          if (f.f>0)
+            alpha= 0;
+          else
+            alpha= (!test) ? 1 : 0;
+        }
+
+    if(!alpha)
         value+=f.gt;
     else
         value+=f.ls;
@@ -195,50 +214,111 @@ long double stageEvaluation(Stage stage, Detector detector, integralPgm* ii, int
 
 }
 
-bool hasPassedStage(Stage stage, Detector detector, integralPgm* ii, integralPgm* ii_sq)
-{
+bool hasPassedStage(Stage stage, Detector detector, integralPgm* ii, integralPgm* ii_sq){
     return stageEvaluation(stage, detector, ii, ii_sq)>= stage.threshold;
+}
+
+
+StageList addStageList(StageList l, Stage e)
+{
+    StageList p,q;
+    p = (StageList)malloc(sizeof(*p));
+    p->element=e;
+    p->next=NULL;
+    if(l==NULL)
+    {
+
+        return p;
+    }
+    else
+    {
+        for(q=l; q->next!=NULL;q=q->next);
+        q->next=p;
+    }
+    return l;
+}
+
+StageList cascadeToStageList(Cascade *cascade)
+{
+    StageList l=NULL;
+    Stage e;
+    while(!e.last)
+    {
+        e=loadNextStage(cascade);
+        l=addStageList(l,e);
+    }
+    return l;
+}
+
+void printStageList(StageList l)
+{
+    StageList p;
+    for(p=l;p!=NULL; p=p->next)
+    {
+        printStage(p->element);
+    }
+}
+
+bool moveDetector(Detector* d, uint16_t width, uint16_t height)
+{
+    if(d->y+d->window.height>=height && d->x +d->window.width>=width)
+        return true;
+
+    else if (d->x+d->window.width==width)
+    {
+        d->x=0;
+        d->y++;
+        return false;
+    }
+    else
+    {
+        d->x++;
+        return false;
+    }
 }
 
 void scanPgm(Cascade* cascade, pgmFormat *i)
 {
+
         Detector d;
         d.window= cascade->D;
         d.x=0;
         d.y=0;
+        //d.window.height=7;
         integralPgm ii, ii_sq;
 
-        //savePgm(*i,"test.pgm");
+        pgmFormat result = *i;
         ii= generateIntegralPgm(*i);
         ii_sq=generateIntegralPgm_sq(*i);
 
-        //printIntegralPgm(*ii);
-
-        Stage s,s2,s3;
-        s= loadNextStage(cascade);
-        s2=loadNextStage(cascade);
-        s3=loadNextStage(cascade);
-        int stageNumber =1;
-        bool laststage = s.last;
-
-            while(d.y + d.window.height < ii.height)
+        StageList l = cascadeToStageList(cascade);
+        StageList p;
+        int stageNumber;
+        bool stageStatus;
+        do{
+            //printf("DETECTOR %d %d", d.x, d.y);
+            for(p=l, stageNumber =i; p!=NULL; p=p->next, stageNumber++)
             {
-                d.x=0;
-                while(d.x +d.window.width < ii.width)
-                {
-//                    if(hasPassedStage(s,d,&ii,&ii_sq ))
-//                    {
-//                        printf("\n---------\nDector: %d %d \nstage:%d\n---", d.x, d.y, 1);
-//                    }
-//                    if(hasPassedStage(s2,d,&ii,&ii_sq))
-//                        printf("\n---------\nDector: %d %d \nstage:%d\n---", d.x, d.y, 2);
-                    if(hasPassedStage(s2,d,&ii,&ii_sq)&&hasPassedStage(s,d,&ii,&ii_sq)&&hasPassedStage(s3,d,&ii,&ii_sq))
-                        printf("\n%d %d stage:%d   ", d.x, d.y, 3);
-
-                    d.x++;
-                }
-                d.y++;
+                stageStatus = hasPassedStage(p->element,d,&ii,&ii_sq);
+                if(stageStatus && p->next==NULL)
+                    {
+                        //face detected
+                        printf("Face detected: %d %d\n", d.x, d.y);
+                        printDetector(d,&result);
+                    }
+                if(!stageStatus)
+                    break;
             }
 
+        }while(!moveDetector(&d,ii.width,ii.height));
+        savePgm(result,"TEST.pgm");
 }
+
+
+
+void printDetector(Detector d, pgmFormat* pgm){
+    int i,j;
+    pgm->values[d.y+ d.window.height/2][d.x+d.window.width/2]=255;
+}
+
 

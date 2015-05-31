@@ -31,9 +31,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="ajout.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="ajout.h" />
+		<Unit filename="detection.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="detection.h" />
+		<Unit filename="vecteurs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vecteurs.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
