@@ -235,7 +235,7 @@ entity fsm is
 end fsm;
 
 architecture A of FSM is
-    type   STATE is (Wait0, Req_s1, Ack_stage2, Req_f3, Req_r4, Req_pts5, Eval_f6, Eval_s7);
+    type   STATE is (Wait0, Req_s1, Ack_s2, Req_f3, Req_r4, Req_pts5, Eval_f6, Eval_s7);
     signal Current_State, Next_State   : STATE;
     signal access_count, access_count_next : std_logic_vector(3 downto 0);
     signal if, if_next : std_logic_vector(11 downto 0);
@@ -262,25 +262,35 @@ begin
 
 
 
-        P_FSM : process(current_state,Tap_Number,Tap_Number_3,ADC_eoc)
-    begin
+        P_FSM : process(current_state,access_count,if,is,img_RDY)
+    	begin
              
-     case current_state is
-       when S0 =>
+     	case current_state is
+       		when WAIT0 => 
+			if(img_RDY='1') then
+				next_state <= REQ_S1;
+			else
+				next_state<=WAIT0;
+			end if;
               
-       when S1 =>
+       		when REQ_S1 =>
                 
-        when S11 =>
+        	when ACK_S2 =>
                 
-        when S2 =>
+        	when REQ_F3 =>
                 
-        when S3 =>
+        	when REQ_F4 =>
                 
-        when S4 =>
+        	when REQ_PTS5 =>
+	
+		when EVAL_F6 =>
+		
+		when EVAL_S7 =>
                
-        when others => next_state <= S0;
-        end case;
-   end process P_FSM;
+        	when others => next_state <= WAIT0;
+        
+	end case;
+end process P_FSM;
 
 
 
@@ -386,4 +396,5 @@ BEGIN
 END eval_Feature;
 
     
+
 
