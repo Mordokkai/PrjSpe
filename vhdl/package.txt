@@ -1,7 +1,6 @@
-
 package type is
 
-
+Exemple
 constant cdiff: integer;  -- deferred constant
 subtype word is bit_vector(15 downto 0);
 subtype address is bit_vector (24 downto 0);
@@ -17,5 +16,9 @@ type Rect is record
 	P4:integer;
 end record;
 
+constant W: integer:=128;
+constant L: integer:=64;
 
 end type;
+
++*>
