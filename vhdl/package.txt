@@ -1,0 +1,21 @@
+
+package type is
+
+
+constant cdiff: integer;  -- deferred constant
+subtype word is bit_vector(15 downto 0);
+subtype address is bit_vector (24 downto 0);
+type mem is array (0 to 31) of word;
+function address2int (val : address) return integer;
+function increment_word(val : word) return word;
+
+
+type Rect is record
+	P1:integer;
+	P2:integer;
+	P3:integer;
+	P4:integer;
+end record;
+
+
+end type;
