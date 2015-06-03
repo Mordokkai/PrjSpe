@@ -73,7 +73,12 @@ int main(int argc, char **argv) {
         /**On construit les images intégrals**/
         scaled_int=construit_Image_Integrale(image_sc);
         scaled_sq_int=construit_Image_Integrale_Carre(image_sc);
-
+        if(s==0){
+            FILE* g=fopen("img_II.txt","w");
+            ecrire_sortie_II(g,scaled_int->coeffs);
+            FILE* h=fopen("img_II_2.txt","w");
+            ecrire_sortie_II(h,scaled_sq_int->coeffs);
+        }
         /**On évalue**/
         Pixel o;
         Pixel* cadres=calloc(200000,sizeof(Pixel)); /**Il est fort improbable d'avoir plus de 2000 cadres détéctés**/

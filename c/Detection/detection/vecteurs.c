@@ -226,7 +226,16 @@ int* lire_entree_IM(FILE* f, int* width, int* height, int* lumin){
     return mi;
 }
 
-
+void ecrire_sortie_II(FILE* f, int* mi){
+    //fprintf(f,"P2\n%d %d\n255",mi->dim1,mi->dim2);
+    int* p=mi;
+    int i=0;
+   while(i<160*120){
+        fprintf(f,"%d\n",*p);
+        p++;
+        i++;
+   }
+}
 
 
 
