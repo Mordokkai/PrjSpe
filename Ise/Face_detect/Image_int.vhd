@@ -31,7 +31,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity Image_integrale is
     Port ( CLK : in  STD_LOGIC;
-           RESET : in  STD_LOGIC;
+           RST : in  STD_LOGIC;
            Image_ready : in  STD_LOGIC;
            Image_i_ready : out  STD_LOGIC;
            Image_ic_ready : out  STD_LOGIC;
@@ -49,8 +49,26 @@ entity Image_integrale is
 end Image_integrale;
 
 architecture Behavioral of Image_integrale is
+	type State_type is (Init,
+                      Case1,
+                      Ligne1,
+                      Colonne1,
+                      ResteImage,
+							 Wait_state
+                      );
 
+  signal current_state, next_state : State_type;
 begin
 
+P_STATE : process(clk) 
+	begin
+     if clk'event and clk='1' then
+      if (RST = '1') then
+      current_state <= Init;
+      else
+      Current_State <= next_state;
+		end if;
+	  end if; 
+   end process P_STATE;
 
 end Behavioral;
