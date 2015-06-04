@@ -55,25 +55,25 @@ type State_type is (Init,
   
 begin
 
-	 offset <= buff_offset;
-	 dout <= din;
+	offset <= buff_offset;
+	dout <= din;
+	
 	sync : process(clk) 
-		begin
-		  if clk'event and clk='1' then
+	begin
+		if clk'event and clk='1' then
 			if (RESET = '1') then
-			current_state <= Init;
+				current_state <= Init;
 			else
-			current_State <= next_state;
-			buff_offset <= next_offset;
-			--offset <= buff_offset;
+				current_State <= next_state;
+				buff_offset <= next_offset;
 			end if;
-		  end if; 
+		end if; 
 	end process sync;
 
 	FSM : process(current_state, Din, VSync, HREF, det_end)
-	 begin
-	 we <= '0';
-	 image_ready <= '0';
+	begin
+		we <= '0';
+		image_ready <= '0';
 		case Current_State is
 			when Init =>
 				next_offset <= (others => '0');
@@ -84,7 +84,6 @@ begin
 				end if;
 				
 			when Lecture =>
-				--Dout <= Din;
 				if (HREF = '1') then
 					we <= '1';
 					next_offset <= buff_offset + 1;
