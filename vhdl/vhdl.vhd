@@ -242,19 +242,23 @@ architecture A of FSM is
     	type   STATE is (Wait_RDY, Place_Detector, Req_s, Req_meanvar, D_meanvar, Req_f, Req_r, RAM_II, Eval_f, Eval_s);
     	signal Current_State, Next_State   : STATE;
     	signal access_count, access_count_next : std_logic_vector(3 downto 0);
-    	signal i_f, i_f_next : std_logic_vector(11 downto 0);
-    	signal i_s, i_s_next : std_logic_vector(5 downto 0);
-			signal i_r, i_r_next : std_logic_vector(2 downto 0);
-			signal i_k, i_k_next : std_logic_vector(2 downto 0);
-			signal l, l_next : std_logic_vector(2 downto 0);
-			signal m, m_next : std_logic_vector(2 downto 0);
-			signal mean: ??????????????????????;
-			signal var: ???????????????????????;
-			signal r: ?????????????????????????;
-			signal rect: ??????????????????????;
-			signal sum_s: integer;
-			signal sum_f: integer;
-			
+    	signal if_q, if_d : std_logic_vector(11 downto 0);
+    	signal is_q, is_d : std_logic_vector(5 downto 0);
+			signal ir_q, ir_d : std_logic_vector(2 downto 0);
+			signal ik_q, ik_d : std_logic_vector(2 downto 0);
+			signal l_q, l_d : std_logic_vector(2 downto 0);
+			signal m_q, m_d : std_logic_vector(2 downto 0);
+			signal mean_q, mean_d: Mean;
+			signal var_q, var_d: Var;
+			signal r_q, r_d: R;
+			signal rect_q,rect_d: Rects;
+			signal sums_q,sums_d: integer;
+			signal sumf_q,sumf_d: integer;
+			signal img_Termine : boolean;
+			signal det_q,det_d : Detector;
+			signal s_q, s_d: unsigned(31 downto 0);
+			signal f_q, f_d: unsigned(31 downto 0);
+			signal z_q, z_d: integer;
 			
 begin
 
@@ -266,93 +270,152 @@ begin
        
       else
                 access_count <= access_count_next;
-								i_f <= i_f_next;
-								i_s <= i_s_next;
-      		Current_State <= Next_State;
+								if_q <= if_d;
+								is_q <= is_d;
+								ir_q <= ir_d;
+								ik_q <= ik_d;
+								l_q <= l_d;
+								m_q <= m_d;
+								mean_q <= mean_d;
+								var_q <= var_d;
+								r_q <= r_d;
+								rect_q <= rect_d;
+								sums_q <= sums_d;
+								sumf_q <= sumf_d;
+								img_Termine_q <= img_Termine_d;
+      					Current_State <= Next_State;
+								s_q <= s_d;
+								f_q <= f_d;
+								z_q <= z_d;
      end if;
     end if;
    end process P_STATE;
 
    
-
+type   STATE is (Wait_RDY, Place_Detector, Req_s, Req_meanvar, D_meanvar, Req_f, Req_r, RAM_II, Eval_f, Eval_s);
 
 
         P_FSM : process(current_state,access_count,if,is,img_RDY)
     	begin
-        variable Ns: INTEGER;
-	variable Nf: INTEGER;
-	variable stage_OK : boolean;
-	variable img_Termine : boolean;
-     	case current_state is
-       		when WAIT_IMG0 => 
-			if(img_RDY='1') then
-				next_state <= REQ_S1;
-			else
-				next_state <= WAIT0;
-			end if;
-			is <= '0';
-              		if <= '0';
-			access_count <= '0';
-       		
-
-
-
-
-
-
-		when REQ_S1 =>
-                	if(is<Ns) then
-				next_state <= ACK_S2;
-				is <= is+1;
-			
-        	when ACK_S2 =>
-                	next_sate <= REQ_F3;
-        	when REQ_F3 =>
-                	if(if < Nf) then
-				if <= if+1;
-				ir <= 0;
-			end if;
-        	when REQ_F4 =>
-			if(ir=Nr) then
-				next_state <= EVAL_F6;
-			else
-                		next_state <= REQ_PTS5;
-				access_count <=0;
-			end if;
-        	when REQ_PTS5 =>
-			if(access_count < 4) then
-				next_state <= REQ_PTS5;
-				access_count <= access_count +1;
-			else
-				if(ir < Nr) then
-					ir <= ir+1;
-					next_state <= REQ_F4;
-		when EVAL_F6 =>
-			if(if <Nf) then
-				next_state <= REQ_F3;
-			else 
-				next_state <= EVAL_S7;
-			end if;
-		
-		when EVAL_S7 =>
-               		if (is < Ns and Stage_OK) then
-				next_state <= REQ_S1;
-			else if (not Stage_OK) then
-				face_detected <= false;
-				next_state <= ???????
-			else if (is=Ns and Stage_OK) then
-				face_detected <= true;
-				next_state <= ???????????
-		
-		when SEND_DATA =>
-			if(img_Termine) then
-				next_state <= WAIT_IMG0;
-			
-			else
-				next_state <= REQ_S1;
-        	when others => next_state <= WAIT0;
         
-	end case;
+	variable stage_OK : boolean;
+	
+     	case current_state is
+       		when Wait_RDY => 
+						if(img_rdy) then
+								next_state <= Place_Detector;
+						else 
+								next_state <= Wait_RDY;
+						end if;
+
+					
+
+					when Place_Detector =>
+						--Deplacement du détecteur
+						if(det_q.y > W-24) then
+								det_d.x <= det_q.x+1;
+								det_d.y <= 0;
+						else 
+								det_d.y <= det_q.y+1;
+						end if; 
+						--Changement d'état
+						if(det_q.x=L-24 and det_q.y=W-25) then
+								img_Termine_d <= true;
+						else
+								img_Termine_d <= false;
+						end if;
+						next_state <= Req_s;
+
+					
+					
+					when Req_s =>
+						--Récupération des valeurs
+						we_stage <= 0;
+						ad_stage <= is_d;
+						we_II <= 0;
+						ad_II <= (det_q.x+1)*W+det_q.y+1;
+						we_II_2 <= 0;
+						ad_II_2 <= (det_q.x+1)*W+det_q.y+1;
+					
+						--Changement d'état
+						ik_d <= 0;
+						next_state <= Req_meanvar;
+
+
+					when Req_meanvar =>
+						--Récupération des valeurs
+						s <= datao_stage;
+						mean_d[ik_q] <= datao_II;
+						var_d[ik_q] <= datao_II_2;
+						we_II <= 0;
+						ad_II <= (det_q.x+1)*W+det_q.y+1+24*abs(l_q)+24*W*m_q;
+						we_II_2 <= 0;
+						ad_II_2 <= (det_q.x+1)*W+det_q.y+1+24*abs(l_q)+24*W*m_q;
+						
+						--Changement d'état
+						if(ik_q<3) then
+								ik_d <= ik_q+1;
+								l_d <= l_q+1;
+								if(m=0) m_d <= 1;
+								next_state <= Req_meanvar;
+						else
+								ik_d <= ik_q+1;
+								is_d <= is_q + 1;
+								sums_d <= 0;
+								next_state <= D_meanvar;
+						end if;
+
+
+			
+
+					when D_meanvar =>
+						--Récupération des valeurs
+						mean_d[ik_q] <= datao_II;
+						var_d[ik_q] <= datao_II_2;
+
+						--Changement d'état
+						if_d <= 0;
+						next_state <= Req_f;
+
+
+
+					when Req_f =>
+						--Récupération des valeurs
+						we_feature <= 0;
+						ad_feature <= s_q<<12 + if_q;
+
+						--Changement d'état
+						if_d <= if_q +1;
+						ir_d <= 0;
+						sumf_d <= 0;
+						next_state <= Req_r;
+						
+
+
+					when Req_r =>
+						--Récupération des valeurs
+						f <= datao_feature;
+						we_rectangle <= 0;
+						ad_rectangle <= f<<12 + ir_d;
+
+						--Changement d'état
+						access_count_next <= 0;
+						z_d <= 3;
+						next_state <= RAM_II;
+
+
+
+					when RAM_II =>
+						r <= datao_rectangle;
+						-- TODO
+
+
+
+
+
+
+
+
 end process P_FSM;
 
 
