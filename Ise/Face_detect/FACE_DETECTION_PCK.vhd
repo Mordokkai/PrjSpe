@@ -42,7 +42,8 @@ record
 	threshold	: integer;
 	nr				: integer; -- number of rectangles per feature
 	greater		: integer;
-	lesser 		: integer; 
+	lower 		: integer; 
+	ad_rectangle : integer;
 end record;
 
 --type Features is array (0 to 37) of Feature; --useless

@@ -38,6 +38,15 @@ entity fsm_detection is
 					we_stage : out std_logic
 					ad_stage : out integer;
 					datao_stage : in unsigned(31 downto 0);
+					
+					we_feature : out std_logic;
+					ad_feature : out std_logic;
+					datao_feature : in unsigned(59 downto 0);
+
+					we_rectangle : out std_logic;
+					ad_rectangle : out std_logic;
+					datao_rectangle : in unsigned(31 downto 0);
+
 					we_II	: out std_logic;
 					ad_II:	out integer;
 					datao_II: in unsigned(31 downto 0);
@@ -174,14 +183,14 @@ begin
 				ad_II_2 <= (det_q.x - 24*m_q)*IMG_WIDTH+det_q.y + 24*l_q;
 						
 			--Changement d'état
-				if(ik_q<4) then
-					if(ik_q = 1) then
+				if(ik_q<3) then
+					if(ik_q = 0) then
 						m_d <= 0;
 						l_d <= 1;
-					elsif(ik_q = 2) then
+					elsif(ik_q = 1) then
 						m_d <= 1;
 						l_d <= 0;
-					elsif(ik_q = 3) then
+					elsif(ik_q = 2) then
 						m_d <= 1;
 						l_d <= 1;
 					end if;
@@ -196,7 +205,7 @@ begin
 
 			
 
-			when D_meanvar =>
+			when D_meanvar =>	--Etape de transition
 			--Récupération des valeurs
 				mean_d(ik_q) <= datao_II;
 				var_d(ik_q) <= datao_II_2;
@@ -209,7 +218,7 @@ begin
 			when Req_f =>
 			--Récupération des valeurs
 				we_feature <= 0;
-				ad_feature <= s_q sll 12 + if_q;
+				ad_feature <= s_q.ad_feature + if_q;
 
 			--Changement d'état
 				if_d <= if_q +1;
@@ -221,12 +230,19 @@ begin
 
 			when Req_r =>
 			--Récupération des valeurs
-				f <= datao_feature;
+				--f <= datao_feature;--A detailler
+				f_d.threshold <= datao_feature(59 downto 44);
+				f_d.greater <= datao_feature(27 downto 12);
+				f_d.lower <= datao_feature(43 downto 28);
+				f_d.ad_rectangle <= datao_feature(11 downto 0);
+				next_state <= D_f;
+				
+			when D_f =>
 				we_rectangle <= 0;
-				ad_rectangle <= f sll 12 + ir_d;
-
+				ad_rectangle <= f.ad_rectangle + ir_q;
+				
 			--Changement d'état
-				if(ir_q < Nr) then
+				if(ir_q < f_q.nr) then
 					access_count_next <= 0;
 					z_d <= 3;
 					next_state <= D_r;
@@ -236,12 +252,17 @@ begin
 				
 
 			when D_r =>
-				r(ir_q) <= datao_rectangle;
-				we_II <= 0;
-				ad_II <= r(ir_q) srl (12+5*z_q);	
-				z_d <= z_q -1;
+				--r(ir_q) <= datao_rectangle;
+				--we_II <= 0;
+				--ad_II <= r(ir_q) srl (12+5*z_q);	
+				--z_d <= z_q -1;
+				--next_state <= RAM_II;
+				rect_d(ir_q).x <= datao_rectangle(31 downto  27);
+				rect_d(ir_q).y <= datao_rectangle(26 downto  22);
+				rect_d(ir_q).h <= datao_rectangle(21 downto  17);
+				rect_d(ir_q).w <= datao_rectangle(16 downto  12);
+				rect_d(ir_q).weight <= datao_rectangle(11 downto  0);
 				next_state <= RAM_II;
-
 
 			when RAM_II =>
 				Rect_d(access_count_q) <= datao_II;
