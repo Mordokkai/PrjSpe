@@ -2,22 +2,23 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="detection" />
+		<Option title="detection_vigule_fixe" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/detection" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/detection_vigule_fixe" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="vide.list url.pgm" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-std=c99" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/detection" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/detection_vigule_fixe" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -32,7 +33,19 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+<<<<<<< HEAD:c/Detection/detection/detection.cbp
 		<Unit filename="../../image_integrale/image_integrale.c">
+=======
+		<Unit filename="detector.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="detector.h" />
+		<Unit filename="fixed_point.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="fixed_point.h" />
+		<Unit filename="main.c">
+>>>>>>> 5bb5cb4b46e9ef5f768edb1f55ab1428ad39c02c:c/detection_vigule_fixe/detection_vigule_fixe.cbp
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../image_integrale/image_integrale.h" />
