@@ -1,31 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include<string.h>
 
 #include"pgm.h"
 #include"integralpgm.h"
-#include"classiefier.h"
+#include"detector.h"
+
 int main(int argc, char ** argv)
 {
     pgmFormat* pgm;
     printf("Hello world!\n");
-    puts(argv[1]);
-    FILE* f = fopen(argv[1],"r");
-    if(f==NULL)
-        printf("***error***\n");
-    else
-        printf("***Reading***\n");
+    for(int i=1; i<argc;i++){
+        puts(argv[i]);
+        FILE* f = fopen(argv[i],"r");
+        if(f==NULL)
+            printf("***Error***\n");
+        else
+            printf("***Reading***\n");
+
         pgm=readPgm(f);
         if(pgm == NULL)
             printf("not a pgm file");
-    //printPgm(*pgm);
 
+        Cascade* cascade = openCascade("../../cascade/haarcascade_frontalface_default.txt");
+        printStageList(cascadeToStageList(cascade));
 
+        printf("\n*****\SCANING*****\n");
 
-////    fclose(f);
-    printf("\n****\nCASCADE****\n");
-    Cascade* cascade = openCascade("../../cascade/haarcascade_frontalface_short.txt");
-    printf("\n*****\SCANING*****\n");
-    scanPgm(cascade,pgm);
+        char *resultName=malloc(sizeof(char)*(strlen(argv[i])+5));
+        resultName = strcpy(resultName,argv[i]);
+        resultName = strcat(resultName,".rs");
+        scanPgm(cascade,pgm,resultName);
+    }
 
 
 

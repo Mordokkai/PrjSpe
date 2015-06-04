@@ -2,21 +2,22 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="detection" />
+		<Option title="detection_vigule_fixe" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/detection" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/detection_vigule_fixe" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-std=c99" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/detection" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/detection_vigule_fixe" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -31,18 +32,17 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="ajout.c">
+		<Unit filename="detector.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ajout.h" />
-		<Unit filename="detection.c">
+		<Unit filename="detector.h" />
+		<Unit filename="fixed_point.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="detection.h" />
-		<Unit filename="vecteurs.c">
+		<Unit filename="fixed_point.h" />
+		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="vecteurs.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
