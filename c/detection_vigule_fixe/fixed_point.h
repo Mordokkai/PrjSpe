@@ -17,7 +17,7 @@ bool initFixedPoint(FixedPoint* fx, int e, int v);
 bool convertDouble(double x, FixedPoint* fx);
 FixedPoint PLUS(FixedPoint x1, FixedPoint x2);
 int* fixedPointtoTab(FixedPoint x);
-
+int minE(double x);
 
 
 #endif // FIXED_POINT_H_INCLUDED

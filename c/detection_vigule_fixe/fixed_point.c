@@ -215,3 +215,14 @@ FixedPoint MULT(FixedPoint x1, FixedPoint x2)
     }
     return result;
 }
+
+int minE (double x)
+{
+        int i;
+        float X=floor(fabs(x));
+//        printf("%f", X );
+        for(i=0;X>=1; i++)
+            X/=2;
+//        printf("\n%d\n", i);
+        return i;
+}

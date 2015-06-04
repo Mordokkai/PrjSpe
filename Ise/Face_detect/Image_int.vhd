@@ -103,8 +103,9 @@ P_FSM : process(current_state)
 				Val_i := Din_img;
 				Val_ic := Din_img * Din_img;
 				Dout_i <= Val_i;
-				--declaration et affectation du registre r1 manque ici
+				r1_i <= Val_i;
 				Dout_ic <= Val_ic;
+				r1_ic <= Val_ic;
 				
 				--incrementation de offsetlect_image
 				
@@ -177,7 +178,7 @@ P_FSM : process(current_state)
 				
 				if ((Offset_lect_img mod C = 0) and (Offset_lect_img < C*L)) then
 					next_state <= Colonne_1; 
-				else if ((Offset_lect_img mod C /= 0) and (Offset_lect_img < C*L)) then
+				elsif ((Offset_lect_img mod C /= 0) and (Offset_lect_img < C*L)) then
 					next_state <= Current_state;
 				else
 					next_state <= Wait_state;
