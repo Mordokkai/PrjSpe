@@ -119,7 +119,7 @@ begin
 
 
 	P_FSM : process(clk)
-	
+	variable calcul : integer;
    begin
      	case current_state is 		
 					
@@ -284,8 +284,15 @@ begin
 			
 			
 			when Eval_f => 
-				--TODO
-				if(if_q < Nf) then
+				--Calcul
+				calcul := FeatureEval(r_q,rect_q);			
+				if(calcul < f_d.threshold) then
+					sumf_d <= sumf_q + f_d.greater;
+				else
+					sumf_d <= sumf_q + f_d.lower;
+				end if;
+ 				--Changement d'état
+				if(if_q < s.nf) then
 					next_state <= Req_f;
 				else
 					next_state <= Eval_s;
