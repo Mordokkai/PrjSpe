@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="vide.list url.pgm" />
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-std=c99" />
@@ -32,6 +33,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+<<<<<<< HEAD:c/Detection/detection/detection.cbp
+		<Unit filename="../../image_integrale/image_integrale.c">
+=======
 		<Unit filename="detector.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -41,11 +45,38 @@
 		</Unit>
 		<Unit filename="fixed_point.h" />
 		<Unit filename="main.c">
+>>>>>>> 5bb5cb4b46e9ef5f768edb1f55ab1428ad39c02c:c/detection_vigule_fixe/detection_vigule_fixe.cbp
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../image_integrale/image_integrale.h" />
+		<Unit filename="../../image_integrale/image_io.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../image_integrale/image_io.h" />
+		<Unit filename="../../image_integrale/pixmap_io.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../image_integrale/pixmap_io.h" />
+		<Unit filename="../../image_scaling/image_scaling.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ajout.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ajout.h" />
+		<Unit filename="detection.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="detection.h" />
+		<Unit filename="vecteurs.c">
+			<Option compilerVar="CC" />
+			<Option weight="27" />
+		</Unit>
+		<Unit filename="vecteurs.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
