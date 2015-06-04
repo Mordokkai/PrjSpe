@@ -80,8 +80,6 @@ type   STATE is (Wait_RDY, Place_Detector, Req_s, Req_meanvar, D_meanvar, Req_f,
 			signal det_q,det_d : Detector;
 			signal s_q, s_d: Stage;
 			signal f_q, f_d: Feature;
-			signal Stage_OK_q, Stage_OK_d : boolean;	
-
 
 begin
 
@@ -110,7 +108,6 @@ begin
 				det_q <= det_d;
 				s_q <= s_d;
 				f_q <= f_d;
-				Stage_OK_q <= Stage_OK_d;
 			end if;
 		end if;
    end process P_STATE;
@@ -120,6 +117,7 @@ begin
 
 	P_FSM : process(clk)
 	variable calcul : integer;
+	variable Stage_OK : boolean;
    begin
      	case current_state is 		
 					
@@ -292,16 +290,18 @@ begin
 					sumf_d <= sumf_q + f_d.lower;
 				end if;
  				--Changement d'état
-				if(if_q < s.nf) then
+				if(if_q < s_d.nf) then
 					next_state <= Req_f;
 				else
 					next_state <= Eval_s;
 				end if;
 				
 			when Eval_s =>
-				if(is_q < Ns and Stage_OK) then
+				if(sumf_d > s_d.threshold) then
+					Stage_OK := true;
+				if(is_q < Ns and Stage_OK) then --TODO
 					next_state <= Req_s;
-				elsif (is=Ns) then
+				elsif (is_q=Ns) then
 					face_detected <= true;
 					next_state <= Place_Detector;
 				elsif (not Stage_OK) then
@@ -312,9 +312,8 @@ begin
 					next_state <= Wait_RDY;
 				end if;
 					
-			-- TODO
-
 			when others => next_state <= current_state;
+
 			end case;
 		end process P_FSM;
 end  Behavioral;
