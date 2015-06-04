@@ -69,7 +69,7 @@ long double rectangleEvaluation(Rectangle r, Detector d, integralPgm* ii);
 long double FeatureEvalution(Feature f, Detector d, integralPgm* ii, integralPgm* ii_sq);
 bool hasPassedStage(Stage stage, Detector detector, integralPgm* ii, integralPgm* ii_sq);
 
-void scanPgm(Cascade* cascade, pgmFormat *i);
+void scanPgm(Cascade* cascade, pgmFormat *i, char* resultName);
 void printDetector(Detector d, pgmFormat* pgm);
 
 

@@ -114,6 +114,7 @@ Stage loadNextStage(Cascade* cascade){
     fsetpos(cascade->file,&nextpos);
     return s;
 }
+
 void printStage(Stage stage){
 
     fprintf(stdout,"**********************\n");
@@ -277,7 +278,7 @@ bool moveDetector(Detector* d, uint16_t width, uint16_t height)
     }
 }
 
-void scanPgm(Cascade* cascade, pgmFormat *i)
+void scanPgm(Cascade* cascade, pgmFormat *i, char* resultName)
 {
 
         Detector d;
@@ -311,13 +312,13 @@ void scanPgm(Cascade* cascade, pgmFormat *i)
             }
 
         }while(!moveDetector(&d,ii.width,ii.height));
-        savePgm(result,"TEST.pgm");
+        savePgm(result,resultName);
 }
 
 
 
 void printDetector(Detector d, pgmFormat* pgm){
-    int i,j;
+    //int i,j;
     pgm->values[d.y+ d.window.height/2][d.x+d.window.width/2]=255;
 }
 
