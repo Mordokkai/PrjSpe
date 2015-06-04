@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="vide.list url.pgm" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -31,12 +32,38 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main.c">
+		<Unit filename="../../image_integrale/image_integrale.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../image_integrale/image_integrale.h" />
+		<Unit filename="../../image_integrale/image_io.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../image_integrale/image_io.h" />
+		<Unit filename="../../image_integrale/pixmap_io.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../image_integrale/pixmap_io.h" />
+		<Unit filename="../../image_scaling/image_scaling.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ajout.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ajout.h" />
+		<Unit filename="detection.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="detection.h" />
+		<Unit filename="vecteurs.c">
+			<Option compilerVar="CC" />
+			<Option weight="27" />
+		</Unit>
+		<Unit filename="vecteurs.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
