@@ -21,6 +21,9 @@ constant FNR : FEATURE_NR := (others => 0); --TODO;
 --constant GTV: integer :=
 --constant LSE: integer :=
 --constant LSV: integer :=
+type Mean is array (0 to 3) of integer;
+type Var is array (0 to 3) of integer;
+type R is array (0 to 3) of integer;
 
 type Rectangle is
 record 
@@ -35,21 +38,28 @@ type Rectangles is array (0 to 2) of Rectangle;
 
 type Feature is 
 record
-	rects 		: Rectangles;
+	--rects 		: Rectangles;
 	threshold	: integer;
 	nr				: integer; -- number of rectangles per feature
 	greater		: integer;
 	lesser 		: integer; 
 end record;
 
-type Features is array (0 to 37) of Feature;
+--type Features is array (0 to 37) of Feature; --useless
+
+--type Stage is
+--record
+	--feats			: Features;
+	--threshold	: integer;
+	--nf				: integer; --number of features per stage
+--end record; 
 
 type Stage is
 record
-	feats			: Features;
-	threshold	: integer;
-	nf				: integer; --number of features per stage
-end record; 
+	threshold : integer;
+	ad_feature: integer;
+	nf : integer;
+end record;
 
 type Detector is
 record

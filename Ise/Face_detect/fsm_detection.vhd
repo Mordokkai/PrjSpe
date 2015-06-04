@@ -30,11 +30,24 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity fsm_detection is
-    Port ( Image_int_ready : in  STD_LOGIC;
-           clk : in  STD_LOGIC;
-           rst : in  STD_LOGIC;
-           face_detected : out  STD_LOGIC;
-           send_img : out  STD_LOGIC);
+			Port ( Image_int_ready : in  STD_LOGIC;
+          clk : in  STD_LOGIC;
+          rst : in  STD_LOGIC;
+					
+					--Communications avec les RAMS
+					we_stage : out std_logic
+					ad_stage : out integer;
+					datao_stage : in unsigned(31 downto 0);
+					we_II	: out std_logic;
+					ad_II:	out integer;
+					datao_II: in unsigned(31 downto 0);
+					
+					ad_II_2: out integer;
+					we_II_2 : out std_logic;
+					datao_II_2: in unsigned(39 downto 0);
+
+          face_detected : out  STD_LOGIC;
+          send_img : out  STD_LOGIC);
 end fsm_detection;
 
 architecture Behavioral of fsm_detection is
@@ -42,24 +55,26 @@ architecture Behavioral of fsm_detection is
 type   STATE is (Wait_RDY, Place_Detector, Req_s, Req_meanvar, D_meanvar, Req_f, Req_r, D_r, RAM_II, Eval_f, Eval_s);
     	signal Current_State, Next_State   : STATE;
     	signal access_count, access_count_next : std_logic_vector(3 downto 0);
-    	signal if_q, if_d : std_logic_vector(11 downto 0);
-    	signal is_q, is_d : std_logic_vector(5 downto 0);
-		signal ir_q, ir_d : std_logic_vector(2 downto 0);
-		signal ik_q, ik_d : std_logic_vector(2 downto 0);
-		signal l_q, l_d : std_logic_vector(2 downto 0);
-		signal m_q, m_d : std_logic_vector(2 downto 0);
-		signal mean_q, mean_d: Mean;
-		signal var_q, var_d: Var;
-		signal r_q, r_d: R;
-		signal rect_q,rect_d: Rects;
-		signal sums_q,sums_d: integer;
-		signal sumf_q,sumf_d: integer;
-		signal img_Termine : boolean;
-		signal det_q,det_d : Detector;
-		signal s_q, s_d: unsigned(31 downto 0);
-		signal f_q, f_d: unsigned(31 downto 0);
-		signal z_q, z_d: integer;
-			
+    	signal if_q, if_d : integer;
+    	signal is_q, is_d : integer;
+			signal ir_q, ir_d : integer;
+			signal ik_q, ik_d : integer;
+			signal l_q, l_d : integer;
+			signal m_q, m_d : integer);
+			signal mean_q, mean_d: Mean;
+			signal var_q, var_d: Var;
+			signal r_q, r_d: R;
+			signal rect_q,rect_d: Rectangles;
+			signal sums_q,sums_d: integer;
+			signal sumf_q,sumf_d: integer;
+			signal img_Termine_q, img_Termine_d : boolean;
+			signal det_q,det_d : Detector;
+			signal s_q, s_d: Stage;
+			signal f_q, f_d: Feature;
+			signal z_q, z_d: integer;
+			signal Stage_OK_q, Stage_OK_d : boolean;	
+
+
 begin
 
 	P_STATE : process(clk)
@@ -69,7 +84,7 @@ begin
 				current_state <= Wait_RDY;
        
 			else
-            access_count <= access_count_next;
+        access_count <= access_count_next;
 				if_q <= if_d;
 				is_q <= is_d;
 				ir_q <= ir_d;
@@ -83,21 +98,21 @@ begin
 				sums_q <= sums_d;
 				sumf_q <= sumf_d;
 				img_Termine_q <= img_Termine_d;
-      		Current_State <= Next_State;
+      	Current_State <= Next_State;
+				det_q <= det_d;
 				s_q <= s_d;
 				f_q <= f_d;
 				z_q <= z_d;
+				Stage_OK_q <= Stage_OK_d;
 			end if;
 		end if;
    end process P_STATE;
 
-   
---type   STATE is (Wait_RDY, Place_Detector, Req_s, Req_meanvar, D_meanvar, Req_f, Req_r, RAM_II, Eval_f, Eval_s);
+  
 
 
 	P_FSM : process(clk)
 	
-	variable stage_OK : boolean;
    begin
      	case current_state is 		
 					
@@ -105,6 +120,9 @@ begin
 				if(Image_int_ready) then
 					next_state <= Place_Detector;
 				else 
+					--On positionne le détecteur à sa position initiale
+					det_d.x <= 24;
+					det_d.y <= 0;
 					next_state <= Wait_RDY;
 				end if;
 
@@ -112,30 +130,31 @@ begin
 
 			when Place_Detector =>
 			--Deplacement du détecteur
-				if(det_q.y > W-24) then
+				if(det_q.y > IMG_WIDTH-24) then
 					det_d.x <= det_q.x+1;
 					det_d.y <= 0;
 				else 
 					det_d.y <= det_q.y+1;
 				end if; 
 			--Changement d'état
-				if(det_q.x=L-24 and det_q.y=W-25) then
+				if(det_q.x=IMG_HEIGHT and det_q.y=IMG_WIDTH-24) then
 					img_Termine_d <= true;
 				else
 					img_Termine_d <= false;
 				end if;
+				is_d <= 0;
 				next_state <= Req_s;
 
 					
 					
 			when Req_s =>
 			--Récupération des valeurs
-				we_stage <= 0;
+				we_stage <= '0';
 				ad_stage <= is_d;
 				we_II <= 0;
-				ad_II <= (det_q.x+1)*W+det_q.y+1;
+				ad_II <= (det_q.x)*IMG_WIDTH+det_q.y; -- Le coin en bas à gauche du détecteur
 				we_II_2 <= 0;
-				ad_II_2 <= (det_q.x+1)*W+det_q.y+1;
+				ad_II_2 <= (det_q.x)*IMG_WIDTH+det_q.y; --idem
 					
 				--Changement d'état
 				ik_d <= 0;
@@ -144,22 +163,31 @@ begin
 
 			when Req_meanvar =>
 			--Récupération des valeurs
-				s <= datao_stage;
+				--s <= datao_stage;--A détailler
+				s.threshold <= datao_stage(31 downto 12);
+				s.ad_feature <= datao_stage(11 downto 0);
 				mean_d(ik_q) <= datao_II;
 				var_d(ik_q) <= datao_II_2;
 				we_II <= 0;
-				ad_II <= (det_q.x+1)*W+det_q.y+1+24*abs(l_q)+24*W*m_q;
+				ad_II <= (det_q.x - 24* m_q)*IMG_WIDTH+det_q.y + 24*l_q;
 				we_II_2 <= 0;
-				ad_II_2 <= (det_q.x+1)*W+det_q.y+1+24*abs(l_q)+24*W*m_q;
+				ad_II_2 <= (det_q.x - 24*m_q)*IMG_WIDTH+det_q.y + 24*l_q;
 						
 			--Changement d'état
-				if(ik_q<3) then
+				if(ik_q<4) then
+					if(ik_q = 1) then
+						m_d <= 0;
+						l_d <= 1;
+					elsif(ik_q = 2) then
+						m_d <= 1;
+						l_d <= 0;
+					elsif(ik_q = 3) then
+						m_d <= 1;
+						l_d <= 1;
+					end if;
 					ik_d <= ik_q+1;
-					l_d <= l_q+1;
-					if(m=0) then m_d <= "001"; end if;
 					next_state <= Req_meanvar;
 				else
-					ik_d <= ik_q+1;
 					is_d <= is_q + 1;
 					sums_d <= 0;
 					next_state <= D_meanvar;
