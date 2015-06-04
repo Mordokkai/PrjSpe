@@ -107,7 +107,7 @@ use ieee.numeric_std.all;
 
 entity ram_II_2 is
 port (	clk : in std_logic;
-			address : in integer;
+			adress : in unsigned(39 downto 0);
 			we : in std_logic;
 			data_i : in unsigned(39 downto 0);
 			data_o : out unsigned(39 downto 0)
@@ -118,7 +118,7 @@ architecture Behavioral of ram_II_2 is
 
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
-type ram_t is array (0 to 128*64) of unsigned(31 downto 0);
+type ram_t is array (0 to 128*64) of unsigned(39 downto 0);
 signal ram : ram_t := (others => (others => '0'));
 
 begin
@@ -128,9 +128,9 @@ PROCESS(clk)
 BEGIN
     if(rising_edge(clk)) then
         if(we='1') then
-            ram(address) <= data_i;
+            ram(to_integer(adress)) <= data_i;
         end if;
-        data_o <= ram(address);
+        data_o <= ram(to_integer(adress));
     end if;
 END PROCESS;
 
