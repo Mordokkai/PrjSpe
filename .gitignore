@@ -3,9 +3,11 @@
 *.layout
 *.pgm
 ./c/detection_2/bin/Debug/img/
-*/img
-*.png
-*.xml
-*.depend
+
+/img/*
 *.cbp
+*.depend
+/ISE/*
+c/detection_2/bin/Debug/img/
+
 *.txt
