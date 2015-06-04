@@ -58,6 +58,8 @@ architecture Behavioral of Image_integrale is
                       );
 
   signal current_state, next_state : State_type;
+  --declaration des registres
+  signal r1_i,r1_ic,r2_i,r2_ic : integer;
 begin
 
 P_STATE : process(clk) 
@@ -71,4 +73,35 @@ P_STATE : process(clk)
 	  end if; 
    end process P_STATE;
 
+P_FSM : process(current_state)
+		-- declaration de variables
+		variable Val_i : integer := 0;
+		variable Val_ic : integer := 0;
+		
+    begin
+    	-- initialisation des valeurs par defaut
+		
+		case Current_State is
+			when Init =>
+				if (Image_ready='1') then
+					Offset_lect_img <= 0;
+					Offset_ecr_int <= 0;
+					Offset_lect_int <= 0;
+					next_state <= Case_1;
+				else 
+					next_state <= current_state;
+				end if;
+				
+			when Case_1 =>
+				we_i <= 0;
+				we_ic <= 0;
+				Val_i := Din_img;
+				Val_ic := Din_img * Din_img;
+				Dout_i <= Val_i;
+				--declaration et affectation du registre r1 manque ici
+				Dout_ic <= Val_ic;
+				
+				--incrementation de offsetlect_image
+				
+				
 end Behavioral;
