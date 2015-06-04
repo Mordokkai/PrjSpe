@@ -80,7 +80,6 @@ type   STATE is (Wait_RDY, Place_Detector, Req_s, Req_meanvar, D_meanvar, Req_f,
 			signal det_q,det_d : Detector;
 			signal s_q, s_d: Stage;
 			signal f_q, f_d: Feature;
-			signal z_q, z_d: integer;
 			signal Stage_OK_q, Stage_OK_d : boolean;	
 
 
@@ -111,7 +110,6 @@ begin
 				det_q <= det_d;
 				s_q <= s_d;
 				f_q <= f_d;
-				z_q <= z_d;
 				Stage_OK_q <= Stage_OK_d;
 			end if;
 		end if;
@@ -244,7 +242,6 @@ begin
 			--Changement d'état
 				if(ir_q < f_q.nr) then
 					access_count_next <= 0;
-					z_d <= 3;
 					next_state <= D_r;
 				else
 					next_state <= Eval_f;
@@ -265,18 +262,24 @@ begin
 				next_state <= RAM_II;
 
 			when RAM_II =>
-				Rect_d(access_count_q) <= datao_II;
+				--r_d(access_count_q) <= datao_II;
 				we_II <= 0;
-				ad_II <= r(ir_q) srl (12+5*z_q); --à modifier
-					
-				z_d <= z_q-1;
+				if(access_count = 0) then
+					ad_II <= (det_q.x - rect_q.x) * IMG_WIDTH + (det_q.y + rect_q.y) ; 
+				elsif(access_count = 1) then
+					ad_II <= (det_q.x - rect_q.x - rect_q.h) * IMG_WIDTH + (det_q.y + rect_q.y); 
+				elsif(access_count = 2) then
+					ad_II <= (det_q.x - rect_q.x) * IMG_WIDTH + (det_q.y + rect_q.y + rect_q.w); 
+				elsif(access_count = 3) then
+					ad_II <= (det_q.x - rect_q.x - rect_q.h) * IMG_WIDTH + (det_q.y + rect_q.y + rect_q.w); 
+				end if;
+				
 				if(access_count_q <4) then 
 					access_count_d <= access_count_q+1;
-					z_d <= z_q -1;
 					next_state <= RAM_II;
 				else
 					ir_d <= ir_q +1 ;
-					next_state <= Req_r;
+					next_state <= D_f;
 				end if;
 			
 			
