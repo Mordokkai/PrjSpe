@@ -4,4 +4,8 @@
 *.pgm
 ./c/detection_2/bin/Debug/img/
 */img
-
+*.png
+*.xml
+*.depend
+*.cbp
+*.txt
