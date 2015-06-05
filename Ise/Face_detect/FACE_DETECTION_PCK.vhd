@@ -2,6 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.numeric_std.all;
 
+
 package FACE_DETECTION_PCK is
 
 constant IMG_WIDTH : integer := 128;
@@ -12,6 +13,7 @@ type FEATURE_NR  is array (0 to 2**12-1) of integer;
 
 constant SNF : STAGE_NF := (others => 0); -- TODO:
 constant FNR : FEATURE_NR := (others => 0); --TODO;
+constant Nstage : integer := 25;
 
 --constant SE : integer :=
 --constant SV : integer :=
@@ -70,9 +72,9 @@ record
 	y 	: integer;
 end record;
 
-function StageEval (signal d: in Detector; signal stageAdress : in unsigned (5 downto 0)) return integer;  
-function FeatureEval(signal r: in R; signal rect: in Rectangle) return integer;
-function test_Feature( signal meanP : in Mean; signal varP : in Var; calcul : integer; signal f_q : in Feature) return boolean;
+--function StageEval (signal d: in Detector; signal stageAdress : in unsigned (5 downto 0)) return integer;  
+function FeatureEval(signal r_tab: in R_tab; signal rect: in Rectangles) return integer;
+function test_Feature( signal sumf_q : in integer; signal meanP : in Mean; signal varP : in Var; calcul : integer; signal f_q : in Feature) return boolean;
 
 -- procedure <procedure_name> (<type_declaration> <constant_name>	: in <type_declaration>);
 --
@@ -87,7 +89,7 @@ begin
 	return 0;
 end;
 
-function FeatureEval(signal r_tab : in R_tab; signal rect : in Rectangle) return integer is
+function FeatureEval(signal r_tab : in R_tab; signal rect : in Rectangles) return integer is
 variable cont1 : integer;
 variable cont2 : integer;
 variable cont3 : integer;
@@ -104,7 +106,7 @@ begin
 end;
 
 
-function test_Feature( signal meanP : in Mean; signal varP : in Var; calcul : integer; signal f_q : in Feature) return boolean is
+function test_Feature( signal sumf_q : in integer; signal meanP : in Mean; signal varP : in Var; calcul : integer; signal f_q : in Feature) return boolean is
 variable mean : integer;
 variable sq_mean : integer;
 variable var_sq : integer;
