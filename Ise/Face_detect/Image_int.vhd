@@ -35,10 +35,10 @@ entity Image_integrale is
            Image_ready : in  STD_LOGIC;
            Image_int_ready : out  STD_LOGIC;
            Din_img : in  unsigned (7 downto 0);
-           Din_i : in  unsigned (7 downto 0);
-           Din_ic : in  unsigned (7 downto 0);
-           Dout_i : out  unsigned (7 downto 0);
-           Dout_ic : out  unsigned (7 downto 0);
+           Din_i : in  unsigned (31 downto 0);
+           Din_ic : in  unsigned (31 downto 0);
+           Dout_i : out  unsigned (31 downto 0);
+           Dout_ic : out  unsigned (31 downto 0);
            Offset_lect_img : out  unsigned (15 downto 0);
            Offset_ecr_int : out  unsigned (15 downto 0);
            Offset_lect_int : out  unsigned (15 downto 0);
