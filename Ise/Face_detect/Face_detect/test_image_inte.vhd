@@ -12,171 +12,121 @@ use ieee.std_logic_1164.all;
   END khalil;
 
   ARCHITECTURE behavior OF khalil IS 
-  
-  COMPONENT RAM_image  --'test' is the name of the module needed to be tested.
-    PORT(
-         clk : IN  std_logic;
-         adress : in  unsigned(31 downto 0);
-         we : IN  std_logic;
-			data_i : IN  unsigned(7 downto 0);
-			data_o : out  unsigned(7 downto 0)
-        );
-    END COMPONENT;
-	 
-	 
-  COMPONENT RAM_II  
-    PORT(
-         clk : IN  std_logic;
-         adress : in  unsigned(31 downto 0);
-         we : IN  std_logic;
-			data_i : IN  unsigned(31 downto 0);
-			data_o : out  unsigned(31 downto 0)
-        );
-    END COMPONENT;
           
+			 Component Image_integrale
+			  Port ( CLK : in  STD_LOGIC;
+           RST : in  STD_LOGIC;
+			  Image_ready : in  STD_LOGIC;
+			  Image_int_ready : out  STD_LOGIC;
+			  Din_img : in  unsigned (7 downto 0);
+			  Din_i : in  unsigned (31 downto 0);
+			  Din_ic : in  unsigned (31 downto 0);
+			  Dout_i : out  unsigned (31 downto 0);
+			  Dout_ic : out  unsigned (31 downto 0);
+			  Offset_lect_img : out  unsigned (15 downto 0);
+			  Offset_ecr_int : out  unsigned (15 downto 0);
+			  Offset_lect_int : out  unsigned (15 downto 0);
+			  we_i : out  STD_LOGIC;
+			  we_ic : out  STD_LOGIC;
+			  Det_end : in  STD_LOGIC);
+			  end Component Image_integrale;
 				
 				SIGNAL RST : STD_LOGIC;
 				SIGNAL Image_ready : STD_LOGIC;
-				SIGNAL Image_int_ready : STD_LOGIC;
+				SIGNAL Image_int_ready : STD_LOGIC := '0';
 				SIGNAL Din_img : unsigned (7 downto 0);
 				SIGNAL Dout_img : unsigned (7 downto 0);
 				SIGNAL Din_i : unsigned (31 downto 0);
 				SIGNAL Din_ic : unsigned (31 downto 0);
 				SIGNAL Dout_i : unsigned (31 downto 0);
 				SIGNAL Dout_ic : unsigned (31 downto 0);
-				SIGNAL Offset_lect_img : unsigned (31 downto 0);
-				SIGNAL Offset_ecr_int : unsigned (31 downto 0);
+				SIGNAL Offset_lect_img : unsigned (15 downto 0);
+				SIGNAL Offset_ecr_int : unsigned (15 downto 0);
 				SIGNAL Offset_lect_int : unsigned (15 downto 0);
-				SIGNAL we2 : STD_LOGIC;
-				SIGNAL we3 : STD_LOGIC;
+				SIGNAL we_i : STD_LOGIC;
+				SIGNAL we_ic : STD_LOGIC;
 				SIGNAL Det_end : STD_LOGIC;
 			  
 			  
-				signal clk : std_logic := '0';
-   
+				signal clk : std_logic := '0';			  
+			   constant clk_period : time := 1 ns;
 
 			  
-			  constant clk_period : time := 1 ns;
-
-			  signal adress: unsigned(31 downto 0):=(others=>'0');
-			  signal we: std_logic;
-			  
-			  
-			  
---			  
-				--signal adress : unsigned(31 downto 0):=(others=>'0');
-				signal adress_next: unsigned(31 downto 0):=(others=>'0');
---				signal we_2 : std_logic;
---				signal data_i_2 : unsigned(39 downto 0);
---				signal data_o_2 : unsigned(39 downto 0);
-				signal counter : std_logic :='0';
-				signal clock,endoffile : bit := '0';
-				signal termine : boolean;
 
   BEGIN
-  
-  uut: ram_II PORT MAP (
-			adress => Offset_ecr_int,
-         clk => clk,
-			 we => we2,
-			 data_i => Din_i,
-			 data_o=>Dout_i
-        );
-  
-	uut_3: ram_image PORT MAP (
-			adress => adress,
-         clk => clk,
-			 we => we,
-			 data_i => Din_img,
-			 data_o=>Dout_img
-       ); 
+
+	uut : Image_integrale PORT MAP(
+			  CLK => CLK,
+           RST => RST,
+			  Image_ready => Image_ready,
+			  Image_int_ready => Image_int_ready,
+			  Din_img => Din_img,
+			  Din_i => Din_i,
+			  Din_ic => Din_ic,
+			  Dout_i => Dout_i,
+			  Dout_ic => Dout_ic,
+			  Offset_lect_img => Offset_lect_img, 
+			  Offset_ecr_int => Offset_ecr_int,
+			  Offset_lect_int => Offset_lect_int,
+			  we_i => we_i,
+			  we_ic => we_ic,
+			  Det_end => Det_end);
+
+	RST <= '1', '0' after 30 ns;
 
   --  Test Bench Statements
-  clk_process :process
-		begin
-        clk <= '0';
-        wait for clk_period/2;  --for 0.5 ns signal is '0'.
-        clk <= '1';
-        wait for clk_period/2;  --for next 0.5 ns signal is '1'.
-		end process;
+clk_process :process
+	begin
+      clk <= '0';
+      wait for clk_period/2;  --for 0.5 ns signal is '0'.
+      clk <= '1';
+      wait for clk_period/2;  --for next 0.5 ns signal is '1'.
+	end process clk_process;
 
 
-cpt: process(clk)
+integral_image : process
+	variable cpt : unsigned (7 downto 0) := (others => '0');
+	
 	begin
 	
-	adress_next<= adress +1;
+	wait until clk = '1' and clk'event;
+	wait until RST = '0';
+	wait until rising_edge(CLK);
+	Image_ready <= '1', '0' after 2 ns;
 	
-end process;
-
-
-
-
-
-
-
-
-
-
-
-
-writing_RAM_image :
-process
-    file   infile    : text is in  "/user/6/guys/Bureau/PrjSpeFinal/PrjSpe/img/lena.ascii.retouche.pgm";   --declare input file
-    variable  inline    : line; --line number declaration
-    variable  dataread1    : integer;
-	 variable counter: integer :=0;
-	 
-begin
-
-
-wait until clk = '1' and clk'event;
-if (not endfile(infile)) then   --checking the "END OF FILE" is not reached.
-	we <= '1';
-	readline(infile, inline);       --reading a line from the file.
-	read(inline, dataread1);
-	Din_img <=to_unsigned(dataread1,8);   --put the value available in variable in a signal.
-	adress<=adress_next;
-
-else
-	we <= '0';
-	termine <= true;
-	if(counter = 0) then
-		adress<=(others=>'0');
-		counter :=1;
-	else 
-		adress<=adress_next;
-	end if;
-	endoffile <='1';         --set signal to tell end of file read file is reached.
-end if;
-wait until clk = '1' and clk'event;
-
-end process writing_RAM_image;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	while (cpt < 30) loop
+		Din_img <= cpt;
+		cpt := cpt + 1;
+		wait until clk'event and clk='1';
+	end loop;
+	cpt := (others => '0');
+	while (cpt < 255) loop
+		Din_img <= cpt;
+		Din_i <= x"000000" & cpt;
+		Din_ic <= x"000000" & cpt;
+		cpt := cpt + 1;
+		wait until clk'event and clk='1';
+	end loop;
+	cpt := (others => '0');
+	while (cpt < 255) loop
+		Din_img <= cpt;
+		Din_i <= x"000000" & cpt;
+		Din_ic <= x"000000" & cpt;
+		cpt := cpt + 1;
+		wait until clk'event and clk='1';
+	end loop;
+	cpt := (others => '0');
+	while (cpt < 255) loop
+		Din_img <= cpt;
+		Din_i <= x"000000" & cpt;
+		Din_ic <= x"000000" & cpt;
+		cpt := cpt + 1;
+		wait until clk'event and clk='1';
+	end loop;
+	
+	
+	wait;
+end process integral_image;	
+		
 
   END;
