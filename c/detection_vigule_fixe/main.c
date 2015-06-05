@@ -16,6 +16,8 @@
 void convertCascade(Cascade cascade, char* outname, int se, int sv,int fe, int fv, int gte, int gtv, int lse, int lsv)
 {
     FILE* f = fopen(outname, "w+");
+    fpos_t pos;
+    fgetpos(cascade.file,&pos);
     StageList s=cascadeToStageList(&cascade);
     StageList p;
     fprintf(f,"#SE %d SV=%d\n#FE=%d FV=%d\n#GTE=%d GTV=%d\n#LSE=%d LSV=%d\n", se, sv, fe, fv, gte, gtv, lse, lsv);
@@ -53,6 +55,7 @@ void convertCascade(Cascade cascade, char* outname, int se, int sv,int fe, int f
         convertDouble(p->element.threshold,&sth);
         fprintf(f, "%c %d", c, sth.val);
     }
+    fsetpos(cascade.file,&pos);
     fclose((f));
 }
 char* intToBinary(int a, int size) // a<2^size
@@ -93,6 +96,8 @@ char* intToBinary(int a, int size) // a<2^size
 void generateBinaryVHDL(Cascade cascade, char* outname, int se, int sv,int fe, int fv, int gte, int gtv, int lse, int lsv)
 {
     FILE* f = fopen(outname, "w+");
+    fpos_t pos;
+    fgetpos(cascade.file,&pos);
     StageList s=cascadeToStageList(&cascade);
     StageList p;
     int fadress=0;
@@ -107,10 +112,10 @@ void generateBinaryVHDL(Cascade cascade, char* outname, int se, int sv,int fe, i
         convertDouble(p->element.threshold,&sth);
         char*sthb= intToBinary(sth.val,16);
         char* fadressb = intToBinary(fadress, 12);
-        fprintf(f, "%d => \"%s%s\";\n", sadress, sthb,fadressb);
+        fprintf(f, "%d => \"%s%s\",\n", sadress, sthb,fadressb);
         fadress+=p->element.numberOfFeatures;
     }
-    fprintf(f,")\n--Features--\n(\n");
+    fprintf(f,");\n--Features--\n(\n");
     for (fadress=0, p=s; p!=NULL; p=p->next)
     {
         for(int i=0; i<p->element.numberOfFeatures; i++, fadress++)
@@ -127,12 +132,12 @@ void generateBinaryVHDL(Cascade cascade, char* outname, int se, int sv,int fe, i
             char* gtb = intToBinary(gt.val,16);
             char* lsb = intToBinary(ls.val, 16);
             char* radressb= intToBinary(radress,13);
-            fprintf(f,"%d => \"%s%s%s%s\";\n", fadress,fthb,gtb,lsb,radressb);
+            fprintf(f,"%d => \"%s%s%s%s\",\n", fadress,fthb,gtb,lsb,radressb);
             radress+=p->element.features[i].type;
 
         }
     }
-    fprintf(f,")\n--Rectangles--\n(\n");
+    fprintf(f,");\n--Rectangles--\n(\n");
 
      for (radress=0,p=s; p!=NULL; p=p->next)
     {
@@ -154,13 +159,14 @@ void generateBinaryVHDL(Cascade cascade, char* outname, int se, int sv,int fe, i
                 wb=intToBinary(w,5);
                 hb=intToBinary(h,5);
                 weightb=intToBinary(weight,5);
-                fprintf(f,"%d => \"%s%s%s%s%s\";\n",radress, xb, yb, wb, hb, weightb);
+                fprintf(f,"%d => \"%s%s%s%s%s\",\n",radress, xb, yb, wb, hb, weightb);
 
 
             }
         }
     }
-     fprintf(f,")\n");
+    fsetpos(cascade.file,&pos);
+     fprintf(f,");\n");
      fclose(f);
 }
 
@@ -184,10 +190,10 @@ int main(int argc, char ** argv)
     int lsv = SIZE-lse-1;
 
     printf("\n%d %d %d %d\n", se, fe, gte, lse);
-    //convertCascade(*cascade, "test2.txt",se,sv,fe,fv,gte,gtv,lse,lsv);
+    convertCascade(*cascade, "test2.txt",se,sv,fe,fv,gte,gtv,lse,lsv);
     generateBinaryVHDL(*cascade, "test.txt",se,sv,fe,fv,gte,gtv,lse,lsv);
-    char *c = intToBinary(3,4);
-    printf("%s", c);
+//    char *c = intToBinary(3,4);
+//    printf("%s", c);
 
     return 0;
 }
