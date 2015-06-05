@@ -33,21 +33,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-<<<<<<< HEAD:c/Detection/detection/detection.cbp
-		<Unit filename="../../image_integrale/image_integrale.c">
-=======
-		<Unit filename="detector.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="detector.h" />
-		<Unit filename="fixed_point.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="fixed_point.h" />
-		<Unit filename="main.c">
->>>>>>> 5bb5cb4b46e9ef5f768edb1f55ab1428ad39c02c:c/detection_vigule_fixe/detection_vigule_fixe.cbp
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../../image_integrale/image_integrale.h" />
 		<Unit filename="../../image_integrale/image_io.c">
 			<Option compilerVar="CC" />
@@ -68,6 +53,17 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="detection.h" />
+		<Unit filename="detector.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="detector.h" />
+		<Unit filename="fixed_point.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="fixed_point.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="vecteurs.c">
 			<Option compilerVar="CC" />
 			<Option weight="27" />

@@ -170,13 +170,13 @@ void printStage(Stage stage){
 
         for (int j =0; j<stage.features[i].type; j++)
         {
-            fprintf(stdout,"%d %d %d %d %llf\n", stage.features[i].rect[j].x, stage.features[i].rect[j].y,
+            fprintf(stdout,"%d %d %d %d %lf\n", stage.features[i].rect[j].x, stage.features[i].rect[j].y,
                 stage.features[i].rect[j].w, stage.features[i].rect[j].h, stage.features[i].rect[j].weight);
         }
-        fprintf(stdout,"%llf %llf %llf\n", stage.features[i].f, stage.features[i].gt, stage.features[i].ls);
+        fprintf(stdout,"%lf %lf %lf\n", stage.features[i].f, stage.features[i].gt, stage.features[i].ls);
         fprintf(stdout,"\n");
     }
-    fprintf(stdout,"%llf\n**********************\n", stage.threshold);
+    fprintf(stdout,"%lf\n**********************\n", stage.threshold);
 
 }
 
