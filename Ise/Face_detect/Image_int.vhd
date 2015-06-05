@@ -70,6 +70,7 @@ Offset_lect_img <= buff_offset;
 Offset_ecr_int <= buff_offset_ei;
 Offset_lect_int <= buff_offset_li;
 
+
 P_STATE : process(clk) 
 	begin
      if clk'event and clk='1' then
@@ -86,7 +87,7 @@ P_STATE : process(clk)
 	  end if; 
    end process P_STATE;
 
-P_FSM : process(current_state)
+P_FSM : process(current_state,Image_ready,Din_img,Din_ic,Din_i,Det_end)
 		-- declaration de variables
 		variable Val_i : unsigned := to_unsigned(0,32);
 		variable Val_ic : unsigned := to_unsigned(0,32); 
@@ -117,7 +118,7 @@ P_FSM : process(current_state)
 				we_i <= '1';
 				we_ic <= '1';
 				Val_i := x"000000" & Din_img;
-				Val_ic := Din_img * Din_img;
+				Val_ic := x"0000" & (Din_img * Din_img);
 				Dout_i <= Val_i;
 				next_r1_i <= Val_i;
 				Dout_ic <= Val_ic;
