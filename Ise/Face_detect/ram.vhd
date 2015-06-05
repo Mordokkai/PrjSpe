@@ -23,7 +23,7 @@ use ieee.numeric_std.all;
 
 entity ram_image is
 port (	clk : in std_logic;
-			address : in integer;
+			adress : in unsigned(31 downto 0);
 			we : in std_logic;
 			data_i : in unsigned(7 downto 0);
 			data_o : out unsigned(7 downto 0)
@@ -44,9 +44,9 @@ PROCESS(clk)
 BEGIN
     if(rising_edge(clk)) then
         if(we='1') then
-            ram(address) <= data_i;
+            ram(to_integer(adress)) <= data_i;
         end if;
-        data_o <= ram(address);
+        data_o <= ram(to_integer(adress));
     end if;
 END PROCESS;
 
