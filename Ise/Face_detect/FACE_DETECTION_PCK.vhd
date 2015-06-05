@@ -35,6 +35,8 @@ record
 end record;
 
 type Rectangles is array (0 to 2) of Rectangle;
+type R_tab is array (0 to 2) of R;
+
 
 type Feature is 
 record
@@ -69,8 +71,8 @@ record
 end record;
 
 function StageEval (signal d: in Detector; signal stageAdress : in unsigned (5 downto 0)) return integer;  
-function FeatureEval(signal d: in Detector; signal FeatureAdress : in unsigned (11 downto 0)) return integer;
-function RectangleEval(signal d: in Detector; signal RectangleAdress : in unsigned (12 downto 0)) return integer;
+function FeatureEval(signal r: in R; signal rect: in Rectangle) return integer;
+function test_Feature( signal meanP : in Mean; signal varP : in Var; calcul : integer; signal f_q : in Feature) return boolean;
 
 -- procedure <procedure_name> (<type_declaration> <constant_name>	: in <type_declaration>);
 --
@@ -85,18 +87,40 @@ begin
 	return 0;
 end;
 
-function FeatureEval(signal d: in Detector; signal FeatureAdress : in unsigned (11 downto 0)) return integer is
+function FeatureEval(signal r_tab : in R_tab; signal rect : in Rectangle) return integer is
+variable cont1 : integer;
+variable cont2 : integer;
+variable cont3 : integer;
+variable sum: integer;
+
 begin
-	--todo
-	return 0;
+	cont1 := r_tab(0)(3)+r_tab(0)(1)-r_tab(0)(2)-r_tab(0)(3);
+	cont2 := r_tab(1)(3)+r_tab(1)(1)-r_tab(1)(2)-r_tab(1)(3);
+	cont3 := r_tab(2)(3)+r_tab(2)(1)-r_tab(2)(2)-r_tab(2)(3);
+	
+	sum := cont1*rect(0).weight + cont2*rect(1).weight + cont3*rect(2).weight;
+	
+	return sum;
 end;
 
-function RectangleEval(signal d: in Detector; signal RectangleAdress : in unsigned (12 downto 0)) return integer is
-begin
-	--todo
-	return 0;
-end;
 
+function test_Feature( signal meanP : in Mean; signal varP : in Var; calcul : integer; signal f_q : in Feature) return boolean is
+variable mean : integer;
+variable sq_mean : integer;
+variable var_sq : integer;
+variable seuil : integer;
+begin
+mean := meanP(4)+meanP(1)-meanP(2)-meanP(3);
+sq_mean := varP(4)+varP(1)-varP(2)-varP(3);
+var_sq := sq_mean*24*24-mean*mean;
+
+seuil:= f_q.threshold;
+if(sumf_q*sumf_q>=seuil*seuil*var_sq) then
+	return true;
+else
+	return false;
+end if;
+end;
 
 ---- Procedure Example
 --  procedure <procedure_name>  (<type_declaration> <constant_name>  : in <type_declaration>) is

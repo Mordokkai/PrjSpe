@@ -15,6 +15,7 @@ use ieee.std_logic_1164.all;
   ARCHITECTURE behavior OF testbench IS 
 
 
+
 --Component declaration
 COMPONENT RAM_II  --'test' is the name of the module needed to be tested.
     PORT(
@@ -47,7 +48,7 @@ COMPONENT RAM_II_2  --'test' is the name of the module needed to be tested.
 	signal data_o : unsigned(31 downto 0);
 	signal termine : boolean;
    signal clock,endoffile : bit := '0';
-	signal counter : std_logic :='0';
+	--signal counter : std_logic :='0';
 
 
 
@@ -64,7 +65,9 @@ COMPONENT RAM_II_2  --'test' is the name of the module needed to be tested.
 	signal termine_2 : boolean;
 
 
-			
+	
+	
+	
 			
   BEGIN
   
@@ -86,7 +89,7 @@ COMPONENT RAM_II_2  --'test' is the name of the module needed to be tested.
 			 data_o=>data_o_2
        );   
 
-
+		
 clk_process :process
    begin
         clk <= '0';
@@ -100,6 +103,7 @@ cpt: process(clk)
 	
 	adress_next<= adress +1;
 	adress_next_2<= adress_2 +1;
+	adress_next_3 <= adress_3 +1;
 
 end process;
 
@@ -112,6 +116,7 @@ process
     file   infile    : text is in  "/user/6/guys/Bureau/PrjSpeFinal/PrjSpe/c/Detection/detection/img_II_short.txt";   --declare input file
     variable  inline    : line; --line number declaration
     variable  dataread1    : integer;
+	 variable counter: integer :=0;
 	 
 begin
 
@@ -127,9 +132,9 @@ if (not endfile(infile)) then   --checking the "END OF FILE" is not reached.
 else
 	we <= '0';
 	termine <= true;
-	if(counter = '0') then
+	if(counter = 0) then
 		adress<=(others=>'0');
-		counter <= '1';
+		counter :=1;
 	else 
 		adress<=adress_next;
 	end if;
@@ -177,6 +182,8 @@ end if;
 wait until clk = '1' and clk'event;
 
 end process writing_RAM_2;
+
+
 
 
 
