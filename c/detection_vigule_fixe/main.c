@@ -184,11 +184,12 @@ void generateConstantVHDL(Cascade cascade, char* outname)
         fprintf(f, "%d => %d,\n",i, p->element.numberOfFeatures);
     }
     fprintf(f,");\n--FEATURE_NR--\n(\n");
+     int k=0;
     for (p=s; p!=NULL; p=p->next)
     {
         for(int i=0; i<p->element.numberOfFeatures; i++)
         {
-            fprintf(f,"%d => %d,\n", i, p->element.features[i].type );
+            fprintf(f,"%d => %d,\n", k, p->element.features[i].type );
         }
     }
     fsetpos(cascade.file,&pos);
