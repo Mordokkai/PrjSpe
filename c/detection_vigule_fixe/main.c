@@ -187,7 +187,7 @@ void generateConstantVHDL(Cascade cascade, char* outname)
      int k=0;
     for (p=s; p!=NULL; p=p->next)
     {
-        for(int i=0; i<p->element.numberOfFeatures; i++)
+        for(int i=0; i<p->element.numberOfFeatures; i++,k++)
         {
             fprintf(f,"%d => %d,\n", k, p->element.features[i].type );
         }
