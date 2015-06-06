@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/Ise/Face_detect/Face_detect/khalil_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="khalil" />
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="textio" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="30" />
+   <wvobject fp_name="/khalil/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/image_ready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">image_ready</obj_property>
+      <obj_property name="ObjectShortName">image_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/image_int_ready" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">image_int_ready</obj_property>
+      <obj_property name="ObjectShortName">image_int_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/din_img" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din_img[7:0]</obj_property>
+      <obj_property name="ObjectShortName">din_img[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/dout_img" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout_img[7:0]</obj_property>
+      <obj_property name="ObjectShortName">dout_img[7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/din_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">din_i[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/din_ic" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">din_ic[31:0]</obj_property>
+      <obj_property name="ObjectShortName">din_ic[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/dout_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dout_i[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/dout_ic" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">dout_ic[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dout_ic[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/offset_lect_img" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">offset_lect_img[15:0]</obj_property>
+      <obj_property name="ObjectShortName">offset_lect_img[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/offset_ecr_int" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">offset_ecr_int[15:0]</obj_property>
+      <obj_property name="ObjectShortName">offset_ecr_int[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/offset_lect_int" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">offset_lect_int[15:0]</obj_property>
+      <obj_property name="ObjectShortName">offset_lect_int[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/we_i" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">we_i</obj_property>
+      <obj_property name="ObjectShortName">we_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/we_ic" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">we_ic</obj_property>
+      <obj_property name="ObjectShortName">we_ic</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/det_end" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">det_end</obj_property>
+      <obj_property name="ObjectShortName">det_end</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/current_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">current_state</obj_property>
+      <obj_property name="ObjectShortName">current_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/next_state" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">next_state</obj_property>
+      <obj_property name="ObjectShortName">next_state</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/buff_offset" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">buff_offset[15:0]</obj_property>
+      <obj_property name="ObjectShortName">buff_offset[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/next_offset" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">next_offset[15:0]</obj_property>
+      <obj_property name="ObjectShortName">next_offset[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/buff_offset_li" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">buff_offset_li[15:0]</obj_property>
+      <obj_property name="ObjectShortName">buff_offset_li[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/next_offset_li" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">next_offset_li[15:0]</obj_property>
+      <obj_property name="ObjectShortName">next_offset_li[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/buff_offset_ei" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">buff_offset_ei[15:0]</obj_property>
+      <obj_property name="ObjectShortName">buff_offset_ei[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/next_offset_ei" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">next_offset_ei[15:0]</obj_property>
+      <obj_property name="ObjectShortName">next_offset_ei[15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/r1_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">r1_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">r1_i[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/r1_ic" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">r1_ic[31:0]</obj_property>
+      <obj_property name="ObjectShortName">r1_ic[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/r2_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">r2_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">r2_i[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/r2_ic" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">r2_ic[31:0]</obj_property>
+      <obj_property name="ObjectShortName">r2_ic[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/next_r1_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">next_r1_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">next_r1_i[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/khalil/uut/next_r1_ic" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">next_r1_ic[31:0]</obj_property>
+      <obj_property name="ObjectShortName">next_r1_ic[31:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>
