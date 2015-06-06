@@ -66,7 +66,7 @@ use ieee.numeric_std.all;
 
 entity ram_II is
 port ( 	clk : in std_logic;
-			adress : in unsigned(31 downto 0);
+			adress : in integer;
 			we : in std_logic;
 			data_i : in unsigned(31 downto 0);
 			data_o : out unsigned(31 downto 0)
@@ -78,7 +78,14 @@ architecture Behavioral of ram_II is
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
 type ram_t is array (0 to 8192) of unsigned(31 downto 0);
-signal ram : ram_t := (others => (others => '0'));
+signal ram : ram_t := (
+0 => "00000000000000000000000000000001",
+24 => "00000000000000000011000000001001",
+3072 => "00000000000000000011000000001000",
+3096 => "00000000000000000011000001001001",
+772 => "00000000000000111110000001001001",
+others => "00000000000000000000000000000000"
+);
 
 begin
 
@@ -87,9 +94,9 @@ PROCESS(clk)
 BEGIN
     if(rising_edge(clk)) then
         if(we='1') then
-            ram(to_integer(adress)) <= data_i;
+            ram(adress) <= data_i;
         end if;
-        data_o <= ram(to_integer(adress));
+        data_o <= ram(adress);
     end if;
 END PROCESS;
 
@@ -107,7 +114,7 @@ use ieee.numeric_std.all;
 
 entity ram_II_2 is
 port (	clk : in std_logic;
-			adress : in unsigned(39 downto 0);
+			adress : in integer;
 			we : in std_logic;
 			data_i : in unsigned(39 downto 0);
 			data_o : out unsigned(39 downto 0)
@@ -119,7 +126,13 @@ architecture Behavioral of ram_II_2 is
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
 type ram_t is array (0 to 128*64) of unsigned(39 downto 0);
-signal ram : ram_t := (others => (others => '0'));
+signal ram : ram_t := (0 => "0000000000000000000000000000000000000001",
+24 => 							 "0000000000000000000001100000000000001001",
+3072 => 							 "0000000000000000000000000011000000001000",
+3096 => 							 "0000000000000000000000000110000001001001",
+772 => "0000000000000000000000111110000001001001",
+						others => "0000000000000000000000000000000000000000"
+);
 
 begin
 
@@ -128,9 +141,9 @@ PROCESS(clk)
 BEGIN
     if(rising_edge(clk)) then
         if(we='1') then
-            ram(to_integer(adress)) <= data_i;
+            ram(adress) <= data_i;
         end if;
-        data_o <= ram(to_integer(adress));
+        data_o <= ram(adress);
     end if;
 END PROCESS;
 
