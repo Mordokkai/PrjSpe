@@ -170,6 +170,31 @@ void generateBinaryVHDL(Cascade cascade, char* outname, int se, int sv,int fe, i
      fclose(f);
 }
 
+void generateConstantVHDL(Cascade cascade, char* outname)
+{
+    FILE* f = fopen(outname, "w+");
+    fpos_t pos;
+    fgetpos(cascade.file,&pos);
+    StageList s=cascadeToStageList(&cascade);
+    StageList p;
+    fprintf(f,"--STAGE_NF--\n(");
+    int i =0;
+    for(p=s; p!=NULL; p=p->next, i++)
+    {
+        fprintf(f, "%d => %d,\n",i, p->element.numberOfFeatures);
+    }
+    fprintf(f,");\n--FEATURE_NR--\n(\n");
+    for (p=s; p!=NULL; p=p->next)
+    {
+        for(int i=0; i<p->element.numberOfFeatures; i++)
+        {
+            fprintf(f,"%d => %d,\n", i, p->element.features[i].type );
+        }
+    }
+    fsetpos(cascade.file,&pos);
+    fclose((f));
+}
+
 int main(int argc, char ** argv)
 {
     printf("Hello world!\n");
@@ -190,8 +215,9 @@ int main(int argc, char ** argv)
     int lsv = SIZE-lse-1;
 
     printf("\n%d %d %d %d\n", se, fe, gte, lse);
-    convertCascade(*cascade, "test2.txt",se,sv,fe,fv,gte,gtv,lse,lsv);
-    generateBinaryVHDL(*cascade, "test.txt",se,sv,fe,fv,gte,gtv,lse,lsv);
+    convertCascade(*cascade, "int_threshold.txt",se,sv,fe,fv,gte,gtv,lse,lsv);
+    generateBinaryVHDL(*cascade, "binary_threshold.txt",se,sv,fe,fv,gte,gtv,lse,lsv);
+    generateConstantVHDL(*cascade,"constants.txt");
 //    char *c = intToBinary(3,4);
 //    printf("%s", c);
 
