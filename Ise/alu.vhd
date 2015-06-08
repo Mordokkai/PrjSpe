@@ -10,6 +10,8 @@ package alu is
 	procedure mult (signal in_A : in signed (15 downto 0) ; signal in_B : in signed (15 downto 0); 
 						signal in_param: in std_logic_vector(15 downto 0); signal out_AB : out signed(31 downto 0)
 						; signal out_param : out std_logic_vector (9 downto 0));
+	function greater (signal in_A : in signed (31 downto 0); signal In_B : in signed (31 downto 0);
+					in_param : in std_logic_vector (19 downto 0)) return boolean;
 
 end alu;
 
@@ -81,5 +83,30 @@ begin
 			out_param<= std_logic_vector(re) & std_logic_vector(rv);
 			out_ab<=to_signed((a*b),32);
 			end procedure;
+			
+function greater (signal in_A : in signed (31 downto 0); signal In_B : in signed (31 downto 0);
+					in_param : in std_logic_vector (19 downto 0)) return boolean	is
+	variable ae : unsigned;
+	variable av : unsigned;
+	variable be : unsigned;
+	variable bv : unsigned;
+	variable a : integer;
+	variable b : integer;
+begin
+
+	ae:=unsigned(in_param(19 downto 15));
+	av:=unsigned(in_param(14 downto 10));
+	be:=unsigned(in_param(9 downto 5));
+	bv:=unsigned(in_param(4 downto 0));
+	a:= to_integer(in_A(to_integer(ae+av) downto 0));
+	b:= to_integer (in_B(to_integer(be+bv) downto 0));
+	if(av>bv) then 
+		b:=b*(2**(to_integer(av-bv)));
+	else
+		a:=a*(2**(to_integer(bv-av)));
+	end if;
+	return a>b;
+	
+end function;
  
 end alu;
