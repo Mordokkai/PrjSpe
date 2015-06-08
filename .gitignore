@@ -6,6 +6,14 @@
 /img/*
 *.cbp
 *.depend
-/ISE/*
 c/detection_2/bin/Debug/img/
 *.txt
+*.html
+*.gise
+*.xise
+*.prj
+*.wdb
+*.xmsgs
+*.cmd
+*.xreport
+*.lso

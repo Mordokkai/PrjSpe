@@ -3,39 +3,40 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 package alu is
+
+	type FixedPoint is 
+	record
+		val: signed (31 downto 0);
+		e: unsigned (4 downto 0);
+		v: unsigned (4 downto 0);
+	end record;
 	
-	procedure adder (signal in_A : in signed (15 downto 0) ; signal in_B : in signed (15 downto 0); 
-						signal in_param: in std_logic_vector(15 downto 0); signal out_AB : out signed(16 downto 0)
-						; signal out_param : out std_logic_vector (8 downto 0));
-	procedure mult (signal in_A : in signed (15 downto 0) ; signal in_B : in signed (15 downto 0); 
-						signal in_param: in std_logic_vector(15 downto 0); signal out_AB : out signed(31 downto 0)
-						; signal out_param : out std_logic_vector (9 downto 0));
-	function greater (signal in_A : in signed (31 downto 0); signal In_B : in signed (31 downto 0);
-					in_param : in std_logic_vector (19 downto 0)) return boolean;
+	function  adder ( in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint;
+	function mult (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint;
+	function greater (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean;
 
 end alu;
 
 package body alu is
 
-	procedure adder (signal in_A : in signed (15 downto 0) ; signal in_B : in signed (15 downto 0); 
-						signal in_param: in std_logic_vector(15 downto 0); signal out_AB : out signed(16 downto 0)
-						; signal out_param : out std_logic_vector (8 downto 0)) is
-		variable ae : unsigned (3 downto 0);
-		variable av : unsigned (3 downto 0);
-		variable be : unsigned (3 downto 0);
-		variable bv : unsigned (3 downto 0);
+	function adder (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint is
+		variable ae : unsigned (4 downto 0);
+		variable av : unsigned (4 downto 0);
+		variable be : unsigned (4 downto 0);
+		variable bv : unsigned (4 downto 0);
 		variable re : unsigned (4 downto 0);
-		variable rv : unsigned (3 downto 0);
+		variable rv : unsigned (4 downto 0);
 		variable a : integer;
 		variable b : integer;
+		variable result : FixedPoint;
 
 		begin
-			ae:=unsigned(in_param(15 downto 12));
-			av:=unsigned(in_param(11 downto 8));
-			be:=unsigned(in_param(7 downto 4));
-			bv:=unsigned(in_param(3 downto 0));
-			a:= to_integer(in_A(to_integer(ae+av) downto 0));
-			b:= to_integer (in_B(to_integer(be+bv) downto 0));
+			ae:=In_A.e;
+			av:=In_A.v;
+			be:=In_B.e;
+			bv:=In_B.v;
+			a:= to_integer(in_A.val(to_integer(ae+av) downto 0));
+			b:= to_integer (in_B.val(to_integer(be+bv) downto 0));
 		if ae > be then
 			re:= '0' & ae;
 		else
@@ -51,56 +52,58 @@ package body alu is
 		end if;
 
 		re:=re+1;
-		out_param<= std_logic_vector(re) & std_logic_vector(rv);
-		out_ab<=to_signed((a+b),16);
-end procedure;
+		result.e:=re;
+		result.v:=rv;
+		result.val:=to_signed((a+b),32);
+		return result;
+end function;
 	
 	
-	procedure mult (signal in_A : in signed (15 downto 0) ; signal in_B : in signed (15 downto 0); 
-					signal in_param: in std_logic_vector(15 downto 0); signal out_AB : out signed(31 downto 0)
-					; signal out_param : out std_logic_vector (9 downto 0))is
+	function mult (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint is
 
-		variable ae : unsigned (3 downto 0);
-		variable av : unsigned (3 downto 0);
-		variable be : unsigned (3 downto 0);
-		variable bv : unsigned (3 downto 0);
+		variable ae : unsigned (4 downto 0);
+		variable av : unsigned (4 downto 0);
+		variable be : unsigned (4 downto 0);
+		variable bv : unsigned (4 downto 0);
 		variable re : unsigned (4 downto 0);
 		variable rv : unsigned (4 downto 0);
 		variable a : integer;
 		variable b : integer;
-
+		variable result : FixedPoint;
 		begin
-			ae:=unsigned(in_param(15 downto 12));
-			av:=unsigned(in_param(11 downto 8));
-			be:=unsigned(in_param(7 downto 4));
-			bv:=unsigned(in_param(3 downto 0));
-			a:= to_integer(in_A(to_integer(ae+av) downto 0));
-			b:= to_integer (in_B(to_integer(be+bv) downto 0));
+			ae:=In_A.e;
+			av:=In_A.v;
+			be:=In_B.e;
+			bv:=In_B.v;
+			a:= to_integer(in_A.val(to_integer(ae+av) downto 0));
+			b:= to_integer (in_B.val(to_integer(be+bv) downto 0));
 			
-			rv:= ('0'& av)+('0'& bv);
-			re:= ('0'& ae)+ ('0'& be);
+			rv:= ( av)+( bv);
+			re:= ( ae)+ (be);
 			
-		out_param<= std_logic_vector(re) & std_logic_vector(rv);
-		out_ab<=to_signed((a*b),32);
-
-		end procedure;
+		result.e:=re;
+		result.v:=rv;
+		result.val:=to_signed((a*b),32);
+		return result;
+		end function;
 			
-function greater (signal in_A : in signed (31 downto 0); signal In_B : in signed (31 downto 0);
-				in_param : in std_logic_vector (19 downto 0)) return boolean	is
-	variable ae : unsigned (3 downto 0);
-	variable av : unsigned (3 downto 0);
-	variable be : unsigned (3 downto 0);
-	variable bv : unsigned (3 downto 0);
-	variable a : integer;
-	variable b : integer;
-begin
-
-	ae:=unsigned(in_param(19 downto 15));
-	av:=unsigned(in_param(14 downto 10));
-	be:=unsigned(in_param(9 downto 5));
-	bv:=unsigned(in_param(4 downto 0));
-	a:= to_integer(in_A(to_integer(ae+av) downto 0));
-	b:= to_integer (in_B(to_integer(be+bv) downto 0));
+function greater (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean	is
+		variable ae : unsigned (4 downto 0);
+		variable av : unsigned (4 downto 0);
+		variable be : unsigned (4 downto 0);
+		variable bv : unsigned (4 downto 0);
+		variable re : unsigned (4 downto 0);
+		variable rv : unsigned (4 downto 0);
+		variable a : integer;
+		variable b : integer;
+		variable result : FixedPoint;
+	begin
+			ae:=In_A.e;
+			av:=In_A.v;
+			be:=In_B.e;
+			bv:=In_B.v;
+			a:= to_integer(in_A.val(to_integer(ae+av) downto 0));
+			b:= to_integer (in_B.val(to_integer(be+bv) downto 0));
 	if(av>bv) then 
 		b:=b*(2**(to_integer(av-bv)));
 	else
