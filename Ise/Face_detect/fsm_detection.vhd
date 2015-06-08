@@ -42,24 +42,24 @@ entity fsm_detection is
 					rst : in  STD_LOGIC;
 					
 					--Communications avec les RAMS
-					we_stage : out std_logic;
-					ad_stage : out integer;--fjydfjydjydtyk
+					we_stage : out std_logic := '0';
+					ad_stage : out integer :=0;--fjydfjydjydtyk
 					datao_stage : in unsigned(27 downto 0);
 					
-					we_feature : out std_logic;
-					ad_feature : out integer;
+					we_feature : out std_logic :='0';
+					ad_feature : out integer :=0;
 					datao_feature : in unsigned(60 downto 0);
 
-					we_rectangle : out std_logic;
-					ad_rectangle : out integer;
+					we_rectangle : out std_logic:='0';
+					ad_rectangle : out integer:=0;
 					datao_rectangle : in unsigned(24 downto 0);
 
-					we_II	: out std_logic;
-					ad_II:	out integer;
+					we_II	: out std_logic:='0';
+					ad_II:	out integer:=0;
 					datao_II: in unsigned(31 downto 0);
 					
-					ad_II_2: out integer;
-					we_II_2 : out std_logic;
+					ad_II_2: out integer:=0;
+					we_II_2 : out std_logic:='0';
 					datao_II_2: in unsigned(39 downto 0);
 
           face_detected : out  boolean;
@@ -89,33 +89,14 @@ type   STATE is (Wait_RDY, Place_Detector, Req_s, Req_meanvar, D_meanvar, Req_f,
 		signal f_q, f_d: Feature;
 		
 		
-		we_stage <= '0';
-		ad_stage <= 0;
-		--datao_stage <= (others => 0);
-					
-		we_feature <= '0';
-		ad_feature <= 0;
-		--datao_feature : in unsigned(60 downto 0);
-
-		we_rectangle <= '0';
-		ad_rectangle <= 0;
-		--datao_rectangle : in unsigned(24 downto 0);
-
-		we_II	:<= '0';
-		ad_II <= 0;
-		--datao_II: in unsigned(31 downto 0);
-					
-		ad_II_2 <= 0;
-		we_II_2 <= '0';
-		--datao_II_2: in unsigned(39 downto 0);
-
+		
           
 
 begin
-
+		
 	P_STATE : process(clk)
 	begin
-		if rising_edge(clk) then
+		if clk'event and clk='1' then
 			if (Rst = '1') then
 				current_state <= Wait_RDY;
        
@@ -149,11 +130,32 @@ begin
 	variable calcul : integer;
 	variable Stage_OK : boolean;
 	variable passe_Feature : boolean;
+	variable signe : integer;
    begin
      	case current_state is 		
 					
 			when Wait_RDY => 
 				if(Image_int_ready) then
+				we_stage <= '0';
+		ad_stage <= 0;
+		--datao_stage <= (others => 0);
+					
+		we_feature <= '0';
+		ad_feature <= 0;
+		--datao_feature : in unsigned(60 downto 0);
+
+		we_rectangle <= '0';
+		ad_rectangle <= 0;
+		--datao_rectangle : in unsigned(24 downto 0);
+
+		we_II	<= '0';
+		ad_II <= 0;
+		--datao_II: in unsigned(31 downto 0);
+					
+		ad_II_2 <= 0;
+		we_II_2 <= '0';
+		--datao_II_2: in unsigned(39 downto 0);
+
 					next_state <= Place_Detector;
 				else 
 					--On positionne le détecteur à sa position initiale
@@ -166,7 +168,7 @@ begin
 
 			when Place_Detector =>
 			--Deplacement du détecteur
-				if(det_q.x > IMG_WIDTH-24) then
+				if(det_q.x >= IMG_WIDTH-24) then
 					det_d.y <= det_q.y+1;
 					det_d.x <= 0;
 				else 
@@ -193,17 +195,21 @@ begin
 				ad_II_2 <= (det_q.y)*IMG_WIDTH+det_q.x; --idem
 					
 				--Changement d'état
-				ik_d <= 0;
+				--ik_d <= 0;
 				next_state <= Req_meanvar;
-
-
+				m_d <= 0;
+				l_d <= 1;
+				ik_d <= 1;
+			
+			
 			when Req_meanvar =>
 			--Récupération des valeurs
 				--s <= datao_stage;--A détailler
 				s_d.threshold <= to_integer(datao_stage(27 downto 12));
 				s_d.ad_feature <= to_integer(datao_stage(11 downto 0));
-				mean_d(ik_q) <= to_integer(datao_II);
-				var_d(ik_q) <= to_integer(datao_II_2);
+				s_d.nf <=  SNF(is_q);
+				mean_d(ik_q-1) <= to_integer(datao_II);
+				var_d(ik_q-1) <= to_integer(datao_II_2);
 				we_II <= '0';
 				ad_II <= (det_q.y + 24* m_q)*IMG_WIDTH+det_q.x + 24*l_q;
 				we_II_2 <= '0';
@@ -211,10 +217,7 @@ begin
 						
 			--Changement d'état
 				if(ik_q<3) then
-					if(ik_q = 0) then
-						m_d <= 0;
-						l_d <= 1;
-					elsif(ik_q = 1) then
+					if(ik_q = 1) then
 						m_d <= 1;
 						l_d <= 0;
 					elsif(ik_q = 2) then
@@ -257,6 +260,7 @@ begin
 
 			when Req_r =>
 			--Récupération des valeurs
+				f_d.nr <= FNR(if_q);
 				f_d.threshold <= to_integer(datao_feature(60 downto 45));
 				f_d.greater <= to_integer(datao_feature(28 downto 13));
 				f_d.lower <= to_integer(datao_feature(44 downto 29));
@@ -281,7 +285,10 @@ begin
 				rect_d(ir_q).y <= to_integer(datao_rectangle(19 downto  15));
 				rect_d(ir_q).h <= to_integer(datao_rectangle(14 downto  10));
 				rect_d(ir_q).w <= to_integer(datao_rectangle(9 downto  5));
-				rect_d(ir_q).weight <= to_integer(datao_rectangle(5 downto  0));
+				if(datao_rectangle(4)='1') then signe:=-1; 
+				else signe:=1; 
+				end if;
+				rect_d(ir_q).weight <= signe*to_integer(datao_rectangle(3 downto  0));
 				next_state <= RAM_II;
 
 			when RAM_II =>
@@ -293,7 +300,7 @@ begin
 				elsif(access_count = 2) then
 					ad_II <= (det_q.x + rect_q(ir_q).x) * IMG_WIDTH + (det_q.y + rect_q(ir_q).y + rect_q(ir_q).w); 
 				elsif(access_count = 3) then
-					ad_II <= (det_q.x + rect_q(ir_q).x - rect_q(ir_q).h) * IMG_WIDTH + (det_q.y + rect_q(ir_q).y + rect_q(ir_q).w); 
+					ad_II <= (det_q.x + rect_q(ir_q).x + rect_q(ir_q).h) * IMG_WIDTH + (det_q.y + rect_q(ir_q).y + rect_q(ir_q).w); 
 				end if;
 				
 				if(access_count <4) then 

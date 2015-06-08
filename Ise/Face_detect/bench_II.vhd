@@ -22,7 +22,7 @@ use work.all;
 COMPONENT RAM_II  --'test' is the name of the module needed to be tested.
     PORT(
          clk : IN  std_logic;
-         adress : in  unsigned(31 downto 0);
+         adress : in  integer;
          we : IN  std_logic;
 			data_i : IN  unsigned(31 downto 0);
 			data_o : out  unsigned(31 downto 0)
@@ -32,7 +32,7 @@ COMPONENT RAM_II  --'test' is the name of the module needed to be tested.
 COMPONENT RAM_II_2  --'test' is the name of the module needed to be tested.
     PORT(
          clk : IN  std_logic;
-         adress : in  unsigned(39 downto 0);
+         adress : in  integer;
          we : IN  std_logic;
 			data_i : IN  unsigned(39 downto 0);
 			data_o : out  unsigned(39 downto 0)
@@ -102,8 +102,9 @@ COMPONENT FSM_DETECTION  --'test' is the name of the module needed to be tested.
    -- Clock period definitions
    constant clk_period : time := 1 ns;
 
-	signal adress: unsigned(31 downto 0):=(others=>'0');
-	signal adress_next: unsigned(31 downto 0):=(others=>'0');
+	signal adress: integer :=0;
+	signal adress_next: integer:=0;
+	--signal adress_mux: integer:=0;
 	signal we: std_logic;
 	signal data_i : unsigned(31 downto 0);
 	signal data_o : unsigned(31 downto 0);
@@ -146,11 +147,11 @@ COMPONENT FSM_DETECTION  --'test' is the name of the module needed to be tested.
 
 	signal we_II	: std_logic;
 	signal ad_II: integer;
-	signal datao_II: unsigned(31 downto 0);
+	--signal datao_II: unsigned(31 downto 0);
 			
 	signal ad_II_2: integer;
 	signal we_II_2 : std_logic;
-	signal datao_II_2: unsigned(39 downto 0);
+	--signal datao_II_2: unsigned(39 downto 0);
 
    signal face_detected :  boolean;
    signal send_img :  boolean;
@@ -161,7 +162,7 @@ COMPONENT FSM_DETECTION  --'test' is the name of the module needed to be tested.
 		-- Instantiate the Unit Under Test UUT
 
 		uut: ram_II PORT MAP (
-			adress => adress,
+			adress => ad_II,
          clk => clk,
 			 we => we,
 			 data_i => data_i,
@@ -169,7 +170,7 @@ COMPONENT FSM_DETECTION  --'test' is the name of the module needed to be tested.
         );  
 
 		uut_2: ram_II_2 PORT MAP (
-			adress => adress_2,
+			adress => ad_II_2,
          clk => clk,
 			 we => we_2,
 			 data_i => data_i_2,
@@ -197,11 +198,11 @@ COMPONENT FSM_DETECTION  --'test' is the name of the module needed to be tested.
 
 			we_II	=> we_II,
 			ad_II => ad_II,
-			datao_II => datao_II,
+			datao_II => data_o,
 			
 			ad_II_2 => ad_II_2,
 			we_II_2 => we_II_2,
-			datao_II_2 => datao_II_2,
+			datao_II_2 => data_o_2,
 
          face_detected => face_detected,
          send_img => send_img
@@ -233,92 +234,102 @@ clk_process :process
         wait for clk_period/2;  --for next 0.5 ns signal is '1'.
    end process;
 
-cpt: process(clk)
-	begin
-	
-	adress_next<= adress +1;
-	adress_next_2<= adress_2 +1;
-
-end process;
-
-	
-	
-
-
-writing_RAM :
-process
-    file   infile    : text is in  "/user/6/guys/Bureau/PrjSpeFinal/PrjSpe/c/Detection/detection/img_II_short.txt";   --declare input file
-    variable  inline    : line; --line number declaration
-    variable  dataread1    : integer;
-	 variable counter: integer :=0;
-	 
-begin
-
-
-wait until clk = '1' and clk'event;
-if (not endfile(infile)) then   --checking the "END OF FILE" is not reached.
-	we <= '1';
-	readline(infile, inline);       --reading a line from the file.
-	read(inline, dataread1);
-	data_i <=to_unsigned(dataread1,32);   --put the value available in variable in a signal.
-	adress<=adress_next;
-
-else
-	we <= '0';
-	termine <= true;
-	if(counter = 0) then
-		adress<=(others=>'0');
-		counter :=1;
-	else 
-		adress<=adress_next;
-	end if;
-	endoffile <='1';         --set signal to tell end of file read file is reached.
-end if;
-wait until clk = '1' and clk'event;
-
-end process writing_RAM;
-
-
-
-
-
-
---Pour l'image intégrale carrée
-
-writing_RAM_2 :
-process
-    file   infile    : text is in  "/user/6/guys/Bureau/PrjSpeFinal/PrjSpe/c/Detection/detection/img_II_2_short.txt";   --declare input file
-    variable  inline    : line; --line number declaration
-    variable  dataread1    : integer;
-	 
-begin
-
-
-wait until clk = '1' and clk'event;
-if (not endfile(infile)) then   --checking the "END OF FILE" is not reached.
-	we_2 <= '1';
-	readline(infile, inline);       --reading a line from the file.
-	read(inline, dataread1);
-	data_i_2 <=to_unsigned(dataread1,40);   --put the value available in variable in a signal.
-	adress_2<=adress_next_2;
-
-else
-	Image_int_ready <= true;
---	we_2 <= '0';
---	termine_2 <= true;
---	if(counter_2 = '0') then
---		adress_2<=(others=>'0');
---		counter_2 <= '1';
---	else 
---		adress_2<=adress_next_2;
+--cpt: process(clk)
+--	begin
+--	if(not termine) then
+--	adress_next<= adress +1;
+--	adress_next_2<= adress_2 +1;
+--	else
+--	adress_next <= ad_II;
 --	end if;
---	endoffile_2 <='1';         --set signal to tell end of file read file is reached.
-end if;
-wait until clk = '1' and clk'event;
+--end process;
 
-end process writing_RAM_2;
+--	
+--mux : process
+--	begin
+--	if( termine) then
+--	adress_next <= ad_II; 
+--	end if;
+--end process;
 
-
+Image_int_ready <= true;
+--writing_RAM :
+--process
+--    file   infile    : text is in  "/user/6/guys/Bureau/PrjSpeFinal/PrjSpe/c/Detection/detection/img_II_short.txt";   --declare input file
+--    variable  inline    : line; --line number declaration
+--    variable  dataread1    : integer;
+--	 variable counter: integer :=0;
+--	 
+--begin
+--
+--
+--wait until clk = '1' and clk'event;
+--if (not endfile(infile)) then   --checking the "END OF FILE" is not reached.
+--	we <= '1';
+--	readline(infile, inline);       --reading a line from the file.
+--	read(inline, dataread1);
+--	data_i <=to_unsigned(dataread1,32);   --put the value available in variable in a signal.
+--	adress<=adress_next;
+--	--adress_mux <= adress_next;
+--else
+--	we <= '0';
+--	termine <= true;
+--	--adress<=ad_II; 
+--	if(counter = 0) then
+--		adress<=0;
+--		counter :=1;
+--	else 
+--		--adress <= ad_II ;
+--		adress<=adress_next;
+--	end if;
+--	endoffile <='1';         --set signal to tell end of file read file is reached.
+--end if;
+----wait until clk = '1' and clk'event;
+--
+--end process writing_RAM;
+--
+--
+--
+--
+--
+--
+----Pour l'image intégrale carrée
+--
+--writing_RAM_2 :
+--process
+--    file   infile    : text is in  "/user/6/guys/Bureau/PrjSpeFinal/PrjSpe/c/Detection/detection/img_II_2_short.txt";   --declare input file
+--    variable  inline    : line; --line number declaration
+--    variable  dataread1    : integer;
+--	 
+--begin
+--
+--
+--wait until clk = '1' and clk'event;
+--if (not endfile(infile)) then   --checking the "END OF FILE" is not reached.
+--	we_2 <= '1';
+--	readline(infile, inline);       --reading a line from the file.
+--	read(inline, dataread1);
+--	data_i_2 <=to_unsigned(dataread1,40);   --put the value available in variable in a signal.
+--	adress_2<=adress_next_2;
+--
+--else
+--	--wait until clk = '1' and clk'event;
+--	Image_int_ready <= true;
+----	we_2 <= '0';
+----	termine_2 <= true;
+----	if(counter_2 = '0') then
+----		adress_2<=(others=>'0');
+----		counter_2 <= '1';
+----	else 
+----		adress_2<=adress_next_2;
+----	end if;
+----	endoffile_2 <='1';         --set signal to tell end of file read file is reached.
+--end if;
+--wait until clk = '1' and clk'event;
+--
+--end process writing_RAM_2;
+--
+--
 
 
 
