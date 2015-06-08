@@ -11,15 +11,17 @@ package alu is
 		v: unsigned (4 downto 0);
 	end record;
 	
-	function  adder ( in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint;
-	function mult (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint;
-	function greater (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean;
+	function "+" ( in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint;
+	function "*" (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint;
+	function ">=" (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean;
+	function ">" (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean;
+	function minE (in_A : in integer) return unsigned;
 
 end alu;
 
 package body alu is
 
-	function adder (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint is
+	function "+" (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint is
 		variable ae : unsigned (4 downto 0);
 		variable av : unsigned (4 downto 0);
 		variable be : unsigned (4 downto 0);
@@ -29,7 +31,6 @@ package body alu is
 		variable a : integer;
 		variable b : integer;
 		variable result : FixedPoint;
-
 		begin
 			ae:=In_A.e;
 			av:=In_A.v;
@@ -59,7 +60,7 @@ package body alu is
 end function;
 	
 	
-	function mult (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint is
+	function "*" (in_A : in FixedPoint ; in_B : in FixedPoint) return FixedPoint is
 
 		variable ae : unsigned (4 downto 0);
 		variable av : unsigned (4 downto 0);
@@ -87,7 +88,7 @@ end function;
 		return result;
 		end function;
 			
-function greater (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean	is
+function ">=" (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean	is
 		variable ae : unsigned (4 downto 0);
 		variable av : unsigned (4 downto 0);
 		variable be : unsigned (4 downto 0);
@@ -98,6 +99,36 @@ function greater (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean	is
 		variable b : integer;
 		variable result : FixedPoint;
 	begin
+	
+
+			ae:=In_A.e;
+			av:=In_A.v;
+			be:=In_B.e;
+			bv:=In_B.v;
+			a:= to_integer(in_A.val(to_integer(ae+av) downto 0));
+			b:= to_integer (in_B.val(to_integer(be+bv) downto 0));
+	if(av>bv) then 
+		b:=b*(2**(to_integer(av-bv)));
+	else
+		a:=a*(2**(to_integer(bv-av)));
+	end if;
+	return a>=b;
+	
+end function;
+
+function ">" (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean	is
+		variable ae : unsigned (4 downto 0);
+		variable av : unsigned (4 downto 0);
+		variable be : unsigned (4 downto 0);
+		variable bv : unsigned (4 downto 0);
+		variable re : unsigned (4 downto 0);
+		variable rv : unsigned (4 downto 0);
+		variable a : integer;
+		variable b : integer;
+		variable result : FixedPoint;
+	begin
+	
+
 			ae:=In_A.e;
 			av:=In_A.v;
 			be:=In_B.e;
@@ -112,5 +143,17 @@ function greater (in_A : in FixedPoint ; in_B : in FixedPoint) return boolean	is
 	return a>b;
 	
 end function;
+
+	
+function minE (in_A : in integer) return unsigned is
+variable i: integer :=1;
+variable a :integer :=in_A;
+begin
+	while (a>0) loop
+		i:=i+1;
+		a:=a/2;
+	end loop;
+return to_unsigned(i, 5);
+end function;
  
-end alu;
+end package body alu;

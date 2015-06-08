@@ -23,7 +23,7 @@ int main(int argc, char ** argv)
             printf("not a pgm file");
 
         Cascade* cascade = openCascade("../../cascade/haarcascade_frontalface_default.txt");
-        printStageList(cascadeToStageList(cascade));
+        //printStageList(cascadeToStageList(cascade));
 
         printf("\n*****\SCANING*****\n");
 
