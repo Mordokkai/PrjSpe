@@ -74,13 +74,14 @@ begin
 	begin
 		we <= '0';
 		image_ready <= '0';
+		next_offset <= buff_offset;
+		next_state <= current_state;
+		
 		case Current_State is
 			when Init =>
 				next_offset <= (others => '0');
 				if (VSync='1') then
 					next_state <= Lecture;
-				else 
-					next_state <= current_state;
 				end if;
 				
 			when Lecture =>
@@ -90,16 +91,12 @@ begin
 				end if;
 				if (rising_edge(VSync)) then
 					next_state <= Wait_det;
-				else
-					next_state <= current_state;
 				end if;
 			
 			when Wait_det =>
 				Image_ready <= '1';
 				if (det_end = '1') then
 					next_state <= Init;
-				else
-					next_state <= current_state;
 				end if;
 				
 			when others =>
