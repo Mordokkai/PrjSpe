@@ -121,9 +121,9 @@ void savePgm (pgmFormat pgm, char* filename){
         {
             for(int j =0; j<pgm.width; j++)
             {
-                fprintf(f,"%3d ",pgm.values[i][j]);
+                fprintf(f,"%d\n",pgm.values[i][j]);
             }
-            fprintf(f,"\n");
+            //fprintf(f,"\n");
             fflush(f);
         }
     fclose(f);

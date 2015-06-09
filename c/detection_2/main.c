@@ -31,6 +31,15 @@ int main(int argc, char ** argv)
         resultName = strcpy(resultName,argv[i]);
         resultName = strcat(resultName,".rs");
         scanPgm(cascade,pgm,resultName);
+
+
+        integralPgm ii = generateIntegralPgm(*pgm);
+        resultName = strcat(resultName,".ii");
+        saveIntegralPgm(ii,resultName);
+
+        ii = generateIntegralPgm_sq(*pgm);
+        resultName = strcat(resultName,".iisq");
+        saveIntegralPgm(ii,resultName);
     }
 
 

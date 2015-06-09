@@ -177,8 +177,8 @@ long double featureEvalution(Feature f, Detector d, integralPgm* ii, integralPgm
 
     double s=r.h*r.w;
 
-    mean=rectangleEvaluation(r,d,ii)/s;
-    variance_sq=mean*mean - rectangleEvaluation(r,d,ii_sq)/(s);
+    mean=rectangleEvaluation(r,d,ii);
+    variance_sq=-(mean*mean - rectangleEvaluation(r,d,ii_sq));
 
     bool test = value*value >= f.f*f.f*variance_sq;
 
@@ -294,11 +294,11 @@ void scanPgm(Cascade* cascade, pgmFormat *i, char* resultName)
 
         StageList l = cascadeToStageList(cascade);
         StageList p;
-        int stageNumber;
+        //int stageNumber;
         bool stageStatus;
         do{
             //printf("DETECTOR %d %d", d.x, d.y);
-            for(p=l, stageNumber =i; p!=NULL; p=p->next, stageNumber++)
+            for(p=l; p!=NULL; p=p->next)
             {
                 stageStatus = hasPassedStage(p->element,d,&ii,&ii_sq);
                 if(stageStatus && p->next==NULL)

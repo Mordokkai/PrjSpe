@@ -112,3 +112,29 @@ void printIntegralPgm(integralPgm integral){
             printf("\n");
         }
 }
+
+void saveIntegralPgm(integralPgm pgm, char* filename){
+    //printing the histogram
+    printf("Saving file...\n");
+    FILE* f= fopen(filename, "w+");
+    if(f==NULL)
+    {
+        printf("Error saving the file");
+        return;
+    }
+//    fprintf(f, "%c%c\n%u %u\n%u\n", pgm.magicNumber[0], pgm.magicNumber[1],pgm.width, pgm.height, pgm.maxValue);
+    fflush(f);
+    printf("Printing Data...\n");
+    for(int i =0; i<pgm.height; i++)
+        {
+            for(int j =0; j<pgm.width; j++)
+            {
+                fprintf(f,"%d\n",pgm.values[i][j]);
+            }
+            //fprintf(f,"\n");
+            fflush(f);
+        }
+    fclose(f);
+    printf("%s has been saved\n", filename);
+
+}

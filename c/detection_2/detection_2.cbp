@@ -17,11 +17,8 @@
 					<Add option="-Winit-self" />
 					<Add option="-Wmain" />
 					<Add option="-g" />
-					<Add option='&quot;-std=c99&quot;  &quot;-pthread&quot; -Wno-format' />
+					<Add option='&quot;-std=c99&quot;   -Wno-format' />
 				</Compiler>
-				<Linker>
-					<Add option="-pthread" />
-				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/detection_2" prefix_auto="1" extension_auto="1" />
@@ -39,7 +36,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="classiefier.h" />
 		<Unit filename="detector.c">
 			<Option compilerVar="CC" />
 		</Unit>

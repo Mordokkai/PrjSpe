@@ -13,7 +13,7 @@ integralPgm generateIntegralPgm(pgmFormat pgm);
 integralPgm generateIntegralPgm_sq(pgmFormat pgm);
 
 void printIntegralPgm(integralPgm integral);
-void saveIntegralPgm(integralPgm integral, char* filename);
+void saveIntegralPgm(integralPgm pgm, char* filename);
 void scalePgm(pgmFormat* pgm);
 
 
