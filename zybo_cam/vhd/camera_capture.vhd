@@ -51,6 +51,20 @@ signal etat_d, etat_q : FSM_type;
 signal data_d, data_q : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
 signal Hcnt_d, Hcnt_q : integer := 0;
 signal Vcnt_d, Vcnt_q : integer := 0;
+
+--signaux image inté
+				SIGNAL Din_img : unsigned (7 downto 0);
+			   SIGNAL Din_i : unsigned (31 downto 0);
+			   SIGNAL Din_ic : unsigned (31 downto 0);
+			   SIGNAL Dout_i : unsigned (31 downto 0);
+			   SIGNAL Dout_ic : unsigned (31 downto 0);
+			   SIGNAL Offset_lect_img : unsigned (15 downto 0);
+			   SIGNAL Offset_ecr_int : unsigned (15 downto 0);
+			   SIGNAL Offset_lect_int : unsigned (15 downto 0);
+			   SIGNAL we_i : STD_LOGIC;
+			   SIGNAL we_ic : STD_LOGIC;
+			   --SIGNAL Det_end : STD_LOGIC;
+				SIGNAL Image_int_ready : boolean;
    
 begin
 

@@ -3,6 +3,7 @@
 -------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
@@ -101,28 +102,70 @@ end component clk_pll;
 --         data_out : out STD_LOGIC_VECTOR (7 downto 0));
 --end component Camera_Data_Simu;
 
-component VGA_generator
-    Port ( clk : in STD_LOGIC;
-    		btn3 : in STD_LOGIC;								
-			Hsync : out STD_LOGIC;
-			Vsync : out STD_LOGIC;
-			addr : out STD_LOGIC_VECTOR (16 downto 0);
-			coord : out coordonnee;
-			activeArea : out boolean;
-			reset : out STD_LOGIC);
-end component VGA_generator;
+--component VGA_generator
+--    Port ( clk : in STD_LOGIC;
+--    		btn3 : in STD_LOGIC;								
+--			Hsync : out STD_LOGIC;
+--			Vsync : out STD_LOGIC;
+--			addr : out STD_LOGIC_VECTOR (16 downto 0);
+--			coord : out coordonnee;
+--			activeArea : out boolean;
+--			reset : out STD_LOGIC);
+--end component VGA_generator;
 
-component Camera_Capture
-    Port ( pclk : in STD_LOGIC;
-    	   reset : in STD_LOGIC;
-         href : in STD_LOGIC;
-			vs_cam : in STD_LOGIC;
-			data_in : in STD_LOGIC_VECTOR (7 downto 0);
-			addr : out STD_LOGIC_VECTOR (16 downto 0);
-			data_out : out STD_LOGIC_VECTOR (15 downto 0);
-			coord : out coordonnee;
-			we : out STD_LOGIC_VECTOR(0 DOWNTO 0));
-end component Camera_Capture;
+Component Frame_grabber 
+    Port ( Din : in  unsigned (7 downto 0);
+           Vsync : in  STD_LOGIC;
+           Href : in  STD_LOGIC;
+           CLK : in  STD_LOGIC;
+           Det_end : in  STD_LOGIC;
+			  RESET : in STD_LOGIC;
+           Dout : out  unsigned (7 downto 0);
+           Offset : out  unsigned (15 downto 0);
+           We : out  STD_LOGIC;
+           Image_ready : out  STD_LOGIC);
+end component Frame_grabber;
+
+component VGA_out 
+    Port ( CLK : in  STD_LOGIC;
+           Din : in  unsigned (7 downto 0);
+           HSync : out  STD_LOGIC;
+           VSync : out  STD_LOGIC;
+           R : out  unsigned (4 downto 0);
+           G : out  unsigned (5 downto 0);
+           B : out  unsigned (4 downto 0);
+           Offset : out  unsigned (15 downto 0));
+end component VGA_out;
+
+Component Image_integrale
+			  Port ( CLK : in  STD_LOGIC;
+           RST : in  STD_LOGIC;
+			  Image_ready : in  STD_LOGIC;
+			  Image_int_ready : out  STD_LOGIC;
+			  Din_img : in  unsigned (7 downto 0);
+			  Din_i : in  unsigned (31 downto 0);
+			  Din_ic : in  unsigned (31 downto 0);
+			  Dout_i : out  unsigned (31 downto 0);
+			  Dout_ic : out  unsigned (31 downto 0);
+			  Offset_lect_img : out  unsigned (15 downto 0);
+			  Offset_ecr_int : out  unsigned (15 downto 0);
+			  Offset_lect_int : out  unsigned (15 downto 0);
+			  we_i : out  STD_LOGIC;
+			  we_ic : out  STD_LOGIC;
+			  send_img : in  boolean);
+end Component Image_integrale;
+
+--component Camera_Capture
+--    Port ( pclk : in STD_LOGIC;
+--    	   reset : in STD_LOGIC;
+--         href : in STD_LOGIC;
+--			vs_cam : in STD_LOGIC;
+--			data_in : in STD_LOGIC_VECTOR (7 downto 0);
+--			addr : out STD_LOGIC_VECTOR (16 downto 0);
+--			data_out : out STD_LOGIC_VECTOR (15 downto 0);
+--			coord : out coordonnee;
+--			we : out STD_LOGIC_VECTOR(0 DOWNTO 0));
+--end component Camera_Capture;
 
 component mem_ram
 	 Port ( clka : in STD_LOGIC;
@@ -133,24 +176,24 @@ component mem_ram
    		addrb : in STD_LOGIC_VECTOR(16 DOWNTO 0);
    		doutb : out STD_LOGIC_VECTOR(15 DOWNTO 0));
 end component mem_ram;
-
-component multiplexer_RGB is
-    Port ( clk : in STD_LOGIC;
-    		sw0 : in STD_LOGIC;	
-			btn0 : in STD_LOGIC;					
-			btn1 : in STD_LOGIC;
-			btn2 : in STD_LOGIC;
-			coord : in coordonnee;
-			data  : in STD_LOGIC_VECTOR (15 downto 0);
-			activeArea : in boolean;
-			Hsync : in STD_LOGIC;
-			Vsync : in STD_LOGIC;
-			VGA_hs : out STD_LOGIC;
-			VGA_vs : out STD_LOGIC;
-			VGA_r : out STD_LOGIC_VECTOR (4 downto 0);
-			VGA_g : out STD_LOGIC_VECTOR (5 downto 0);
-			VGA_b : out STD_LOGIC_VECTOR (4 downto 0));
-end component multiplexer_RGB;
+--
+--component multiplexer_RGB is
+--    Port ( clk : in STD_LOGIC;
+--    		sw0 : in STD_LOGIC;	
+--			btn0 : in STD_LOGIC;					
+--			btn1 : in STD_LOGIC;
+--			btn2 : in STD_LOGIC;
+--			coord : in coordonnee;
+--			data  : in STD_LOGIC_VECTOR (15 downto 0);
+--			activeArea : in boolean;
+--			Hsync : in STD_LOGIC;
+--			Vsync : in STD_LOGIC;
+--			VGA_hs : out STD_LOGIC;
+--			VGA_vs : out STD_LOGIC;
+--			VGA_r : out STD_LOGIC_VECTOR (4 downto 0);
+--			VGA_g : out STD_LOGIC_VECTOR (5 downto 0);
+--			VGA_b : out STD_LOGIC_VECTOR (4 downto 0));
+--end component multiplexer_RGB;
 
 signal clk_VGA, pclk_cam : STD_LOGIC; 
 signal we : STD_LOGIC_VECTOR(0 DOWNTO 0);
@@ -159,11 +202,69 @@ signal data_cam, data_VGA : STD_LOGIC_VECTOR (15 downto 0);
 signal coord_VGA, coord_cam : coordonnee;
 signal img_active : boolean;
 signal hs, vs : STD_LOGIC; 
-signal rst_VGA : STD_LOGIC; 
+signal rst_VGA : STD_LOGIC;
+
+--signaux pour les cast
+signal address_vga_unsigned : unsigned(15 downto 0);
+signal address_cam_unsigned : unsigned(15 downto 0);
+signal red_unsigned : unsigned (4 downto 0);
+signal green_unsigned : unsigned (5 downto 0);
+signal blue_unsigned : unsigned (4 downto 0); 
+signal data_vga_unsigned : unsigned (7 downto 0);
+signal camera_data_unsigned : unsigned (7 downto 0);
+signal data_cam_unsigned : unsigned (7 downto 0);
+signal we_stdlogic : std_logic;
+
+--signaux image inté
+				SIGNAL Din_img : unsigned (7 downto 0);
+			   SIGNAL Din_i : unsigned (31 downto 0);
+			   SIGNAL Din_ic : unsigned (31 downto 0);
+			   SIGNAL Dout_i : unsigned (31 downto 0);
+			   SIGNAL Dout_ic : unsigned (31 downto 0);
+			   SIGNAL Offset_lect_img : unsigned (15 downto 0);
+			   SIGNAL Offset_ecr_int : unsigned (15 downto 0);
+			   SIGNAL Offset_lect_int : unsigned (15 downto 0);
+			   SIGNAL we_i : STD_LOGIC;
+			   SIGNAL we_ic : STD_LOGIC;
+			   --SIGNAL Det_end : STD_LOGIC;
+				SIGNAL send_img :  boolean;
+				SIGNAL Image_int_ready : std_logic;
+				
+				signal image_ready : std_logic;
+				signal sig_true : std_logic := '1';
 --signal CAMERA_DATA : STD_LOGIC_VECTOR (7 downto 0);
 --signal CAMERA_HS, CAMERA_VS : STD_LOGIC;
 
+----signaux detection
+--
+--				SIGNAL we_stage : std_logic;
+--				SIGNAL ad_stage : integer;
+--				SIGNAL datao_stage : unsigned(27 downto 0);
+--						
+--				SIGNAL we_feature  : std_logic;
+--				SIGNAL ad_feature  : integer;
+--				SIGNAL datao_feature : unsigned(60 downto 0);
+--
+--				SIGNAL we_rectangle : std_logic;
+--				SIGNAL ad_rectangle : integer;
+--				SIGNAL datao_rectangle : unsigned(24 downto 0);
+--				
+--				SIGNAL face_detected :  boolean;
+--				SIGNAL visage : Visage;
+
 begin
+
+sig_true <= '1';
+address_vga <= std_logic_vector("0" & address_vga_unsigned);
+red <= std_logic_vector(red_unsigned);
+green <= std_logic_vector(green_unsigned);
+blue <= std_logic_vector(blue_unsigned);
+data_vga_unsigned <= unsigned(data_vga(7 downto 0));
+camera_data_unsigned <= unsigned(camera_data);
+address_cam <= std_logic_vector("0" & address_cam_unsigned);
+data_cam <= "00000000" & std_logic_vector(data_cam_unsigned);
+we <= (0 => we_stdlogic);
+
 
 system_i: system
 	 Port map ( processing_system7_0_MIO => processing_system7_0_MIO,
@@ -215,28 +316,54 @@ led_io(3) <= '1';
 --           data_out => CAMERA_DATA
 --			    );
 
-vga: VGA_generator
-    Port map ( clk => clk_VGA,
-    		  btn3 => push_io(3),
-           Hsync => hs,
-           Vsync => vs,
-			  addr => address_VGA,
-			  coord => coord_VGA,
-			  activeArea => img_active,
-			  reset => rst_VGA
+--vga: VGA_generator
+--    Port map ( clk => clk_VGA,
+--    		  btn3 => push_io(3),
+--           Hsync => hs,
+--           Vsync => vs,
+--			  addr => address_VGA,
+--			  coord => coord_VGA,
+--			  activeArea => img_active,
+--			  reset => rst_VGA
+--			  );
+--
+--capture: Camera_Capture
+--    Port map ( pclk => CAMERA_PCLK,
+--    		  reset => rst_VGA,
+--           href => CAMERA_HS,
+--           vs_cam => CAMERA_VS,
+--           data_in => CAMERA_DATA,
+--           addr => address_cam,
+--           data_out => data_cam,
+--           coord => coord_cam,
+--           we => we
+--			  );
+
+
+vga: VGA_out
+    Port map ( clk => clk_VGA,    	
+           Hsync => VGA_HS,
+           Vsync => VGA_VS,
+			  offset => address_VGA_unsigned,
+			  r => RED_unsigned,
+			  g => GREEN_unsigned,
+			  b => BLUE_unsigned,
+			  Din => Data_VGA_unsigned
 			  );
 
-capture: Camera_Capture
-    Port map ( pclk => CAMERA_PCLK,
+capture: Frame_grabber
+    Port map ( clk => CAMERA_PCLK,
     		  reset => rst_VGA,
            href => CAMERA_HS,
-           vs_cam => CAMERA_VS,
-           data_in => CAMERA_DATA,
-           addr => address_cam,
-           data_out => data_cam,
-           coord => coord_cam,
-           we => we
+           vsync => CAMERA_VS,
+           din => CAMERA_DATA_unsigned,
+			  det_end => sig_true,
+           offset => address_cam_unsigned,
+           dout => data_cam_unsigned,
+           image_ready => image_ready,
+           we => we_stdlogic
 			  );
+
 			  
 ram: mem_ram
 	 Port map ( clka => CAMERA_PCLK,
@@ -248,23 +375,73 @@ ram: mem_ram
    		  doutb => data_VGA
    		  );
    		  
-mux: multiplexer_RGB
-    Port map ( clk => clk_VGA,
-    		  sw0 => switch_io(0),
-    		  btn0 => push_io(0),
-			  btn1 => push_io(1),	
-			  btn2 => push_io(2),
-			  coord => coord_VGA,
-			  data => data_VGA,
-			  activeArea => img_active,
-			  Hsync => hs,
-			  Vsync => vs,
-			  VGA_hs => VGA_HS,
-			  VGA_vs => VGA_VS,
-			  VGA_r => RED,
-			  VGA_g => GREEN,
-			  VGA_b => BLUE
-			  );
+--mux: multiplexer_RGB
+--    Port map ( clk => clk_VGA,
+--    		  sw0 => switch_io(0),
+--    		  btn0 => push_io(0),
+--			  btn1 => push_io(1),	
+--			  btn2 => push_io(2),
+--			  coord => coord_VGA,
+--			  data => data_VGA,
+--			  activeArea => img_active,
+--			  Hsync => hs,
+--			  Vsync => vs,
+--			  VGA_hs => VGA_HS,
+--			  VGA_vs => VGA_VS,
+--			  VGA_r => RED,
+--			  VGA_g => GREEN,
+--			  VGA_b => BLUE
+--			  );
+			  
+--image_int: Image_integrale PORT MAP(
+--			  CLK => CLK,
+--           RST => rst_VGA,
+--			  send_img => send_img,
+--			  Image_int_ready => Image_int_ready,
+--			  Din_img => Din_img,
+--			  Din_i => data_i,
+--			  Din_ic => data_i_2,
+--			  Dout_i => data_o,
+--			  Dout_ic => data_o_2,
+--			  Offset_lect_img => ad_img, 
+--			  Offset_ecr_int => Offset_ecr_int,
+--			  Offset_lect_int => Offset_lect_int,
+--			  we_i => we_i,
+--			  we_ic => we_ic,
+--			  Det_end => send_img);		
+
+
+--detection: fsm_detection 
+--	PORT MAP (
+--			 Image_int_ready => Image_int_ready,
+--          clk => clk,
+--          rst => rst,
+--					
+--			--Communications avec les RAMS
+--			we_stage => we_stage,
+--			ad_stage => ad_stage,
+--			datao_stage => datao_stage,
+--					
+--			we_feature => we_feature,
+--			ad_feature => ad_feature,
+--			datao_feature => datao_feature,
+--
+--			we_rectangle => we_rectangle,
+--			ad_rectangle => ad_rectangle,
+--			datao_rectangle => datao_rectangle,
+--
+--			we_II	=> we_i,
+--			ad_II => ad_II,
+--			datao_II => data_o,
+--			
+--			ad_II_2 => ad_II_2,
+--			we_II_2 => we_ic,
+--			datao_II_2 => data_o_2,
+--
+--         face_detected => face_detected,
+--         send_img => send_img,
+--			visage => visage); 
+		 			  
 
 end architecture STRUCTURE;
 

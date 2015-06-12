@@ -1,4 +1,4 @@
-cd /tima/smancini/zybo_cam/zybo_simple
+cd /user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple
 if { [ catch { xload xmp system.xmp } result ] } {
   exit 10
 }

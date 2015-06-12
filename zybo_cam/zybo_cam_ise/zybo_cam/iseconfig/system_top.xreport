@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2015-05-18T12:27:14</DateModified>
+  <DateModified>2015-06-12T09:24:02</DateModified>
   <ModuleName>system_top</ModuleName>
   <SummaryTimeStamp>2015-05-18T09:35:24</SummaryTimeStamp>
-  <SavedFilePath>/tima/smancini/zybo_cam/zybo_cam_ise/zybo_cam/iseconfig/system_top.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>/tima/smancini/zybo_cam/zybo_cam_ise/zybo_cam/</ImplementationReportsDirectory>
+  <SavedFilePath>/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_cam_ise/zybo_cam/iseconfig/system_top.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_cam_ise/zybo_cam/</ImplementationReportsDirectory>
   <DateInitialized>2015-05-12T16:43:29</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
-  <XMP_File>/tima/smancini/zybo_cam/zybo_simple/system.xmp</XMP_File>
+  <XMP_File>/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/system.xmp</XMP_File>
  </header>
  <body>
   <viewgroup label="Design Overview" >
@@ -31,15 +31,15 @@
    <view inputState="Fitted" program="taengine" contextTags="CPLD_ONLY,EDK_OFF" hidden="true" type="EXTERNAL_HTML" file="system_top_html/tim/report.htm" label="CPLD Timing Report" />
   </viewgroup>
   <viewgroup label="XPS Errors and Warnings" >
-   <view program="platgen" WrapMessages="true" contextTags="EDK_ON" hidden="false" type="MessageList" hideColumns="Filtered" file="/tima/smancini/zybo_cam/zybo_simple/__xps/ise/_xmsgs/platgen.xmsgs" label="Platgen Messages" />
-   <view program="simgen" WrapMessages="true" contextTags="EDK_ON" hidden="false" type="MessageList" hideColumns="Filtered" file="/tima/smancini/zybo_cam/zybo_simple/__xps/ise/_xmsgs/simgen.xmsgs" label="Simgen Messages" />
-   <view program="bitinit" WrapMessages="true" contextTags="EDK_ON" hidden="false" type="MessageList" hideColumns="Filtered" file="/tima/smancini/zybo_cam/zybo_simple/__xps/ise/_xmsgs/bitinit.xmsgs" label="BitInit Messages" />
+   <view program="platgen" WrapMessages="true" contextTags="EDK_ON" hidden="false" type="MessageList" hideColumns="Filtered" file="/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/__xps/ise/_xmsgs/platgen.xmsgs" label="Platgen Messages" />
+   <view program="simgen" WrapMessages="true" contextTags="EDK_ON" hidden="false" type="MessageList" hideColumns="Filtered" file="/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/__xps/ise/_xmsgs/simgen.xmsgs" label="Simgen Messages" />
+   <view program="bitinit" WrapMessages="true" contextTags="EDK_ON" hidden="false" type="MessageList" hideColumns="Filtered" file="/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/__xps/ise/_xmsgs/bitinit.xmsgs" label="BitInit Messages" />
   </viewgroup>
   <viewgroup label="XPS Reports" >
-   <view inputState="PreSynthesized" program="platgen" contextTags="EDK_ON" hidden="false" type="Secondary_Report" file="/tima/smancini/zybo_cam/zybo_simple/platgen.log" label="Platgen Log File" />
-   <view inputState="PreSynthesized" program="simgen" contextTags="EDK_ON" hidden="false" type="Secondary_Report" file="/tima/smancini/zybo_cam/zybo_simple/simgen.log" label="Simgen Log File" />
-   <view inputState="PreSynthesized" program="bitinit" contextTags="EDK_ON" hidden="false" type="Secondary_Report" file="/tima/smancini/zybo_cam/zybo_simple/bitinit.log" label="BitInit Log File" />
-   <view inputState="PreSynthesized" program="system" contextTags="EDK_ON" hidden="false" type="Secondary_Report" file="/tima/smancini/zybo_cam/zybo_simple/system_top.log" label="System Log File" />
+   <view inputState="PreSynthesized" program="platgen" contextTags="EDK_ON" hidden="false" type="Secondary_Report" file="/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/platgen.log" label="Platgen Log File" />
+   <view inputState="PreSynthesized" program="simgen" contextTags="EDK_ON" hidden="false" type="Secondary_Report" file="/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/simgen.log" label="Simgen Log File" />
+   <view inputState="PreSynthesized" program="bitinit" contextTags="EDK_ON" hidden="false" type="Secondary_Report" file="/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/bitinit.log" label="BitInit Log File" />
+   <view inputState="PreSynthesized" program="system" contextTags="EDK_ON" hidden="false" type="Secondary_Report" file="/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/system_top.log" label="System Log File" />
   </viewgroup>
   <viewgroup label="Errors and Warnings" >
    <view program="pn" WrapMessages="true" contextTags="EDK_OFF" hidden="true" type="MessageList" hideColumns="Filtered, New" file="_xmsgs/pn_parser.xmsgs" label="Parser Messages" />

@@ -1,8 +1,8 @@
 INTSTYLE=ise
-INFILE=/tima/smancini/zybo_cam/zybo_cam_ise/zybo_cam/system_top.ncd
-OUTFILE=/tima/smancini/zybo_cam/zybo_cam_ise/zybo_cam/system_top.bit
+INFILE=/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_cam_ise/zybo_cam/system_top.ncd
+OUTFILE=/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_cam_ise/zybo_cam/system_top.bit
 FAMILY=Zynq
 PART=xc7z010-3clg400
-WORKINGDIR=/tima/smancini/zybo_cam/zybo_cam_ise/zybo_cam
-LICENSE=ISE
-USER_INFO=174170201_174170202_210573033_526
+WORKINGDIR=/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_cam_ise/zybo_cam
+LICENSE=WebPack
+USER_INFO=211048036_0_0_210

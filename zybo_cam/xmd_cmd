@@ -1,0 +1,8 @@
+connect arm hw
+
+source zybo_simple_hw_platform/ps7_init.tcl
+
+ps7_init
+fpga -f ../zybo_cam_ise/zybo_cam/system_top.bit
+dow cam_cfg/Debug/cam_cfg.elf
+con

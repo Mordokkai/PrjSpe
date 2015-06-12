@@ -1,7 +1,6 @@
-12:26:03 **** Clean-only build of configuration Debug for project test ****
-make clean 
-rm -rf  ./src/helloworld.o ./src/platform.o  ./src/helloworld.d ./src/platform.d  test.elf.size  test.elf
- 
+16:47:59 **** Incremental Build of configuration Debug for project test ****
+make all 
+make: Nothing to be done for `all'.
 
-12:26:03 Build Finished (took 68ms)
+16:47:59 Build Finished (took 82ms)
 

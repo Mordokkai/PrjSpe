@@ -1,0 +1,14 @@
+set -tmpdir /user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/synthesis/xst_temp_dir/
+run
+-opt_mode speed
+-netlist_hierarchy as_optimized
+-opt_level 1
+-p xc7z010clg400-3
+-top system_processing_system7_0_wrapper
+-ifmt MIXED
+-ifn system_processing_system7_0_wrapper_xst.prj
+-ofn ../implementation/system_processing_system7_0_wrapper.ngc
+-hierarchy_separator /
+-iobuf NO
+-sd {../implementation}
+-vlgincdir {"/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/zybo_cam/zybo_simple/pcores/" "/Xilinx/14.7/ISE_DS/EDK/hw/XilinxBFMinterface/pcores/" "/Xilinx/14.7/ISE_DS/EDK/hw/XilinxProcessorIPLib/pcores/" }

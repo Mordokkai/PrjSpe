@@ -1,0 +1,24 @@
+Running: /Xilinx/14.7/ISE_DS/ISE/bin/lin64/unwrapped/fuse -relaunch -intstyle "ise" -incremental -lib "secureip" -o "/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/Ise/Face_detect/Face_detect/khalil_isim_beh.exe" -prj "/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/Ise/Face_detect/Face_detect/khalil_beh.prj" "work.khalil" 
+ISim P.20131013 (signature 0xfbc00daa)
+Number of CPUs detected in this system: 4
+Turning on mult-threading, number of parallel sub-compilation jobs: 8 
+Determining compilation order of HDL files
+Parsing VHDL file "/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/Ise/Face_detect/Face_detect/../Image_int.vhd" into library work
+Parsing VHDL file "/user/1/.base/chatouik/home/Projet_specialite/PrjSpe/Ise/Face_detect/Face_detect/test_image_inte.vhd" into library work
+Starting static elaboration
+Completed static elaboration
+Fuse Memory Usage: 95944 KB
+Fuse CPU Usage: 880 ms
+Compiling package standard
+Compiling package textio
+Compiling package std_logic_1164
+Compiling package numeric_std
+Compiling architecture behavioral of entity Image_integrale [image_integrale_default]
+Compiling architecture behavior of entity khalil
+Time Resolution for simulation is 1ps.
+Waiting for 1 sub-compilation(s) to finish...
+Compiled 7 VHDL Units
+Built simulation executable /user/1/.base/chatouik/home/Projet_specialite/PrjSpe/Ise/Face_detect/Face_detect/khalil_isim_beh.exe
+Fuse Memory Usage: 667884 KB
+Fuse CPU Usage: 990 ms
+GCC CPU Usage: 150 ms
