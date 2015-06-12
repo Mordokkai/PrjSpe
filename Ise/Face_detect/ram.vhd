@@ -30,7 +30,7 @@ port (	clk : in std_logic;
      );
 end ram_image;
 
-architecture Behavioral of ram_image is
+architecture Behavioral1 of ram_image is
 
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
@@ -50,7 +50,7 @@ BEGIN
     end if;
 END PROCESS;
 
-end Behavioral;
+end Behavioral1;
 
 
 
@@ -73,7 +73,7 @@ port ( 	clk : in std_logic;
      );
 end ram_II;
 
-architecture Behavioral of ram_II is
+architecture Behavioral2 of ram_II is
 
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
@@ -100,7 +100,7 @@ BEGIN
     end if;
 END PROCESS;
 
-end Behavioral;
+end Behavioral2;
 
 
 
@@ -121,7 +121,7 @@ port (	clk : in std_logic;
      );
 end ram_II_2;
 
-architecture Behavioral of ram_II_2 is
+architecture Behavioral3 of ram_II_2 is
 
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
@@ -147,7 +147,7 @@ BEGIN
     end if;
 END PROCESS;
 
-end Behavioral;
+end Behavioral3;
 
 
 
@@ -169,7 +169,7 @@ port (Clk : in std_logic;
      );
 end ram_image_ping;
 
-architecture Behavioral of ram_image_ping is
+architecture Behavioral4 of ram_image_ping is
 
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
@@ -189,7 +189,7 @@ BEGIN
     end if;
 END PROCESS;
 
-end Behavioral;
+end Behavioral4;
 
 
 
@@ -211,7 +211,7 @@ port (Clk : in std_logic;
      );
 end ram_II_ping;
 
-architecture Behavioral of ram_II_ping is
+architecture Behavioral5 of ram_II_ping is
 
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
@@ -231,7 +231,7 @@ BEGIN
     end if;
 END PROCESS;
 
-end Behavioral;
+end Behavioral5;
 
 
 
@@ -252,7 +252,7 @@ port (Clk : in std_logic;
      );
 end ram_II_2_ping;
 
-architecture Behavioral of ram_II_2_ping is
+architecture Behavioral6 of ram_II_2_ping is
 
 --Declaration of type and signal of a 256 element RAM
 --with each element being 8 bit wide.
@@ -272,7 +272,7 @@ BEGIN
     end if;
 END PROCESS;
 
-end Behavioral;
+end Behavioral6;
 
 
 

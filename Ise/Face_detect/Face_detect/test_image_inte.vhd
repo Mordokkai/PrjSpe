@@ -28,7 +28,7 @@ use ieee.std_logic_1164.all;
 			  Offset_lect_int : out  unsigned (15 downto 0);
 			  we_i : out  STD_LOGIC;
 			  we_ic : out  STD_LOGIC;
-			  Det_end : in  STD_LOGIC);
+			  Det_end : in  boolean);
 			  end Component Image_integrale;
 				
 				SIGNAL RST : STD_LOGIC;
@@ -45,7 +45,7 @@ use ieee.std_logic_1164.all;
 				SIGNAL Offset_lect_int : unsigned (15 downto 0);
 				SIGNAL we_i : STD_LOGIC;
 				SIGNAL we_ic : STD_LOGIC;
-				SIGNAL Det_end : STD_LOGIC;
+				SIGNAL Det_end : boolean;
 			  
 			  
 				signal clk : std_logic := '0';			  

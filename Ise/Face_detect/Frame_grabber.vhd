@@ -58,8 +58,8 @@ type State_type is (Init,
   signal data, next_data : unsigned (7 downto 0);
   signal x, y, next_x, next_y : unsigned (14 downto 0);
   
-  constant L : unsigned := to_unsigned(20,8); --valeur a modifier, nb de lignes de l'image
-  constant C : unsigned := to_unsigned(30,8); --valeur a modifier, nb de col de l'image
+  constant L : unsigned := to_unsigned(100,8); --valeur a modifier, nb de lignes de l'image
+  constant C : unsigned := to_unsigned(100,8); --valeur a modifier, nb de col de l'image
   
 begin
 
@@ -80,7 +80,7 @@ begin
 		end if; 
 	end process sync;
 
-	FSM : process(current_state, Din, VSync, HREF, det_end, data, x, y)
+	FSM : process(current_state, Din, VSync, HREF, det_end, data, x, y,buff_offset)
 		variable R, G, B : unsigned (7 downto 0);
 	begin
 		dout <= (others => '0');
@@ -116,10 +116,10 @@ begin
 				next_x <= x + 1;
 				if ((x < C) and (y < L)) then
 					next_offset <= buff_offset + 1;
-					R := "000" & data(7 downto 3);
-					G := "00" & data(2 downto 0) & din(7 downto 5);
-					B := "000" & din(4 downto 0);
-					dout <= R + G + B;
+					R := "00" & din(7 downto 3) & "0";
+					G := "00" & din(2 downto 0) & data(7 downto 5);
+					B := "00" & data(4 downto 0) & "0";
+					dout <= (R + G + B);
 					we <= '1';
 				end if;
 				next_state <= Lecture_High;

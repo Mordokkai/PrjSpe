@@ -235,22 +235,27 @@ signal we_stdlogic : std_logic;
 --signal CAMERA_DATA : STD_LOGIC_VECTOR (7 downto 0);
 --signal CAMERA_HS, CAMERA_VS : STD_LOGIC;
 
-----signaux detection
---
---				SIGNAL we_stage : std_logic;
---				SIGNAL ad_stage : integer;
---				SIGNAL datao_stage : unsigned(27 downto 0);
---						
---				SIGNAL we_feature  : std_logic;
---				SIGNAL ad_feature  : integer;
---				SIGNAL datao_feature : unsigned(60 downto 0);
---
---				SIGNAL we_rectangle : std_logic;
---				SIGNAL ad_rectangle : integer;
---				SIGNAL datao_rectangle : unsigned(24 downto 0);
---				
---				SIGNAL face_detected :  boolean;
---				SIGNAL visage : Visage;
+--signaux detection
+
+				SIGNAL we_stage : std_logic;
+				SIGNAL ad_stage : integer;
+				SIGNAL datao_stage : unsigned(27 downto 0);
+						
+				SIGNAL we_feature  : std_logic;
+				SIGNAL ad_feature  : integer;
+				SIGNAL datao_feature : unsigned(60 downto 0);
+
+				SIGNAL we_rectangle : std_logic;
+				SIGNAL ad_rectangle : integer;
+				SIGNAL datao_rectangle : unsigned(24 downto 0);
+				
+				SIGNAL face_detected :  boolean;
+				SIGNAL visage : Visage;
+				
+				SIGNAL data_i : unsigned (31 downto 0);
+			   SIGNAL data_i_2 : unsigned (31 downto 0);
+			   SIGNAL data_o : unsigned (31 downto 0);
+			   SIGNAL data_o_2 : unsigned (31 downto 0);
 
 begin
 
@@ -393,54 +398,54 @@ ram: mem_ram
 --			  VGA_b => BLUE
 --			  );
 			  
---image_int: Image_integrale PORT MAP(
---			  CLK => CLK,
---           RST => rst_VGA,
---			  send_img => send_img,
---			  Image_int_ready => Image_int_ready,
---			  Din_img => Din_img,
---			  Din_i => data_i,
---			  Din_ic => data_i_2,
---			  Dout_i => data_o,
---			  Dout_ic => data_o_2,
---			  Offset_lect_img => ad_img, 
---			  Offset_ecr_int => Offset_ecr_int,
---			  Offset_lect_int => Offset_lect_int,
---			  we_i => we_i,
---			  we_ic => we_ic,
---			  Det_end => send_img);		
+image_int: Image_integrale PORT MAP(
+			  CLK => CLK,
+           RST => rst_VGA,
+			  send_img => send_img,
+			  Image_int_ready => Image_int_ready,
+			  Din_img => Din_img,
+			  Din_i => data_i,
+			  Din_ic => data_i_2,
+			  Dout_i => data_o,
+			  Dout_ic => data_o_2,
+			  Offset_lect_img => address_cam_unsigned, 
+			  Offset_ecr_int => Offset_ecr_int,
+			  Offset_lect_int => Offset_lect_int,
+			  we_i => we_i,
+			  we_ic => we_ic,
+			  Det_end => send_img);		
 
 
---detection: fsm_detection 
---	PORT MAP (
---			 Image_int_ready => Image_int_ready,
---          clk => clk,
---          rst => rst,
---					
---			--Communications avec les RAMS
---			we_stage => we_stage,
---			ad_stage => ad_stage,
---			datao_stage => datao_stage,
---					
---			we_feature => we_feature,
---			ad_feature => ad_feature,
---			datao_feature => datao_feature,
---
---			we_rectangle => we_rectangle,
---			ad_rectangle => ad_rectangle,
---			datao_rectangle => datao_rectangle,
---
---			we_II	=> we_i,
---			ad_II => ad_II,
---			datao_II => data_o,
---			
---			ad_II_2 => ad_II_2,
---			we_II_2 => we_ic,
---			datao_II_2 => data_o_2,
---
---         face_detected => face_detected,
---         send_img => send_img,
---			visage => visage); 
+detection: fsm_detection 
+	PORT MAP (
+			 Image_int_ready => Image_int_ready,
+          clk => clk,
+          rst => rst,
+					
+			--Communications avec les RAMS
+			we_stage => we_stage,
+			ad_stage => ad_stage,
+			datao_stage => datao_stage,
+					
+			we_feature => we_feature,
+			ad_feature => ad_feature,
+			datao_feature => datao_feature,
+
+			we_rectangle => we_rectangle,
+			ad_rectangle => ad_rectangle,
+			datao_rectangle => datao_rectangle,
+
+			we_II	=> we_i,
+			ad_II => ad_II,
+			datao_II => data_o,
+			
+			ad_II_2 => ad_II_2,
+			we_II_2 => we_ic,
+			datao_II_2 => data_o_2,
+
+         face_detected => face_detected,
+         send_img => send_img,
+			visage => visage); 
 		 			  
 
 end architecture STRUCTURE;

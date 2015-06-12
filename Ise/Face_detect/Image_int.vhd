@@ -44,7 +44,7 @@ entity Image_integrale is
            Offset_lect_int : out  unsigned (15 downto 0);
            we_i : out  STD_LOGIC;
            we_ic : out  STD_LOGIC;
-           Det_end : in  STD_LOGIC);
+           Det_end : in  boolean);
 end Image_integrale;
 
 architecture Behavioral of Image_integrale is
@@ -62,7 +62,7 @@ architecture Behavioral of Image_integrale is
   signal buff_offset_li, next_offset_li : unsigned (15 downto 0);
   signal buff_offset_ei, next_offset_ei : unsigned (15 downto 0);
   --declaration des registres
-  signal r1_i,r1_ic,r2_i,r2_ic, next_r1_i, next_r1_ic : unsigned (31 downto 0);
+  signal r1_i,r1_ic,r2_i,r2_ic, next_r1_i, next_r1_ic,next_r2_i,next_r2_ic : unsigned (31 downto 0);
   constant L : unsigned := to_unsigned(20,8); --valeur a modifier, nb de lignes de l'image
   constant C : unsigned := to_unsigned(30,8); --valeur a modifier, nb de col de l'image
 begin
@@ -75,6 +75,18 @@ P_STATE : process(clk)
 	begin
      if clk'event and clk='1' then
       if (RST = '1') then
+		buff_offset <= (others => '0');
+		buff_offset_li <= (others => '0');
+		buff_offset_ei <= (others => '0');
+		Dout_i <= (others => '0');
+		Dout_ic <= (others => '0');
+		r1_i <= (others => '0');
+		r1_ic <= (others => '0');
+		r2_i <= (others => '0');
+		r2_ic <= (others => '0');
+		we_i <= '0';
+		we_ic <= '0';
+		Image_int_ready <= '0';
       current_state <= Init;
       else
       Current_State <= next_state;
@@ -83,6 +95,8 @@ P_STATE : process(clk)
 		buff_offset_ei <= next_offset_ei;
 		r1_i <= next_r1_i;
 		r1_ic <= next_r1_ic;
+		r2_i <= next_r2_i;
+		r2_ic <= next_r2_ic;
 		end if;
 	  end if; 
    end process P_STATE;
@@ -98,6 +112,18 @@ P_FSM : process(current_state,Image_ready,Din_img,Din_ic,Din_i,Det_end)
 		we_ic <= '0';
 		Image_int_ready <= '0';
 		
+		next_offset <= Buff_offset;
+		next_offset_ei <= Buff_offset_ei;
+		next_offset_li <= Buff_offset_li;
+		Dout_i <= (others => '0');
+		Dout_ic <= (others => '0');
+		
+		next_r1_i <= r1_i;
+		next_r1_ic <= r1_ic;
+		next_r2_i <= r2_i;
+		next_r2_ic <= r2_ic;
+		
+		next_state <= current_state;
 		
 		case current_State is
 			when Init =>
@@ -110,8 +136,6 @@ P_FSM : process(current_state,Image_ready,Din_img,Din_ic,Din_i,Det_end)
 					next_offset <= buff_offset + 1;
 				
 					next_state <= Case_1;
-				else 
-					next_state <= current_state;
 				end if;
 				
 			when Case_1 =>
@@ -159,10 +183,10 @@ P_FSM : process(current_state,Image_ready,Din_img,Din_ic,Din_i,Det_end)
 				Val_ic := Din_img * Din_img + Din_ic;
 				Dout_i <= Val_i;
 				next_r1_i <= Val_i;
-				r2_i <= Din_i;
+				next_r2_i <= Din_i;
 				Dout_ic <= Val_ic;
 				next_r1_ic <= Val_ic;
-				r2_ic <= Din_ic;
+				next_r2_ic <= Din_ic;
 				--incrementation des 3 offsets
 				
 				next_offset <= buff_offset + 1;
@@ -176,13 +200,13 @@ P_FSM : process(current_state,Image_ready,Din_img,Din_ic,Din_i,Det_end)
 				we_ic <= '1';
 				Val_i := Din_img + Din_i + r1_i - r2_i;
 				Val_ic := Din_img * Din_img + Din_ic + r1_ic - r2_ic;
-				-- cette partie n'est pas forcement juste----------ca m'a l'air bon
+				
 				Dout_i <= Val_i;
 				next_r1_i <= Val_i;
-				r2_i <= Din_i;
+				next_r2_i <= Din_i;
 				Dout_ic <= Val_ic;
 				next_r1_ic <= Val_ic;
-				r2_ic <= Din_ic;
+				next_r2_ic <= Din_ic;
 				---------------------------------------------------
 				--incrementation des 3 offsets
 				
@@ -213,13 +237,11 @@ P_FSM : process(current_state,Image_ready,Din_img,Din_ic,Din_i,Det_end)
 				
 			when Wait_state =>
 				Image_int_ready <= '1';
-				if (Det_end = '1') then
+				if (Det_end) then
 					next_offset_li <= (others => '0');
 					next_offset_ei <= (others => '0');
 					next_offset <= (others => '0');
 					next_state <= Init; 
-				else 
-					next_state <= Current_state;
 				end if;
 				
 			when others =>
